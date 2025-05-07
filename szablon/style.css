@@ -1,0 +1,187 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f0f0f0;
+  }
+  
+  header {
+    background-color: #004b8d;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  header h1 {
+    margin: 0;
+  }
+  
+  nav a {
+    color: white;
+    margin-left: 1rem;
+    text-decoration: none;
+  }
+  
+  main {
+    padding: 2rem;
+    background: white;
+  }
+  
+  section.search input {
+    margin: 0.5rem;
+    padding: 0.5rem;
+    width: 200px;
+  }
+  
+  button {
+    padding: 0.5rem 1rem;
+    background-color: #0077cc;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #eee;
+  }
+  
+  .admin-list {
+    margin-top: 1rem;
+  }
+  
+  .admin-list button {
+    margin-left: 0.5rem;
+  }
+
+  table {
+    text-align: center;
+  }  
+  .auth-form {
+    max-width: 400px;
+    margin: 2rem auto;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .auth-form label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+  
+  .auth-form input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.3rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .auth-form button {
+    margin-top: 1.5rem;
+    width: 100%;
+  }
+  
+  .auth-form p {
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .przystanek-blok button.usun-przystanek {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 0 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 3px;
+  }
+  
+  .przystanek-blok button.usun-przystanek:hover {
+    background: #c0392b;
+  }
+
+  .przystanki {
+    margin-top: 0.5rem;
+    padding-left: 1.5rem;
+    list-style-type: disc;
+  }
+  
+  .kurs {
+    margin-bottom: 1.5rem;
+  }
+  
+  .kurs button {
+    margin-left: 0.5rem;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .tab-button {
+    padding: 0.5rem 1rem;
+    background: #ddd;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .tab-button.active {
+    background: #007acc;
+    color: #fff;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .przystanek-blok {
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 1rem;
+  }
+
+  .przystanek-blok input {
+    flex: 1;
+  }
+
+  .wynik-trasy {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #f0f8ff;
+    border-left: 4px solid #007acc;
+    border-radius: 6px;
+  } 
+
+  .admin-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .admin-tab {
+    padding: 0.5rem 1rem;
+    background: #eee;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .admin-tab.active {
+    background: #007acc;
+    color: white;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
