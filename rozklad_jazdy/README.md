@@ -24,6 +24,17 @@ php artisan migrate
 php artisan db:seed
 ```
 
+### Database Credentials
+
+#### Database Admin User:
+- **Username:** rozklad_admin
+- **Password:** IU0Bg0yMkaiBqXiz
+
+#### Application Database User (used by the Laravel application):
+- **Username:** rozklad_user
+- **Password:** IEALdiauSyFWXzPN
+- **Database:** rozklad_jazdy
+
 ### Running the Application
 
 Start the Laravel development server:
@@ -33,3 +44,15 @@ php artisan serve
 ```
 
 The application will be available at [http://localhost:8000](http://localhost:8000).
+
+### Application Login Credentials
+
+#### Admin User:
+- **Username:** admin
+- **Email:** admin@example.com
+- **Password:** admin123
+
+### Regular User:
+- **Username:** jkowalski
+- **Email:** jan.kowalski@example.com
+- **Password:** password123
