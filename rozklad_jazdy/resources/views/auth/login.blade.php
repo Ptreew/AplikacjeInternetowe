@@ -4,18 +4,19 @@
 
 @section('header', 'Logowanie')
 
-@section('navigation')
-    <a href="{{ route('register') }}">Zarejestruj</a>
-    <a href="{{ route('home') }}">Strona główna</a>
-@endsection
+{{-- Navigation is handled in the main layout --}}
 
 @section('content')
     <section>
         <form class="auth-form" method="POST" action="{{ route('login') }}">
             @csrf
-            <label for="email">Login/email:</label>
-            <input type="text" id="email" name="email" placeholder="Wpisz login lub email" required />
-            @error('email')
+            <label for="login_id">Nazwa użytkownika lub e-mail:</label>
+            <input type="text" id="login_id" name="login_id" placeholder="Wpisz nazwę użytkownika lub e-mail" value="{{ old('login_id') }}" required />
+            @error('login_id')
+                <span class="error">{{ $message }}</span>
+            @enderror
+            
+            @error('login')
                 <span class="error">{{ $message }}</span>
             @enderror
 

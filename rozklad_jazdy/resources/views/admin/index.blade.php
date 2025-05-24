@@ -4,11 +4,13 @@
 
 @section('header', 'Panel Administratora')
 
-@section('navigation')
-    <a href="{{ route('home') }}">Strona główna</a>
-@endsection
+{{-- Navigation is handled in the main layout --}}
 
 @section('content')
+    <div class="admin-actions" style="margin-bottom: 20px;">
+        <a href="{{ route('admin.dashboard') }}" class="action-button">Przejdź do Dashboard</a>
+    </div>
+    
     <div class="tabs">
         <button class="tab-button active" data-tab="miedzymiastowe">Międzymiastowe</button>
         <button class="tab-button" data-tab="miejskie">Miejskie</button>

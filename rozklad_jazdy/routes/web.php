@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Admin\DashboardController;
 
 // Main pages
 Route::get('/', function () {
@@ -9,52 +11,41 @@ Route::get('/', function () {
 })->name('home');
 
 // Authentication routes
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
+// Registration routes
+Route::get('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'register']);
 
-// Admin routes
-Route::get('/admin', function () {
-    return view('admin.index');
-})->name('admin');
+// Secure Admin routes with explicit middleware class
+Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::class.':admin'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    
+    // Admin panel management view
+    Route::get('/', function() {
+        return view('admin.index');
+    })->name('admin');
+    
+    // Admin form submission routes
+    Route::post('/miedzymiastowe', function () {
+        return redirect()->back()->with('success', 'Kurs został dodany');
+    })->name('admin.miedzymiastowe.store');
 
-// Admin form submission routes
-Route::post('/admin/miedzymiastowe', function () {
-    // Controller logic would go here in a real app
-    return redirect()->back()->with('success', 'Kurs został dodany');
-})->name('admin.miedzymiastowe.store');
+    Route::post('/miejskie', function () {
+        return redirect()->back()->with('success', 'Kurs został dodany');
+    })->name('admin.miejskie.store');
 
-Route::post('/admin/miejskie', function () {
-    // Controller logic would go here in a real app
-    return redirect()->back()->with('success', 'Kurs został dodany');
-})->name('admin.miejskie.store');
+    Route::post('/users', function () {
+        return redirect()->back()->with('success', 'Użytkownik został dodany');
+    })->name('admin.users.store');
 
-Route::post('/admin/users', function () {
-    // Controller logic would go here in a real app
-    return redirect()->back()->with('success', 'Użytkownik został dodany');
-})->name('admin.users.store');
+    Route::post('/vehicles', function () {
+        return redirect()->back()->with('success', 'Pojazd został dodany');
+    })->name('admin.vehicles.store');
 
-Route::post('/admin/vehicles', function () {
-    // Controller logic would go here in a real app
-    return redirect()->back()->with('success', 'Pojazd został dodany');
-})->name('admin.vehicles.store');
-
-Route::post('/admin/carriers', function () {
-    // Controller logic would go here in a real app
-    return redirect()->back()->with('success', 'Przewoźnik został dodany');
-})->name('admin.carriers.store');
-
-// Authentication form handling - in a real app these would use Laravel's authentication system
-Route::post('/login', function () {
-    // Login logic would go here
-    return redirect()->route('home');
-})->name('login.post');
-
-Route::post('/register', function () {
-    // Registration logic would go here
-    return redirect()->route('login');
-})->name('register.post');
+    Route::post('/carriers', function () {
+        return redirect()->back()->with('success', 'Przewoźnik został dodany');
+    })->name('admin.carriers.store');
+});

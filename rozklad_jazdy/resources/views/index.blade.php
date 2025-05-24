@@ -2,11 +2,7 @@
 
 @section('title', 'Rozkład jazdy')
 
-@section('navigation')
-    <a href="{{ route('login') }}">Login</a>
-    <a href="{{ route('register') }}">Zarejestruj</a>
-    <a href="{{ route('admin') }}">Panel administratora</a>
-@endsection
+{{-- Navigation is handled in the main layout --}}
 
 @section('content')
     <div class="tabs">

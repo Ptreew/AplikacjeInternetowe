@@ -4,10 +4,7 @@
 
 @section('header', 'Rejestracja')
 
-@section('navigation')
-    <a href="{{ route('login') }}">Login</a>
-    <a href="{{ route('home') }}">Strona główna</a>
-@endsection
+{{-- Navigation is handled in the main layout --}}
 
 @section('content')
     <section>
