@@ -1,0 +1,16 @@
+services:
+  database:
+    image: 'postgres:latest'
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: rozklad_admin
+      POSTGRES_PASSWORD: IU0Bg0yMkaiBqXiz
+      POSTGRES_DB: rozklad_jazdy
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+
+volumes:
+  pgdata:
