@@ -36,8 +36,11 @@ class DatabaseSeeder extends Seeder
         // Then seed the departures (depend on schedules and stops)
         $this->call(DeparturesTableSeeder::class);
         
-        // Finally, seed the vehicles (depend on lines)
+        // Then seed the vehicles (depend on lines)
         $this->call(VehiclesTableSeeder::class);
+        
+        // Finally, seed the tickets (depend on users and departures)
+        $this->call(TicketsTableSeeder::class);
         
         // favourite_lines will be populated through user interaction
     }

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\TicketController;
 
 // Main pages
 Route::get('/', function () {
@@ -18,6 +19,19 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 // Registration routes
 Route::get('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'register']);
+
+// Ticket routes - require authentication except search
+Route::get('/tickets/search', [TicketController::class, 'create'])->name('tickets.search');
+Route::post('/tickets/search', [TicketController::class, 'search'])->name('tickets.search.results');
+
+Route::middleware(['auth'])->group(function () {
+    // Standard resource routes for tickets
+    Route::resource('tickets', TicketController::class);
+    
+    // Additional custom routes for ticket management
+    Route::post('/tickets/{ticket}/pay', [TicketController::class, 'pay'])->name('tickets.pay');
+});
+
 
 // Secure Admin routes with explicit middleware class
 Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::class.':admin'])->group(function () {
@@ -48,4 +62,7 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::clas
     Route::post('/carriers', function () {
         return redirect()->back()->with('success', 'Przewoźnik został dodany');
     })->name('admin.carriers.store');
+    
+    // Admin ticket management
+    Route::post('/tickets/{ticket}/mark-as-used', [TicketController::class, 'markAsUsed'])->name('admin.tickets.mark-as-used');
 });
