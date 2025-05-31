@@ -13,40 +13,67 @@ class RouteStopsTableSeeder extends Seeder
     public function run(): void
     {
         $routeStops = [
-            // Route 1: Warszawa - Kraków (przez Radom, Kielce) - Assuming some stops for Radom and Kielce
+            // Route 1: Warszawa - Kraków (przez Radom, Kielce)
             [
                 'route_id' => 1,
                 'stop_id' => 1, // Warszawa Dworzec Centralny
                 'stop_number' => 1,
                 'distance_from_start' => 0,
-                'time_to_next' => 20,
+                'time_to_next' => 50, // 50 minut do Radomia pociągiem
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'route_id' => 1,
+                'stop_id' => 17, // Radom Dworzec PKP
+                'stop_number' => 2,
+                'distance_from_start' => 104000, // 104 km
+                'time_to_next' => 40, // 40 minut do Kielc pociągiem
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'route_id' => 1,
+                'stop_id' => 18, // Kielce Dworzec PKP
+                'stop_number' => 3,
+                'distance_from_start' => 185000, // 185 km
+                'time_to_next' => 60, // 60 minut do Krakowa pociągiem
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'route_id' => 1,
                 'stop_id' => 9, // Kraków Dworzec Główny
-                'stop_number' => 2, 
-                'distance_from_start' => 292000, // 292 km
+                'stop_number' => 4, 
+                'distance_from_start' => 294000, // 294 km
                 'time_to_next' => 0, // Last stop
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             
-            // Route 2: Kraków - Rzeszów (przez Tarnów) - Assuming Tarnów would be in the middle
+            // Route 2: Kraków - Rzeszów (przez Tarnów)
             [
                 'route_id' => 2,
                 'stop_id' => 10, // Kraków MDA
                 'stop_number' => 1,
                 'distance_from_start' => 0,
-                'time_to_next' => 80,
+                'time_to_next' => 45, // 45 minut do Tarnowa
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'route_id' => 2,
+                'stop_id' => 16, // Tarnów Dworzec PKP
+                'stop_number' => 2,
+                'distance_from_start' => 80000, // 80 km
+                'time_to_next' => 40, // 40 minut do Rzeszowa
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'route_id' => 2,
                 'stop_id' => 13, // Rzeszów Dworzec Lokalny
-                'stop_number' => 2,
+                'stop_number' => 3,
                 'distance_from_start' => 160000, // 160 km
                 'time_to_next' => 0, // Last stop
                 'created_at' => now(),
@@ -65,7 +92,7 @@ class RouteStopsTableSeeder extends Seeder
             ],
             [
                 'route_id' => 3,
-                'stop_id' => 15, // Lublin Dworzec Autobusowy
+                'stop_id' => 13, // Lublin Dworzec Autobusowy
                 'stop_number' => 2,
                 'distance_from_start' => 170000, // 170 km
                 'time_to_next' => 0, // Last stop

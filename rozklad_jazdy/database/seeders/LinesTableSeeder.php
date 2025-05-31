@@ -13,12 +13,12 @@ class LinesTableSeeder extends Seeder
     public function run(): void
     {
         $lines = [
-            // Intercity bus lines (PolBus, id=1)
+            // Intercity train lines (PKP Intercity, id=5)
             [
-                'carrier_id' => 1,
+                'carrier_id' => 5,
                 'number' => null,
-                'name' => 'Warszawa - Kraków',
-                'color' => '#4a8f29', // PolBus green
+                'name' => 'IC 3520: Warszawa - Kraków',
+                'color' => '#001489', // PKP Intercity blue
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),

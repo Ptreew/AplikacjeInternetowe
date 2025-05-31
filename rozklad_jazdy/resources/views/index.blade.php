@@ -12,8 +12,22 @@
                 
                 <div class="tabs-container mb-4">
                     <div class="tabs">
-                        <button class="tab-button active btn btn-primary" data-tab="miedzymiastowe">Międzymiastowe</button>
-                        <button class="tab-button btn btn-outline-secondary" data-tab="miejskie">Miejskie</button>
+                        @php
+                            // Najpierw sprawdzamy parametr URL 'tab'
+                            $tabFromUrl = request()->query('tab');
+                            
+                            // Ustalamy ostateczną aktywną zakładkę
+                            $finalActiveTab = 'miedzymiastowe'; // domyślna wartość
+                            
+                            if ($tabFromUrl === 'miejskie' || $tabFromUrl === 'miedzymiastowe') {
+                                $finalActiveTab = $tabFromUrl;
+                            } elseif (isset($activeTab) && ($activeTab === 'miejskie' || $activeTab === 'miedzymiastowe')) {
+                                $finalActiveTab = $activeTab;
+                            }
+                        @endphp
+                        
+                        <button class="tab-button {{ $finalActiveTab == 'miedzymiastowe' ? 'active btn btn-primary' : 'btn btn-outline-secondary' }}" data-tab="miedzymiastowe">Międzymiastowe</button>
+                        <button class="tab-button {{ $finalActiveTab == 'miejskie' ? 'active btn btn-primary' : 'btn btn-outline-secondary' }}" data-tab="miejskie">Miejskie</button>
                     </div>
                 </div>
                 
@@ -21,10 +35,11 @@
                     <div class="card-body">
 
                         <!-- Międzymiastowe -->
-                        <section class="tab-content" id="miedzymiastowe">
+                        <section class="tab-content {{ $finalActiveTab == 'miedzymiastowe' ? '' : 'hidden' }}" id="miedzymiastowe">
                             <h4>Wyszukaj kurs międzymiastowy</h4>
                             <form action="{{ route('routes.search.results') }}" method="POST" class="route-search-form">
                                 @csrf
+                                <input type="hidden" name="active_tab" value="miedzymiastowe">
                                 <!-- Dropdowns at the top -->
                                 <div class="dropdowns-container">
                                     <select name="from_city" id="from_city" required>
@@ -60,10 +75,11 @@
                         </section>
 
                         <!-- Miejskie -->
-                        <section class="tab-content hidden" id="miejskie">
+                        <section class="tab-content {{ $finalActiveTab == 'miejskie' ? '' : 'hidden' }}" id="miejskie">
                             <h4>Wyszukaj kurs miejski</h4>
                             <form action="{{ route('routes.search.city') }}" method="POST" class="city-route-search-form">
                                 @csrf
+                                <input type="hidden" name="active_tab" value="miejskie">
                                 <!-- Dropdowns at the top -->
                                 <div class="dropdowns-container">
                                     <select name="city_id" id="city_id" required>
@@ -203,7 +219,12 @@
 
 @section('scripts')
     <script>
+
+        // Code executed when the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded - brak automatycznej inicjalizacji JS, zakładki są już ustawione przez PHP');
+            console.log('URL strony:', window.location.href);
+
             // Add form validation for the międzymiastowe search form
             const fromCity = document.getElementById('from_city');
             const toCity = document.getElementById('to_city');
@@ -235,10 +256,7 @@
                 }
             }
             
-            // Add form validation for the miejskie search form - use existing variables defined below
-            
-            // Validate before form submission - we'll use the fromStopSelect and toStopSelect variables
-            // that are defined later in the code
+            // Validate the miejskie search form
             const citySearchForm = document.querySelector('.city-route-search-form');
             if (citySearchForm) {
                 citySearchForm.addEventListener('submit', function(e) {
@@ -258,31 +276,28 @@
             const currentHour = String(now.getHours()).padStart(2, '0');
             const currentMinutes = String(now.getMinutes()).padStart(2, '0');
             
-            // Domyślne wartości czasu (od bieżącej godziny do +3h później)
+            // Default date and time values +3 hours
             const timeFrom = `${currentHour}:${currentMinutes}`;
             
-            // Oblicz godzinę +3h później
+            // Calculate time +3 hours
             const laterTime = new Date(now);
             laterTime.setHours(laterTime.getHours() + 3);
             const laterHour = String(laterTime.getHours()).padStart(2, '0');
             const laterMinutes = String(laterTime.getMinutes()).padStart(2, '0');
             const timeTo = `${laterHour}:${laterMinutes}`;
             
-            // Ustaw wartości dla formularza międzymiastowego
+            // Set default values for forms
             document.getElementById('date').value = dateStr;
             document.getElementById('time_from').value = timeFrom;
             document.getElementById('time_to').value = timeTo;
             
-            // Ustaw wartości dla formularza miejskiego
+            // Set default values for city form
             document.getElementById('city_date').value = dateStr;
             document.getElementById('city_time_from').value = timeFrom;
             document.getElementById('city_time_to').value = timeTo;
             
-            // Ustaw aktywną zakładkę na podstawie odpowiedzi serwera
-            const activeTab = '{{ $activeTab ?? "miedzymiastowe" }}';
-            setActiveTab(activeTab);
+            console.log('UWAGA: Usunięto automatyczne wywołanie setActiveTab() - zakładki są ustawiane przez PHP');
 
-            // Dodaj style dla nowych kontenerów
             const style = document.createElement('style');
             style.textContent = `
                 .route-search-form, .city-route-search-form {
@@ -318,85 +333,107 @@
             document.head.appendChild(style);
         });
         
-        // Funkcja przełączania zakładek
         const tabButtons = document.querySelectorAll('.tab-button');
         
         tabButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const tabId = this.dataset.tab;
-                setActiveTab(tabId);
+                console.log('Kliknięto przycisk zakładki:', tabId);
+                
+                // Update URL without page refresh
+                const url = new URL(window.location.href);
+                url.searchParams.set('tab', tabId);
+                window.history.pushState({}, '', url);
+                
+                // Hide all tabs
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.add('hidden');
+                });
+                
+                // Reset buttons styles
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.classList.remove('btn-primary');
+                    btn.classList.add('btn-outline-secondary');
+                });
+                
+                // Show selected tab
+                const selectedTab = document.getElementById(tabId);
+                if (selectedTab) {
+                    selectedTab.classList.remove('hidden');
+                }
+                
+                // Activate selected button
+                this.classList.add('active');
+                this.classList.remove('btn-outline-secondary');
+                this.classList.add('btn-primary');
+                
+                // Clear search results and error messages
+                clearSearchResults();
             });
         });
         
-        function setActiveTab(tabId) {
-            // Ukryj wszystkie zakładki
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.add('hidden');
+        // Function to clear search results and error messages
+        function clearSearchResults() {
+            document.querySelectorAll('.search-results').forEach(resultsDiv => {
+                // Hide error messages
+                const errorAlert = resultsDiv.querySelector('.alert-danger');
+                if (errorAlert) {
+                    errorAlert.style.display = 'none';
+                }
+                
+                // Hide results table, heading and pagination
+                const resultsHeading = resultsDiv.querySelector('h4');
+                const resultsTable = resultsDiv.querySelector('.table-responsive');
+                const paginationLinks = resultsDiv.querySelector('.pagination-container');
+                
+                if (resultsHeading) resultsHeading.style.display = 'none';
+                if (resultsTable) resultsTable.style.display = 'none';
+                if (paginationLinks) paginationLinks.style.display = 'none';
             });
-            
-            // Usuń klasy active ze wszystkich przycisków i zmień styl
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.classList.remove('active');
-                button.classList.remove('btn-primary');
-                button.classList.add('btn-outline-secondary');
-            });
-            
-            // Pokaż wybraną zakładkę
-            const selectedTab = document.getElementById(tabId);
-            if (selectedTab) {
-                selectedTab.classList.remove('hidden');
-            }
-            
-            // Dodaj klasę active do klikniętego przycisku
-            const activeButton = document.querySelector(`.tab-button[data-tab="${tabId}"]`);
-            if (activeButton) {
-                activeButton.classList.add('active');
-                activeButton.classList.remove('btn-outline-secondary');
-                activeButton.classList.add('btn-primary');
-            }
         }
         
-        // Funkcja do filtrowania przystanków według miasta
+        // Function to filter stops by city
         const citySelect = document.getElementById('city_id');
         const fromStopSelect = document.getElementById('from_stop');
         const toStopSelect = document.getElementById('to_stop');
         
-        // Funkcja do aktualizacji przystanków na podstawie wybranego miasta
+        // Function to update stops based on selected city
         function updateStops() {
             const cityId = citySelect.value;
             
             if (!cityId) {
-                // Jeśli miasto nie jest wybrane, wyczyść listy przystanków
+                // If city is not selected, clear stop options
                 clearStopOptions(fromStopSelect);
                 clearStopOptions(toStopSelect);
                 return;
             }
             
-            // Pobierz przystanki dla wybranego miasta za pomocą AJAX
+            // Fetch stops for selected city using AJAX
             fetch(`/stops/by-city/${cityId}`)
                 .then(response => response.json())
                 .then(data => {
-                    // Zaktualizuj obie listy przystanków
+                    // Update both stop lists
                     updateStopOptions(fromStopSelect, data);
                     updateStopOptions(toStopSelect, data);
                 })
-                .catch(error => console.error('Błąd pobierania przystanków:', error));
+                .catch(error => console.error('Error fetching stops:', error));
         }
         
-        // Funkcja do czyszczenia opcji w liście przystanków
+        // Function to clear stop options
         function clearStopOptions(selectElement) {
-            // Zachowaj tylko pierwszą opcję (placeholder)
+            // Keep only the first option (placeholder)
             while (selectElement.options.length > 1) {
                 selectElement.remove(1);
             }
         }
         
-        // Funkcja do aktualizacji opcji w liście przystanków
+        // Function to update stop options
         function updateStopOptions(selectElement, stops) {
-            // Wyczyść obecne opcje (oprócz placeholdera)
+            // Clear current options (except placeholder)
             clearStopOptions(selectElement);
             
-            // Dodaj nowe opcje na podstawie pobranych danych
+            // Add new options based on fetched data
             stops.forEach(stop => {
                 const option = document.createElement('option');
                 option.value = stop.id;
@@ -405,7 +442,7 @@
             });
         }
         
-        // Dodaj nasłuchiwacz zdarzeń do listy rozwijanej miast
+        // Add event listener to city select
         if (citySelect) {
             citySelect.addEventListener('change', updateStops);
         }

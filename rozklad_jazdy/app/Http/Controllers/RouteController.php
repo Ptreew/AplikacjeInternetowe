@@ -316,7 +316,10 @@ class RouteController extends Controller
         
         // If after filtering there are no routes left
         if ($routes->isEmpty()) {
-            return back()->withInput()->with('error', 'Nie znaleziono żadnych kursów dla wybranych miast i kryteriów czasowych.');
+            $activeTab = $request->input('active_tab', 'miedzymiastowe');
+            return back()->withInput()
+                ->with('error', 'Nie znaleziono żadnych kursów dla wybranych miast i kryteriów czasowych.')
+                ->with('activeTab', $activeTab);
         }
         
         // Paginate the filtered results (10 items per page)
@@ -330,8 +333,8 @@ class RouteController extends Controller
             ['path' => request()->url(), 'query' => request()->query()]
         );
         
-        // Set active tab for the form
-        $activeTab = 'miedzymiastowe';
+        // Set active tab for the form - use the value from the request or default to 'miedzymiastowe'
+        $activeTab = $request->input('active_tab', 'miedzymiastowe');
         
         return view('index', compact('routesPaginator', 'fromCity', 'toCity', 'request', 'cities', 'vehicleTypes', 'activeTab'));
     }
@@ -454,7 +457,10 @@ class RouteController extends Controller
         
         // If after filtering there are no routes left
         if ($routes->isEmpty()) {
-            return back()->withInput()->with('error', 'Nie znaleziono żadnych połączeń dla wybranych przystanków.');
+            $activeTab = $request->input('active_tab', 'miejskie');
+            return back()->withInput()
+                ->with('error', 'Nie znaleziono żadnych połączeń dla wybranych przystanków.')
+                ->with('activeTab', $activeTab);
         }
         
         // Get data for the search form
@@ -479,8 +485,8 @@ class RouteController extends Controller
             ['path' => request()->url(), 'query' => request()->query()]
         );
         
-        // Set active tab for the form
-        $activeTab = 'miejskie';
+        // Set active tab for the form - use the value from the request or default to 'miejskie'
+        $activeTab = $request->input('active_tab', 'miejskie');
         
         return view('index', compact('routesPaginator', 'fromStop', 'toStop', 'request', 'cities', 'stops', 'vehicleTypes', 'activeTab'));
     }

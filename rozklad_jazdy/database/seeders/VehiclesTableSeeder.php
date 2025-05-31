@@ -13,30 +13,21 @@ class VehiclesTableSeeder extends Seeder
     public function run(): void
     {
         $vehicles = [
-            // PolBus vehicles
+            // PKP Intercity vehicles for line 1
             [
                 'line_id' => 1, // Warszawa - Kraków line
-                'vehicle_number' => 'PB-1234',
-                'type' => 'Autokar',
-                'capacity' => 52,
+                'vehicle_number' => 'EP09-042',
+                'type' => 'Pociąg ekspresowy',
+                'capacity' => 350,
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'line_id' => 1, // Warszawa - Kraków line
-                'vehicle_number' => 'PB-5678',
-                'type' => 'Autokar',
-                'capacity' => 48,
-                'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'line_id' => 2, // Kraków - Rzeszów line
-                'vehicle_number' => 'PB-9012',
-                'type' => 'Autokar',
-                'capacity' => 52,
+                'vehicle_number' => 'EP09-051',
+                'type' => 'Pociąg ekspresowy',
+                'capacity' => 350,
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
