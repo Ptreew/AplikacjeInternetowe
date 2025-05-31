@@ -73,6 +73,24 @@ class CitiesTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'name' => 'Tarnów',
+                'voivodeship' => 'małopolskie',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Radom',
+                'voivodeship' => 'mazowieckie',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Kielce',
+                'voivodeship' => 'świętokrzyskie',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ];
         
         DB::table('cities')->insert($cities);

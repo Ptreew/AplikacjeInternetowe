@@ -137,6 +137,33 @@ class StopsTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            // Tarnów (id=11)
+            [
+                'city_id' => 11,
+                'name' => 'Dworzec PKP',
+                'code' => 'TA-DK',
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            // Radom (id=17)
+            [
+                'city_id' => 12,
+                'name' => 'Dworzec PKP',
+                'code' => 'RA-DK',
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            // Kielce (id=18)
+            [
+                'city_id' => 13,
+                'name' => 'Dworzec PKP',
+                'code' => 'KI-DK',
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ];
         
         DB::table('stops')->insert($stops);

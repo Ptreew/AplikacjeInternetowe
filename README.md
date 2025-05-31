@@ -4,6 +4,7 @@
 
 ### Database Setup
 
+
 1. Start the PostgreSQL database using Docker:
 
 ```bash
@@ -11,14 +12,20 @@ cd rozklad_jazdy-stack
 docker-compose up -d
 ```
 
-2. Run migrations to create database tables:
+2. Install dependencies:
 
 ```bash
-cd rozklad_jazdy
+cd ../rozklad_jazdy
+composer install
+```
+
+3. Run migrations to create database tables:
+
+```bash
 php artisan migrate
 ```
 
-3. Seed the database with sample data:
+4. Seed the database with sample data:
 
 ```bash
 php artisan db:seed

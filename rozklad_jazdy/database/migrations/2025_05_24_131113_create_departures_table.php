@@ -14,11 +14,14 @@ return new class extends Migration
         Schema::create('departures', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('schedule_id');
+            $table->unsignedBigInteger('vehicle_id')->nullable();
             $table->unsignedBigInteger('stop_id');
             $table->time('departure_time');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
             
             $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
+            $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('set null');
             $table->foreign('stop_id')->references('id')->on('stops')->onDelete('cascade');
         });
     }

@@ -13,12 +13,12 @@ class LinesTableSeeder extends Seeder
     public function run(): void
     {
         $lines = [
-            // Intercity bus lines (PolBus, id=1)
+            // Intercity train lines (PKP Intercity, id=5)
             [
-                'carrier_id' => 1,
+                'carrier_id' => 5,
                 'number' => null,
-                'name' => 'Warszawa - Kraków',
-                'color' => '#4a8f29', // PolBus green
+                'name' => 'IC 3520: Warszawa - Kraków',
+                'color' => '#001489', // PKP Intercity blue
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -75,6 +75,53 @@ class LinesTableSeeder extends Seeder
                 'number' => 501,
                 'name' => 'Centrum Handlowe - Os. Wschód',
                 'color' => '#ffdd00',
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            // PKP Intercity (id=5)
+            [
+                'carrier_id' => 5,
+                'number' => null,
+                'name' => 'IC 3100: Warszawa - Gdańsk (Ekspres)',
+                'color' => '#122e57', // PKP Intercity color
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'carrier_id' => 5,
+                'number' => null,
+                'name' => 'IC 1400: Warszawa - Poznań',
+                'color' => '#122e57',
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'carrier_id' => 5,
+                'number' => null,
+                'name' => 'IC 5400: Kraków - Wrocław',
+                'color' => '#122e57',
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            // Koleje Regionalne (id=6)
+            [
+                'carrier_id' => 6,
+                'number' => null,
+                'name' => 'R 10234: Warszawa - Radom',
+                'color' => '#006e34', // Koleje Regionalne color
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'carrier_id' => 6,
+                'number' => null,
+                'name' => 'R 12345: Kraków - Kielce',
+                'color' => '#006e34',
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),

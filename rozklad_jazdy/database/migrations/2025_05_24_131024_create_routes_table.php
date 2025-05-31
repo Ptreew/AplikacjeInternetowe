@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('line_id');
             $table->string('name');
+            $table->integer('travel_time')->nullable()->comment('Estimated journey duration in minutes');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
             
