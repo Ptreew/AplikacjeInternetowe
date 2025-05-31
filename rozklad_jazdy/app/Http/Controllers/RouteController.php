@@ -319,10 +319,21 @@ class RouteController extends Controller
             return back()->withInput()->with('error', 'Nie znaleziono żadnych kursów dla wybranych miast i kryteriów czasowych.');
         }
         
+        // Paginate the filtered results (10 items per page)
+        $currentPage = request()->has('page') ? request()->get('page') : 1;
+        $perPage = 10;
+        $routesPaginator = new \Illuminate\Pagination\LengthAwarePaginator(
+            $routes->forPage($currentPage, $perPage),
+            $routes->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+        
         // Set active tab for the form
         $activeTab = 'miedzymiastowe';
         
-        return view('index', compact('routes', 'fromCity', 'toCity', 'request', 'cities', 'vehicleTypes', 'activeTab'));
+        return view('index', compact('routesPaginator', 'fromCity', 'toCity', 'request', 'cities', 'vehicleTypes', 'activeTab'));
     }
     
     /**
@@ -457,9 +468,20 @@ class RouteController extends Controller
             ->orderBy('type')
             ->pluck('type');
         
+        // Paginate the filtered results (10 items per page)
+        $currentPage = request()->has('page') ? request()->get('page') : 1;
+        $perPage = 10;
+        $routesPaginator = new \Illuminate\Pagination\LengthAwarePaginator(
+            $routes->forPage($currentPage, $perPage),
+            $routes->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+        
         // Set active tab for the form
         $activeTab = 'miejskie';
         
-        return view('index', compact('routes', 'fromStop', 'toStop', 'request', 'cities', 'stops', 'vehicleTypes', 'activeTab'));
+        return view('index', compact('routesPaginator', 'fromStop', 'toStop', 'request', 'cities', 'stops', 'vehicleTypes', 'activeTab'));
     }
 }

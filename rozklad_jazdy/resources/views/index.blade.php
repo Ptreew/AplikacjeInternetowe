@@ -118,7 +118,7 @@
                                     {{ session('error') }}
                                 </div>
                             @endif
-                            @if(isset($routes) && count($routes) > 0)
+                            @if(isset($routesPaginator) && count($routesPaginator) > 0)
                                 <h4>Znalezione połączenia</h4>
                                 <div class="table-responsive">
                                     <table class="table table-striped table-hover">
@@ -135,7 +135,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($routes as $route)
+                                            @foreach($routesPaginator as $route)
                                                 @if(isset($route->schedules) && count($route->schedules) > 0)
                                                     @foreach($route->schedules as $schedule)
                                                         @if(isset($schedule->departures) && count($schedule->departures) > 0)
@@ -186,6 +186,11 @@
                                             @endforeach
                                         </tbody>
                                     </table>
+                                </div>
+                                
+                                <!-- Paginacja -->
+                                <div class="d-flex justify-content-center mt-4">
+                                    {{ $routesPaginator->appends(request()->except('page'))->links() }}
                                 </div>
                             @endif
                         </div>
