@@ -41,6 +41,20 @@ class CarriersTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'name' => 'PKP Intercity',
+                'email' => 'kontakt@pkpintercity.example',
+                'website' => 'https://www.pkpintercity.example',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Koleje Regionalne',
+                'email' => 'info@kolejeregionalne.example',
+                'website' => 'https://www.kolejeregionalne.example',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ];
         
         DB::table('carriers')->insert($carriers);

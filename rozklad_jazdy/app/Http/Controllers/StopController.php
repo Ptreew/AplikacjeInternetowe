@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Stop;
 use App\Models\City;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -16,11 +17,11 @@ class StopController extends Controller
      */
     public function __construct()
     {
-        // Require authentication for all methods except index and show
-        $this->middleware('auth');
+        // Require authentication for all methods except index, show and getStopsByCity
+        $this->middleware('auth', ['except' => ['getStopsByCity']]);
         
-        // Require admin role for all methods
-        $this->middleware('role:admin');
+        // Require admin role for all methods except getStopsByCity
+        $this->middleware('role:admin', ['except' => ['getStopsByCity']]);
     }
     
     /**
@@ -190,5 +191,31 @@ class StopController extends Controller
             return redirect()->route('stops.show', $stop)
                 ->with('error', 'Failed to delete stop: ' . $e->getMessage());
         }
+    }
+    
+    /**
+     * Get stops by city ID (for AJAX dropdown)
+     *
+     * @param City $city
+     * @return JsonResponse
+     */
+    public function getStopsByCity(City $city): JsonResponse
+    {
+        // Get all stops for the given city
+        $stops = Stop::where('city_id', $city->id)
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get(['id', 'name', 'code']);
+        
+        // Format stops for select dropdown
+        $formattedStops = $stops->map(function($stop) {
+            return [
+                'id' => $stop->id,
+                'name' => $stop->name, // Changed from 'text' to 'name' to match JS expectations
+                'code' => $stop->code
+            ];
+        });
+        
+        return response()->json($formattedStops);
     }
 }

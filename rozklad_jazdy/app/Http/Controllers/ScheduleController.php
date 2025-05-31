@@ -35,32 +35,33 @@ class ScheduleController extends Controller
             $query->where('route_id', $request->route_id);
         }
         
-        if ($request->has('day_of_week')) {
-            $query->where('day_of_week', $request->day_of_week);
+        if ($request->has('day_type')) {
+            $query->where('day_type', $request->day_type);
         }
         
-        if ($request->has('is_active')) {
-            $query->where('is_active', $request->is_active == 1);
+        if ($request->has('valid_from')) {
+            $query->where('valid_from', '>=', $request->valid_from);
+        }
+        
+        if ($request->has('valid_to')) {
+            $query->where('valid_to', '<=', $request->valid_to);
         }
         
         // Paginate the results
-        $schedules = $query->orderBy('route_id')->orderBy('day_of_week')->paginate(15);
+        $schedules = $query->orderBy('route_id')->orderBy('day_type')->paginate(15);
         
         // Get routes for filter dropdown
         $routes = Route::with('line')->orderBy('name')->get();
         
-        // Days of week for dropdown
-        $daysOfWeek = [
-            0 => 'Sunday',
-            1 => 'Monday',
-            2 => 'Tuesday',
-            3 => 'Wednesday',
-            4 => 'Thursday',
-            5 => 'Friday',
-            6 => 'Saturday',
+        // Day types for dropdown
+        $dayTypes = [
+            'weekday' => 'Dzień powszedni',
+            'saturday' => 'Sobota',
+            'sunday' => 'Niedziela', 
+            'holiday' => 'Święto'
         ];
         
-        return view('schedules.index', compact('schedules', 'routes', 'daysOfWeek'));
+        return view('schedules.index', compact('schedules', 'routes', 'dayTypes'));
     }
 
     /**
@@ -68,20 +69,17 @@ class ScheduleController extends Controller
      */
     public function create()
     {
-        $routes = Route::with('line')->where('is_active', true)->orderBy('name')->get();
+        $routes = Route::with('line')->orderBy('name')->get();
         
-        // Days of week for dropdown
-        $daysOfWeek = [
-            0 => 'Sunday',
-            1 => 'Monday',
-            2 => 'Tuesday',
-            3 => 'Wednesday',
-            4 => 'Thursday',
-            5 => 'Friday',
-            6 => 'Saturday',
+        // Day types for dropdown
+        $dayTypes = [
+            'weekday' => 'Dzień powszedni',
+            'saturday' => 'Sobota',
+            'sunday' => 'Niedziela',
+            'holiday' => 'Święto'
         ];
         
-        return view('schedules.create', compact('routes', 'daysOfWeek'));
+        return view('schedules.create', compact('routes', 'dayTypes'));
     }
 
     /**
@@ -92,23 +90,23 @@ class ScheduleController extends Controller
         // Validate the request data
         $validated = $request->validate([
             'route_id' => 'required|exists:routes,id',
-            'day_of_week' => [
+            'day_type' => [
                 'required',
-                'integer',
-                'min:0',
-                'max:6',
+                'in:weekday,saturday,sunday,holiday',
                 Rule::unique('schedules')->where(function ($query) use ($request) {
                     return $query->where('route_id', $request->route_id);
                 }),
             ],
-            'is_active' => 'boolean',
+            'valid_from' => 'required|date',
+            'valid_to' => 'required|date|after_or_equal:valid_from',
         ]);
         
         // Create new schedule
         $schedule = new Schedule();
         $schedule->route_id = $validated['route_id'];
-        $schedule->day_of_week = $validated['day_of_week'];
-        $schedule->is_active = $request->has('is_active');
+        $schedule->day_type = $validated['day_type'];
+        $schedule->valid_from = $validated['valid_from'];
+        $schedule->valid_to = $validated['valid_to'];
         $schedule->save();
         
         return redirect()->route('schedules.show', $schedule)
@@ -130,18 +128,15 @@ class ScheduleController extends Controller
             'departures.vehicle'
         ]);
         
-        // Days of week for display
-        $daysOfWeek = [
-            0 => 'Sunday',
-            1 => 'Monday',
-            2 => 'Tuesday',
-            3 => 'Wednesday',
-            4 => 'Thursday',
-            5 => 'Friday',
-            6 => 'Saturday',
+        // Day types for display
+        $dayTypes = [
+            'weekday' => 'Dzień powszedni',
+            'saturday' => 'Sobota',
+            'sunday' => 'Niedziela',
+            'holiday' => 'Święto'
         ];
         
-        return view('schedules.show', compact('schedule', 'daysOfWeek'));
+        return view('schedules.show', compact('schedule', 'dayTypes'));
     }
 
     /**
@@ -149,20 +144,17 @@ class ScheduleController extends Controller
      */
     public function edit(Schedule $schedule)
     {
-        $routes = Route::with('line')->where('is_active', true)->orderBy('name')->get();
+        $routes = Route::with('line')->orderBy('name')->get();
         
-        // Days of week for dropdown
-        $daysOfWeek = [
-            0 => 'Sunday',
-            1 => 'Monday',
-            2 => 'Tuesday',
-            3 => 'Wednesday',
-            4 => 'Thursday',
-            5 => 'Friday',
-            6 => 'Saturday',
+        // Day types for dropdown
+        $dayTypes = [
+            'weekday' => 'Dzień powszedni',
+            'saturday' => 'Sobota',
+            'sunday' => 'Niedziela',
+            'holiday' => 'Święto'
         ];
         
-        return view('schedules.edit', compact('schedule', 'routes', 'daysOfWeek'));
+        return view('schedules.edit', compact('schedule', 'routes', 'dayTypes'));
     }
 
     /**
@@ -173,22 +165,22 @@ class ScheduleController extends Controller
         // Validate the request data
         $validated = $request->validate([
             'route_id' => 'required|exists:routes,id',
-            'day_of_week' => [
+            'day_type' => [
                 'required',
-                'integer',
-                'min:0',
-                'max:6',
+                'in:weekday,saturday,sunday,holiday',
                 Rule::unique('schedules')->where(function ($query) use ($request) {
                     return $query->where('route_id', $request->route_id);
                 })->ignore($schedule->id),
             ],
-            'is_active' => 'boolean',
+            'valid_from' => 'required|date',
+            'valid_to' => 'required|date|after_or_equal:valid_from',
         ]);
         
         // Update schedule
         $schedule->route_id = $validated['route_id'];
-        $schedule->day_of_week = $validated['day_of_week'];
-        $schedule->is_active = $request->has('is_active');
+        $schedule->day_type = $validated['day_type'];
+        $schedule->valid_from = $validated['valid_from'];
+        $schedule->valid_to = $validated['valid_to'];
         $schedule->save();
         
         return redirect()->route('schedules.show', $schedule)

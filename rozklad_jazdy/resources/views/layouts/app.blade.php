@@ -4,7 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Rozkład jazdy')</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Niestandardowe style (mają niższy priorytet niż Bootstrap) -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <!-- Dodatkowe style -->
+    <style>
+        /* Style dla zakładek */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        .tab-button {
+            padding: 10px 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 5px;
+        }
+        
+        .tab-button.active {
+            background-color: #0077cc;
+            color: white;
+            border-color: #0077cc;
+        }
+        
+        .tab-content {
+            display: block;
+            width: 100%;
+        }
+        
+        .tab-content.hidden {
+            display: none;
+        }
+        
+        /* Style dla formularzy wyszukiwania */
+        .route-search-form,
+        .city-route-search-form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        
+        .route-search-form select,
+        .route-search-form input,
+        .city-route-search-form select,
+        .city-route-search-form input {
+            flex: 1;
+            min-width: 150px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .route-search-form button,
+        .city-route-search-form button {
+            padding: 10px 20px;
+            background-color: #0077cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            min-width: 120px;
+        }
+        
+        .route-search-form button:hover,
+        .city-route-search-form button:hover {
+            background-color: #005fa3;
+        }
+    </style>
     <style>
         .nav-link-button {
             background: none;
@@ -78,12 +156,6 @@
             </div>
         @endif
 
-        @if(session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
-
         @yield('content')
     </main>
 
@@ -91,6 +163,9 @@
         <p>&copy; 2025 Rozkład jazdy – jazda z busami</p>
     </footer>
 
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     @yield('scripts')
 </body>
 </html>

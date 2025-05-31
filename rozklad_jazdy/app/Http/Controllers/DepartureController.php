@@ -45,9 +45,6 @@ class DepartureController extends Controller
             $query->whereDate('departure_time', $request->date);
         }
         
-        if ($request->has('is_active')) {
-            $query->where('is_active', $request->is_active == 1);
-        }
         
         // Paginate the results
         $departures = $query->orderBy('departure_time')->paginate(15);
