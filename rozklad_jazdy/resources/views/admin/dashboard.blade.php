@@ -7,10 +7,6 @@
 {{-- Navigation is handled in the main layout --}}
 
 @section('content')
-    <div class="admin-nav" style="margin-bottom: 20px;">
-        <a href="{{ route('admin') }}" class="action-button">Przejdź do panelu administratora</a>
-    </div>
-
     <div class="dashboard-stats">
         <div class="stat-card">
             <h3>Użytkownicy</h3>
