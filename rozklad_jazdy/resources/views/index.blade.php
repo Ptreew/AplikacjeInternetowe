@@ -4,6 +4,34 @@
 
 {{-- Navigation is handled in the main layout --}}
 
+@section('styles')
+<style>
+    /* Styles for inactive tab buttons to match admin panel */
+    .tabs .btn-outline-secondary {
+        color: #6c757d; /* Bootstrap secondary text color */
+        border: 1px solid #6c757d; /* Bootstrap secondary border color */
+        background-color: transparent;
+    }
+    .tabs .btn-outline-secondary:hover {
+        color: #fff; /* White text on hover */
+        background-color: #6c757d; /* Bootstrap secondary color as background */
+        border-color: #6c757d;
+    }
+
+    /* Ensure active tab button retains its primary style */
+    .tabs .btn-primary {
+        color: #fff;
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .tabs .btn-primary:hover {
+        color: #fff;
+        background-color: #0069d9; /* Darker primary on hover */
+        border-color: #0062cc;
+    }
+</style>
+@endsection
+
 @section('content')
     <div class="container my-4">
         <div class="row justify-content-center">
