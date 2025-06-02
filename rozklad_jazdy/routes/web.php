@@ -16,6 +16,7 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StopController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\Admin\AdminCityController;
 
 // Main pages
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -79,15 +80,28 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::clas
     })->name('admin');
     
     // Admin resource routes
-    Route::resource('carriers', CarrierController::class)->except(['index', 'show', 'store']);
-    Route::resource('lines', LineController::class)->except(['index', 'show']);
-    Route::resource('routes', RouteController::class)->except(['index', 'show']);
-    Route::resource('cities', CityController::class)->except(['index', 'show']);
-    Route::resource('stops', StopController::class);
-    Route::resource('route-stops', RouteStopController::class);
-    Route::resource('schedules', ScheduleController::class);
-    Route::resource('departures', DepartureController::class);
-    Route::resource('vehicles', VehicleController::class)->except('store');
+    Route::resource('carriers', CarrierController::class)
+        ->names('admin.carriers')
+        ->except(['index', 'show', 'store']);
+    Route::resource('lines', LineController::class)
+        ->names('admin.lines')
+        ->except(['index', 'show']);
+    Route::resource('routes', RouteController::class)
+        ->names('admin.routes')
+        ->except(['index', 'show']);
+    Route::resource('cities', AdminCityController::class)
+        ->names('admin.cities');
+    Route::resource('stops', StopController::class)
+        ->names('admin.stops');
+    Route::resource('route-stops', RouteStopController::class)
+        ->names('admin.route-stops');
+    Route::resource('schedules', ScheduleController::class)
+        ->names('admin.schedules');
+    Route::resource('departures', DepartureController::class)
+        ->names('admin.departures');
+    Route::resource('vehicles', VehicleController::class)
+        ->names('admin.vehicles')
+        ->except('store');
     
     // Admin form submission routes
     Route::post('/miedzymiastowe', function () {
@@ -112,4 +126,15 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::clas
     
     // Admin ticket management
     Route::post('/tickets/{ticket}/mark-as-used', [TicketController::class, 'markAsUsed'])->name('admin.tickets.mark-as-used');
+    
+    // Admin routes for cities
+    Route::resource('cities', AdminCityController::class)->names([
+        'index' => 'admin.cities.index',
+        'create' => 'admin.cities.create',
+        'store' => 'admin.cities.store',
+        'show' => 'admin.cities.show',
+        'edit' => 'admin.cities.edit',
+        'update' => 'admin.cities.update',
+        'destroy' => 'admin.cities.destroy',
+    ]);
 });

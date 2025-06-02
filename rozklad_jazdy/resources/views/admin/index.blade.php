@@ -481,12 +481,68 @@
 
         <div class="tab-pane fade" id="cities" role="tabpanel" aria-labelledby="cities-tab">
             <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Zarządzanie Miastami</h5>
+                    <a href="{{ route('admin.cities.create') }}" class="btn btn-sm btn-success">
+                        <i class="fas fa-plus"></i> Dodaj Miasto
+                    </a>
                 </div>
                 <div class="card-body">
-                    <p>Tutaj będzie można zarządzać miastami (CRUD).</p>
-                    <!-- TODO: Add CRUD interface for Cities -->
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nazwa</th>
+                                    <th>Województwo</th>
+                                    <th>Liczba przystanków</th>
+                                    <th>Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(\App\Models\City::with('stops')->take(10)->get() as $city)
+                                    <tr>
+                                        <td>{{ $city->id }}</td>
+                                        <td>{{ $city->name }}</td>
+                                        <td>{{ $city->voivodeship }}</td>
+                                        <td>{{ $city->stops->count() }}</td>
+                                        <td class="align-middle">
+                                            <div class="d-inline-flex">
+                                                <a href="{{ route('admin.cities.edit', $city) }}" 
+                                                   class="btn btn-sm btn-primary me-1">
+                                                    Edytuj
+                                                </a>
+                                                <a href="{{ route('admin.cities.show', $city) }}" 
+                                                   class="btn btn-sm btn-success me-1">
+                                                    Pokaż
+                                                </a>
+                                                <form action="{{ route('admin.cities.destroy', $city) }}" 
+                                                      method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" 
+                                                            onclick="return confirm('Czy na pewno chcesz usunąć to miasto?')">
+                                                        Usuń
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-center mt-3">
+                            <a href="{{ route('admin.cities.index') }}" class="btn btn-primary">
+                                <i class="fas fa-list"></i> Zobacz pełną listę miast
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

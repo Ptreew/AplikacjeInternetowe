@@ -323,6 +323,86 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Miasta -->
+        <div class="tab-pane {{ $finalActiveTab == 'cities' ? 'show active' : '' }}" id="cities">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Zarządzanie Miastami</h5>
+                </div>
+                <div class="card-body">
+                    <p>Przejdź do pełnej listy miast, aby zarządzać nimi (dodawać, edytować, usuwać).</p>
+                    <a href="{{ route('admin.cities.index') }}" class="btn btn-primary">Przejdź do Listy Miast</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Nowe kontenery zakładek -->
+        <div class="tab-pane {{ $finalActiveTab == 'lines' ? 'show active' : '' }}" id="lines">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Zarządzanie Liniami</h5>
+                </div>
+                <div class="card-body">
+                    <p>Tutaj będzie można zarządzać liniami (CRUD).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane {{ $finalActiveTab == 'routes' ? 'show active' : '' }}" id="routes">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Zarządzanie Trasami</h5>
+                </div>
+                <div class="card-body">
+                    <p>Tutaj będzie można zarządzać trasami (CRUD).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane {{ $finalActiveTab == 'stops' ? 'show active' : '' }}" id="stops">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Zarządzanie Przystankami</h5>
+                </div>
+                <div class="card-body">
+                    <p>Tutaj będzie można zarządzać przystankami (CRUD).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane {{ $finalActiveTab == 'schedules' ? 'show active' : '' }}" id="schedules">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Zarządzanie Rozkładami Jazdy</h5>
+                </div>
+                <div class="card-body">
+                    <p>Tutaj będzie można zarządzać rozkładami jazdy (CRUD).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane {{ $finalActiveTab == 'departures' ? 'show active' : '' }}" id="departures">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Zarządzanie Odjazdami</h5>
+                </div>
+                <div class="card-body">
+                    <p>Tutaj będzie można zarządzać odjazdami (CRUD).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane {{ $finalActiveTab == 'tickets' ? 'show active' : '' }}" id="tickets">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Zarządzanie Biletami</h5>
+                </div>
+                <div class="card-body">
+                    <p>Tutaj będzie można zarządzać biletami (CRUD).</p>
+                </div>
+            </div>
+        </div>
     </div>
     
     <div class="card">
@@ -351,83 +431,6 @@
         </div>
     </div>
 
-    <!-- Nowe kontenery zakładek -->
-    <div class="tab-pane {{ $finalActiveTab == 'lines' ? 'show active' : '' }}" id="lines">
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Zarządzanie Liniami</h5>
-            </div>
-            <div class="card-body">
-                <p>Tutaj będzie można zarządzać liniami (CRUD).</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="tab-pane {{ $finalActiveTab == 'routes' ? 'show active' : '' }}" id="routes">
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Zarządzanie Trasami</h5>
-            </div>
-            <div class="card-body">
-                <p>Tutaj będzie można zarządzać trasami (CRUD).</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="tab-pane {{ $finalActiveTab == 'cities' ? 'show active' : '' }}" id="cities">
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Zarządzanie Miastami</h5>
-            </div>
-            <div class="card-body">
-                <p>Tutaj będzie można zarządzać miastami (CRUD).</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="tab-pane {{ $finalActiveTab == 'stops' ? 'show active' : '' }}" id="stops">
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Zarządzanie Przystankami</h5>
-            </div>
-            <div class="card-body">
-                <p>Tutaj będzie można zarządzać przystankami (CRUD).</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="tab-pane {{ $finalActiveTab == 'schedules' ? 'show active' : '' }}" id="schedules">
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Zarządzanie Rozkładami Jazdy</h5>
-            </div>
-            <div class="card-body">
-                <p>Tutaj będzie można zarządzać rozkładami jazdy (CRUD).</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="tab-pane {{ $finalActiveTab == 'departures' ? 'show active' : '' }}" id="departures">
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Zarządzanie Odjazdami</h5>
-            </div>
-            <div class="card-body">
-                <p>Tutaj będzie można zarządzać odjazdami (CRUD).</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="tab-pane {{ $finalActiveTab == 'tickets' ? 'show active' : '' }}" id="tickets">
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Zarządzanie Biletami</h5>
-            </div>
-            <div class="card-body">
-                <p>Tutaj będzie można zarządzać biletami (CRUD).</p>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @section('styles')
