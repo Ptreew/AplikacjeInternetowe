@@ -549,12 +549,62 @@
 
         <div class="tab-pane fade" id="stops" role="tabpanel" aria-labelledby="stops-tab">
             <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Zarządzanie Przystankami</h5>
+                    <a href="{{ route('admin.stops.create') }}" class="btn btn-sm btn-success">
+                        <i class="fas fa-plus"></i> Dodaj Przystanek
+                    </a>
                 </div>
                 <div class="card-body">
-                    <p>Tutaj będzie można zarządzać przystankami (CRUD).</p>
-                    <!-- TODO: Add CRUD interface for Stops -->
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nazwa Przystanku</th>
+                                    <th>Kod</th>
+                                    <th>Miasto</th>
+                                    <th>Status</th>
+                                    <th>Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($stops as $stop)
+                                    <tr>
+                                        <td>{{ $stop->id }}</td>
+                                        <td>{{ $stop->name }}</td>
+                                        <td>{{ $stop->code }}</td>
+                                        <td>{{ $stop->city->name }}</td>
+                                        <td>{{ $stop->is_active ? 'Aktywny' : 'Nieaktywny' }}</td>
+                                        <td>
+                                            <a href="{{ route('admin.stops.edit', $stop) }}" class="btn btn-sm btn-primary me-1">
+                                                Edytuj
+                                            </a>
+                                            <form action="{{ route('admin.stops.destroy', $stop) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten przystanek?')">
+                                                    Usuń
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="{{ route('admin.stops.index') }}" class="btn btn-primary">
+                            Zobacz pełną listę przystanków
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

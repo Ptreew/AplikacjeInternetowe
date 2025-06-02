@@ -76,7 +76,11 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::clas
     
     // Admin panel management view
     Route::get('/', function() {
-        return view('admin.index');
+        // Fetch the latest cities and stops to display in the panel
+        $cities = \App\Models\City::orderBy('id', 'desc')->take(10)->get();
+        $stops = \App\Models\Stop::with('city')->orderBy('id', 'desc')->take(10)->get();
+        
+        return view('admin.index', compact('cities', 'stops'));
     })->name('admin');
     
     // Admin resource routes
@@ -91,7 +95,7 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::clas
         ->except(['index', 'show']);
     Route::resource('cities', AdminCityController::class)
         ->names('admin.cities');
-    Route::resource('stops', StopController::class)
+    Route::resource('stops', \App\Http\Controllers\Admin\AdminStopController::class)
         ->names('admin.stops');
     Route::resource('route-stops', RouteStopController::class)
         ->names('admin.route-stops');
