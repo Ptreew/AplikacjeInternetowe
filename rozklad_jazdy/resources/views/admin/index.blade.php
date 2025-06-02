@@ -56,101 +56,85 @@
     <div class="tab-content" id="myTabContent">
         <!-- Międzymiastowe -->
         <div class="tab-pane fade show active" id="miedzymiastowe" role="tabpanel" aria-labelledby="miedzymiastowe-tab">
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Zarządzanie kursami międzymiastowymi</h5>
-                </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ route('admin.miedzymiastowe.store') }}" class="row g-3">
-                        @csrf
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="z" name="z" placeholder="Z" required />
-                                <label for="z">Z</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="do" name="do" placeholder="Do" required />
-                                <label for="do">Do</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="przystanek_poczatkowy" name="przystanek_poczatkowy" placeholder="Przystanek początkowy" required />
-                                <label for="przystanek_poczatkowy">Przystanek początkowy</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="przystanek_koncowy" name="przystanek_koncowy" placeholder="Przystanek końcowy" required />
-                                <label for="przystanek_koncowy">Przystanek końcowy</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input type="time" class="form-control" id="godzina_wyruszenia" name="godzina_wyruszenia" required />
-                                <label for="godzina_wyruszenia">Godzina wyruszenia</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input type="time" class="form-control" id="godzina_dotarcia" name="godzina_dotarcia" required />
-                                <label for="godzina_dotarcia">Godzina dotarcia</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="przewoznik" name="przewoznik" placeholder="Przewoźnik" required />
-                                <label for="przewoznik">Przewoźnik</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="cena" name="cena" placeholder="Cena biletu" required />
-                                <label for="cena">Cena biletu</label>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary">Dodaj kurs</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            
             <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Lista kursów</h5>
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Najnowsze kursy międzymiastowe</h5>
+                    <a href="{{ route('admin.intercity.create') }}" class="btn btn-sm btn-success">
+                        <i class="fas fa-plus"></i> Dodaj nowy kurs
+                    </a>
                 </div>
                 <div class="card-body">
+                    @php
+                        // Pobierz najnowsze kursy międzymiastowe z bazy danych
+                        $intercityRoutes = \App\Models\Route::with(['line.carrier', 'routeStops.stop.city'])
+                            ->whereHas('line', function($query) {
+                                $query->where('number', 'NOT LIKE', 'M%'); // Filtruj kursy miejskie
+                            })
+                            ->orderBy('id', 'desc')
+                            ->take(5)
+                            ->get();
+                    @endphp
+                    
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
-                            <thead class="table-light">
+                            <thead>
                                 <tr>
-                                    <th>Z: Rzeszów</th>
-                                    <th>&#8680;</th>
-                                    <th>Do: Kraków</th>
-                                    <th>19<sup><u>99</u></sup>zł</th>
+                                    <th>Linia</th>
+                                    <th>Miasto początkowe</th>
+                                    <th>Miasto docelowe</th>
+                                    <th>Przewoźnik</th>
                                     <th>Akcje</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>07:00</td>
-                                    <td></td>
-                                    <td>09:50</td>
-                                    <td></td>
-                                    <td><button class="btn btn-sm btn-outline-primary">Edytuj</button></td>
-                                </tr>
-                                <tr>
-                                    <td>Dworzec Lokalny</td>
-                                    <td>&rarr;</td>
-                                    <td>Kraków MDA</td>
-                                    <td>FlixBus</td>
-                                    <td><button class="btn btn-sm btn-outline-danger">Usuń</button></td>
-                                </tr>
+                                @forelse($intercityRoutes as $route)
+                                    <tr>
+                                        <td>{{ $route->line->number }} - {{ $route->line->name }}</td>
+                                        <td>
+                                            @if($route->routeStops->isNotEmpty() && $route->routeStops->first()->stop && $route->routeStops->first()->stop->city)
+                                                {{ $route->routeStops->first()->stop->city->name }}
+                                                ({{ $route->routeStops->first()->stop->name }})
+                                            @else
+                                                Brak danych
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($route->routeStops->count() > 1 && $route->routeStops->last()->stop && $route->routeStops->last()->stop->city)
+                                                {{ $route->routeStops->last()->stop->city->name }}
+                                                ({{ $route->routeStops->last()->stop->name }})
+                                            @else
+                                                Brak danych
+                                            @endif
+                                        </td>
+                                        <td>{{ $route->line->carrier->name }}</td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{{ route('admin.intercity.edit', $route->id) }}" class="btn btn-sm btn-primary me-1">
+                                                    Edytuj
+                                                </a>
+                                                <form action="{{ route('admin.intercity.destroy', $route->id) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten kurs?')">
+                                                        Usuń
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center">Brak kursów międzymiastowych w bazie danych</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
+                    </div>
+                    
+                    <div class="mt-3 text-center">
+                        <a href="{{ route('admin.intercity.index') }}" class="btn btn-primary">
+                            Zobacz wszystkie kursy międzymiastowe
+                        </a>
                     </div>
                 </div>
             </div>

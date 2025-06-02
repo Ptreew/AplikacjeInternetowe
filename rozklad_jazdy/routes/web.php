@@ -97,6 +97,13 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::clas
         ->names('admin.cities');
     Route::resource('stops', \App\Http\Controllers\Admin\AdminStopController::class)
         ->names('admin.stops');
+    
+    // Intercity routes management
+    Route::resource('intercity', \App\Http\Controllers\Admin\AdminIntercityController::class)
+        ->names('admin.intercity');
+    Route::get('intercity/stops-for-city', [\App\Http\Controllers\Admin\AdminIntercityController::class, 'getStopsForCity'])
+        ->name('admin.intercity.stops-for-city');
+        
     Route::resource('route-stops', RouteStopController::class)
         ->names('admin.route-stops');
     Route::resource('schedules', ScheduleController::class)
