@@ -6,6 +6,8 @@
     <title>@yield('title', 'Rozkład jazdy')</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <!-- Niestandardowe style (mają niższy priorytet niż Bootstrap) -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <!-- Dodatkowe style -->
@@ -159,6 +161,35 @@
 
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    
+    <!-- Skrypt do obsługi powiadomień -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obsługa błędów
+            @if(session('error'))
+                Swal.fire({
+                    title: 'Błąd!',
+                    text: "{{ session('error') }}",
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3085d6'
+                });
+            @endif
+            
+            // Obsługa powiadomień o sukcesie
+            @if(session('success'))
+                Swal.fire({
+                    title: 'Sukces!',
+                    text: "{{ session('success') }}",
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3085d6'
+                });
+            @endif
+        });
+    </script>
     
     @yield('scripts')
 </body>

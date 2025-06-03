@@ -231,9 +231,9 @@
                                                                     <td class="align-middle">{{ $departure->vehicle->type ?? 'Brak' }}</td>
                                                                     <td class="align-middle text-success fw-bold">{{ number_format($departure->price, 2) }} zł</td>
                                                                     <td class="align-middle" style="white-space: nowrap;">
-                                                                        <a href="{{ route('routes.show', ['route' => $route->id]) }}" class="btn btn-sm btn-warning">Szczegóły</a>
+                                                                        <a href="{{ route('routes.show', ['route' => $route->id, 'date' => $request->date ?? now()->toDateString()]) }}" class="btn btn-sm btn-warning">Szczegóły</a>
                                                                         @if(auth()->check())
-                                                                            <a href="{{ route('tickets.create', ['departure_id' => $departure->id]) }}" class="btn btn-sm btn-success">Kup Bilet</a>
+                                                                            <a href="{{ route('tickets.create', ['departure_id' => $departure->id, 'travel_date' => $request->date ?? now()->toDateString()]) }}" class="btn btn-sm btn-success">Kup Bilet</a>
                                                                         @else
                                                                             <a href="{{ route('login') }}" class="btn btn-sm btn-primary">Kup bilet</a>
                                                                         @endif
@@ -266,7 +266,7 @@
 
         // Code executed when the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM Content Loaded - brak automatycznej inicjalizacji JS, zakładki są już ustawione przez PHP');
+            console.log('DOM Content Loaded - brak automatycznej inicjalizacji JS, zakładki są już ustawiane przez PHP');
             console.log('URL strony:', window.location.href);
 
             // Add form validation for the międzymiastowe search form

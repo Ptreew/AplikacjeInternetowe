@@ -225,24 +225,13 @@ class RouteController extends Controller
             'to_city.different' => 'Miasto początkowe i docelowe nie mogą być takie same. Wybierz różne miasta.'
         ]);
         
-        // Find routes that connect the two cities with correct order (from_city must come before to_city)
+        // Find routes that contain both cities (order will be verified later)
         $routesQuery = Route::where('is_active', true)
             ->whereHas('line', function($query) {
                 $query->whereNull('number'); // Intercity routes always have number=NULL
             })
-            ->whereHas('routeStops', function($query) use ($request) {
-                $query->whereHas('stop', function($q) use ($request) {
-                    $q->where('city_id', $request->from_city);
-                });
-                // Store the stop_number for the 'from' city to use in the next query
-                $query->addSelect('stop_number');
-            })
-            ->whereHas('routeStops', function($query) use ($request) {
-                $query->whereHas('stop', function($q) use ($request) {
-                    $q->where('city_id', $request->to_city);
-                });
-                // Ensure that the 'to' city stop comes after the 'from' city stop
-                $query->whereRaw('stop_number > (SELECT MIN(rs.stop_number) FROM route_stops rs JOIN stops s ON rs.stop_id = s.id WHERE rs.route_id = route_stops.route_id AND s.city_id = ?)', [$request->from_city]);
+            ->whereHas('routeStops.stop.city', function($query) use ($request) {
+                $query->whereIn('id', [$request->from_city, $request->to_city]);
             })
             ->with([
                 'line.carrier',
@@ -288,6 +277,23 @@ class RouteController extends Controller
             ]);
         
         $routes = $routesQuery->get();
+        
+        // Filter routes where from_city stop appears before to_city stop
+        $routes = $routes->filter(function($route) use ($request) {
+            $fromStop = $route->routeStops->first(function($rs) use ($request) {
+                return $rs->stop->city_id == $request->from_city;
+            });
+            $toStop = $route->routeStops->first(function($rs) use ($request) {
+                return $rs->stop->city_id == $request->to_city;
+            });
+
+            if (!$fromStop || !$toStop) {
+                return false;
+            }
+
+            return $fromStop->stop_number < $toStop->stop_number;
+        });
+        
         $fromCity = City::findOrFail($request->from_city);
         $toCity = City::findOrFail($request->to_city);
         

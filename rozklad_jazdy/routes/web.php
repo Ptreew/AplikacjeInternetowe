@@ -52,6 +52,9 @@ Route::get('/routes/{route}', [RouteController::class, 'show'])->name('routes.sh
 Route::get('/cities', [CityController::class, 'index'])->name('cities.index');
 Route::get('/cities/{city}', [CityController::class, 'show'])->name('cities.show');
 
+// Ticket creation page available publicly (will redirect to login inside controller if not authenticated)
+Route::get('/tickets/create', [TicketController::class, 'create'])->name('tickets.create');
+
 // Ticket routes - require authentication except search
 Route::get('/tickets/search', [TicketController::class, 'create'])->name('tickets.search');
 Route::post('/tickets/search', [TicketController::class, 'search'])->name('tickets.search.results');
@@ -67,6 +70,8 @@ Route::middleware(['auth'])->group(function () {
     
     // Additional custom routes for ticket management
     Route::post('/tickets/{ticket}/pay', [TicketController::class, 'pay'])->name('tickets.pay');
+    Route::post('/tickets/{ticket}/mark-used', [TicketController::class, 'markAsUsed'])->name('tickets.mark-used');
+    Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy');
 });
 
 

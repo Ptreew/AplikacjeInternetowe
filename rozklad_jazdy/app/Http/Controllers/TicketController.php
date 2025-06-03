@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class TicketController extends Controller
@@ -57,65 +58,137 @@ class TicketController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new ticket
      */
     public function create(Request $request)
     {
+        // Check if user is authenticated
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Musisz być zalogowany, aby zarezerwować bilet.');
+        }
+
         // If departure_id is provided, we're buying a ticket for a specific departure
         if ($request->has('departure_id')) {
-            $departure = Departure::with(['schedule.route.routeStops.stop.city', 'vehicle'])
-                ->findOrFail($request->departure_id);
-                
-            return view('tickets.create', compact('departure'));
+            $departure = Departure::with([
+                'schedule.route.line.carrier',
+                'schedule.route.stops.city',
+                'vehicle'
+            ])->findOrFail($request->departure_id);
+            
+            // Determine selected travel date (defaults to today if not provided)
+            $travelDate = $request->input('travel_date');
+            if ($travelDate) {
+                try {
+                    $travelDateCarbon = Carbon::parse($travelDate)->startOfDay();
+                } catch (\Exception $e) {
+                    return redirect()->back()->with('error', 'Nieprawidłowa data podróży.');
+                }
+            } else {
+                $travelDateCarbon = Carbon::today();
+            }
+            
+            // Check if departure is active
+            if (!$departure->is_active) {
+                return redirect()->back()->with('error', 'To połączenie nie jest obecnie dostępne.');
+            }
+            
+            // Combine travel date with departure time to get full DateTime
+            $departureDateTime = Carbon::parse($travelDateCarbon->format('Y-m-d').' '.$departure->departure_time);
+            
+            // Check if departure datetime is in the past
+            if ($departureDateTime->lt(Carbon::now())) {
+                return redirect()->back()->with('error', 'Nie można kupić biletu - połączenie już odjechało. Prosimy wybrać inny termin.');
+            }
+            
+            return view('tickets.create', [
+                'departure' => $departure,
+                'travelDate' => $travelDateCarbon->format('Y-m-d')
+            ]);
         }
         
-        // Otherwise show a form to search for departures first
-        return view('tickets.search');
+        // Redirect to search if no departure_id is provided
+        return redirect()->route('routes.search');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created ticket in storage
      */
     public function store(Request $request)
     {
-        $request->validate([
+        // Validate request data
+        $validated = $request->validate([
             'departure_id' => 'required|exists:departures,id',
+            'travel_date'  => 'required|date|after_or_equal:today',
             'passenger_name' => 'required|string|max:255',
             'passenger_email' => 'required|email|max:255',
             'passenger_phone' => 'nullable|string|max:20',
             'notes' => 'nullable|string|max:1000',
         ]);
         
+        // Check if user is authenticated
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Musisz być zalogowany, aby zarezerwować bilet.');
+        }
+        
         // Check if the departure exists and is active
-        $departure = Departure::findOrFail($request->departure_id);
+        $departure = Departure::with('schedule.route.line.carrier')
+            ->findOrFail($request->departure_id);
+            
         if (!$departure->is_active) {
-            return redirect()->back()->with('error', 'This departure is not available for booking.');
+            return redirect()->back()->with('error', 'To połączenie nie jest obecnie dostępne.');
+        }
+        
+        // Determine selected travel date
+        $travelDateCarbon = Carbon::parse($validated['travel_date'])->startOfDay();
+        
+        // Combine travel date with departure time to get full DateTime
+        $departureDateTime = Carbon::parse($travelDateCarbon->format('Y-m-d').' '.$departure->departure_time);
+        
+        // Check if departure datetime is in the past
+        if ($departureDateTime->lt(Carbon::now())) {
+            return redirect()->back()->with('error', 'Nie można kupić biletu - połączenie już odjechało. Prosimy wybrać inny termin.');
         }
         
         // Start database transaction
         DB::beginTransaction();
         
         try {
+            // Generate unique ticket number
+            $ticketNumber = 'TKT-' . Carbon::now()->format('Ymd') . '-' . strtoupper(Str::random(6));
+            
             // Create the ticket
             $ticket = new Ticket();
             $ticket->user_id = Auth::id();
             $ticket->departure_id = $request->departure_id;
-            $ticket->ticket_number = 'TKT-' . Str::upper(Str::random(8));
+            $ticket->ticket_number = $ticketNumber;
             $ticket->status = 'reserved';
+            $ticket->purchase_date = now();
             $ticket->passenger_name = $request->passenger_name;
             $ticket->passenger_email = $request->passenger_email;
             $ticket->passenger_phone = $request->passenger_phone;
             $ticket->notes = $request->notes;
+            $ticket->is_active = true;
+            
+            // (Optionally) store travel_date in ticket if column exists
+            if (Schema::hasColumn('tickets', 'travel_date')) {
+                $ticket->travel_date = $travelDateCarbon->format('Y-m-d');
+            }
+            
             $ticket->save();
             
             DB::commit();
             
+            // Redirect to ticket details with success message
             return redirect()->route('tickets.show', $ticket)
-                ->with('success', 'Ticket has been reserved successfully. Please complete payment to confirm.');
+                ->with('success', 'Bilet został pomyślnie zarezerwowany. Możesz go teraz opłacić.');
+                
         } catch (\Exception $e) {
             DB::rollBack();
+            \Log::error('Błąd podczas rezerwacji biletu: ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
+            
             return redirect()->back()
-                ->with('error', 'Failed to reserve ticket: ' . $e->getMessage())
+                ->with('error', 'Wystąpił błąd podczas rezerwacji biletu. Prosimy spróbować ponownie.')
                 ->withInput();
         }
     }
@@ -164,15 +237,15 @@ class TicketController extends Controller
     public function update(Request $request, Ticket $ticket)
     {
         // Only admins or ticket owners can update tickets
-        if (Auth::id() !== $ticket->user_id && Auth::user()->role !== 'Admin') {
+        if (Auth::id() !== $ticket->user_id && !Auth::user()->hasRole('Admin')) {
             return redirect()->route('tickets.index')
-                ->with('error', 'You are not authorized to update this ticket.');
+                ->with('error', 'Nie masz uprawnień do edycji tego biletu.');
         }
         
         // Can't update tickets that are already used or cancelled
         if (in_array($ticket->status, ['used', 'cancelled'])) {
             return redirect()->route('tickets.show', $ticket)
-                ->with('error', 'This ticket cannot be updated because it has been ' . $ticket->status . '.');
+                ->with('error', 'Nie można edytować biletu, który został ' . ($ticket->status === 'used' ? 'wykorzystany' : 'anulowany') . '.');
         }
         
         $request->validate([
@@ -180,14 +253,17 @@ class TicketController extends Controller
             'passenger_email' => 'required|email|max:255',
             'passenger_phone' => 'nullable|string|max:20',
             'notes' => 'nullable|string|max:1000',
+            'status' => 'sometimes|in:reserved,paid,used,cancelled',
         ]);
         
         // Only admins can change the status
-        if (Auth::user()->role === 'Admin' && $request->has('status')) {
-            $request->validate([
-                'status' => 'required|in:reserved,paid,cancelled,used',
-            ]);
+        if ($request->has('status') && Auth::user()->hasRole('Admin')) {
             $ticket->status = $request->status;
+            
+            // Deactivate ticket if it's used or cancelled
+            if (in_array($request->status, ['used', 'cancelled'])) {
+                $ticket->is_active = false;
+            }
         }
         
         $ticket->passenger_name = $request->passenger_name;
@@ -197,39 +273,39 @@ class TicketController extends Controller
         $ticket->save();
         
         return redirect()->route('tickets.show', $ticket)
-            ->with('success', 'Ticket details have been updated successfully.');
+            ->with('success', 'Dane biletu zostały zaktualizowane pomyślnie.');
     }
-
+    
     /**
-     * Remove the specified resource from storage.
+     * Cancel the specified ticket.
      */
     public function destroy(Ticket $ticket)
     {
-        // Only admins or ticket owners can delete tickets
-        if (Auth::id() !== $ticket->user_id && Auth::user()->role !== 'Admin') {
+        // Check if user is authorized to cancel this ticket
+        if (Auth::id() !== $ticket->user_id && !Auth::user()->hasRole('Admin')) {
             return redirect()->route('tickets.index')
-                ->with('error', 'You are not authorized to delete this ticket.');
+                ->with('error', 'Nie masz uprawnień do anulowania tego biletu.');
         }
         
-        // Can't delete tickets that are already used
+        // Check if ticket can be cancelled
+        if ($ticket->status === 'cancelled') {
+            return redirect()->back()
+                ->with('error', 'Ten bilet został już wcześniej anulowany.');
+        }
+        
         if ($ticket->status === 'used') {
-            return redirect()->route('tickets.show', $ticket)
-                ->with('error', 'This ticket cannot be deleted because it has been used.');
+            return redirect()->back()
+                ->with('error', 'Nie można anulować już wykorzystanego biletu.');
         }
         
-        // For paid tickets, set status to cancelled instead of deleting
-        if ($ticket->status === 'paid') {
-            $ticket->status = 'cancelled';
-            $ticket->save();
-            return redirect()->route('tickets.index')
-                ->with('success', 'Ticket has been cancelled successfully.');
-        }
-        
-        // For reserved tickets, actually delete them
-        $ticket->delete();
-        
-        return redirect()->route('tickets.index')
-            ->with('success', 'Ticket has been deleted successfully.');
+        // Update ticket status to cancelled
+        $ticket->update([
+            'status' => 'cancelled',
+            'is_active' => false
+        ]);
+
+        return redirect()->route('tickets.show', $ticket)
+            ->with('success', 'Bilet został pomyślnie anulowany.');
     }
     
     /**
@@ -238,39 +314,72 @@ class TicketController extends Controller
     public function search(Request $request)
     {
         $request->validate([
-            'from_city' => 'required|exists:cities,id',
-            'to_city' => 'required|exists:cities,id|different:from_city',
-            'date' => 'required|date|after_or_equal:today',
+            'from_city' => 'required_without:from_stop|exists:cities,id',
+            'to_city' => 'required_without:to_stop|exists:cities,id',
+            'from_stop' => 'required_without:from_city|exists:stops,id',
+            'to_stop' => 'required_without:to_city|exists:stops,id',
+            'date' => 'required|date',
+            'time_from' => 'nullable|date_format:H:i',
+            'time_to' => 'nullable|date_format:H:i|after_or_equal:time_from',
         ]);
         
-        $date = Carbon::parse($request->date)->format('Y-m-d');
-        $dayOfWeek = Carbon::parse($request->date)->dayOfWeek;
+        $query = Departure::with([
+            'schedule.route.line.carrier',
+            'schedule.route.stops.city',
+            'vehicle'
+        ])
+        ->where('is_active', true)
+        ->whereDate('departure_time', '>=', now())
+        ->orderBy('departure_time');
         
-        // Find routes that connect the selected cities
-        $departures = Departure::with(['schedule.route.routeStops.stop.city', 'vehicle'])
-            ->whereHas('schedule', function($query) use ($dayOfWeek) {
-                $query->where('day_of_week', $dayOfWeek)
-                      ->where('is_active', true);
-            })
-            ->whereHas('schedule.route', function($query) use ($request) {
-                $query->where('is_active', true)
-                      ->whereHas('routeStops', function($q1) use ($request) {
-                          $q1->whereHas('stop', function($q2) use ($request) {
-                              $q2->where('city_id', $request->from_city);
-                          });
-                      })
-                      ->whereHas('routeStops', function($q1) use ($request) {
-                          $q1->whereHas('stop', function($q2) use ($request) {
-                              $q2->where('city_id', $request->to_city);
-                          });
-                      });
-            })
-            ->where('is_active', true)
-            ->whereDate('departure_time', $date)
-            ->orderBy('departure_time')
-            ->paginate(15);
+        // Filter by date
+        if ($request->filled('date')) {
+            $query->whereDate('departure_time', $request->date);
+        }
         
-        return view('tickets.search_results', compact('departures', 'request'));
+        // Filter by time range
+        if ($request->filled('time_from')) {
+            $query->whereTime('departure_time', '>=', $request->time_from);
+        }
+        
+        if ($request->filled('time_to')) {
+            $query->whereTime('departure_time', '<=', $request->time_to);
+        }
+        
+        // Filter by from city/stop
+        if ($request->filled('from_city')) {
+            $query->whereHas('schedule.route.stops', function($q) use ($request) {
+                $q->where('city_id', $request->from_city);
+            });
+        } elseif ($request->filled('from_stop')) {
+            $query->whereHas('schedule.route.stops', function($q) use ($request) {
+                $q->where('stop_id', $request->from_stop);
+            });
+        }
+        
+        // Filter by to city/stop
+        if ($request->filled('to_city')) {
+            $query->whereHas('schedule.route.stops', function($q) use ($request) {
+                $q->where('city_id', $request->to_city);
+            });
+        } elseif ($request->filled('to_stop')) {
+            $query->whereHas('schedule.route.stops', function($q) use ($request) {
+                $q->where('stop_id', $request->to_stop);
+            });
+        }
+        
+        $departures = $query->paginate(10);
+        
+        // Get cities and stops for the search form
+        $cities = \App\Models\City::orderBy('name')->get();
+        $stops = \App\Models\Stop::with('city')->orderBy('name')->get();
+        
+        return view('tickets.search-results', [
+            'departures' => $departures,
+            'cities' => $cities,
+            'stops' => $stops,
+            'searchParams' => $request->all()
+        ]);
     }
     
     /**

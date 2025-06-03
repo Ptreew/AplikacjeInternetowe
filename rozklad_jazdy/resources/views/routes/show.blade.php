@@ -101,7 +101,7 @@
                                                             {{ number_format($departure->price, 2) }} zł
                                                         </div>
                                                         @if(Auth::check())
-                                                            <a href="{{ route('tickets.create', ['departure_id' => $departure->id]) }}" class="btn btn-sm btn-primary w-100">
+                                                            <a href="{{ route('tickets.create', ['departure_id' => $departure->id, 'travel_date' => request('date') ?? now()->toDateString()]) }}" class="btn btn-sm btn-primary w-100">
                                                                 Zarezerwuj bilet
                                                             </a>
                                                         @else
