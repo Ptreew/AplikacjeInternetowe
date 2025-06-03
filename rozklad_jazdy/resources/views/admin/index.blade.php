@@ -285,65 +285,110 @@
                     <h5 class="mb-0">Zarządzanie użytkownikami</h5>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('admin.users.store') }}" class="row g-3">
-                        @csrf
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Imię i nazwisko" required />
-                                <label for="name">Imię i nazwisko</label>
-                            </div>
+                    @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                <input type="email" class="form-control" id="email" name="email" placeholder="E-mail" required />
-                                <label for="email">E-mail</label>
-                            </div>
+                    @endif
+                    
+                    @if(session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                <select class="form-select" id="role" name="role">
-                                    <option value="user">Użytkownik</option>
-                                    <option value="admin">Administrator</option>
-                                </select>
-                                <label for="role">Rola</label>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary">Dodaj użytkownika</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Lista użytkowników</h5>
-                </div>
-                <div class="card-body">
+                    @endif
+                    
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Imię</th>
                                     <th>Email</th>
-                                    <th>Hasło</th>
+                                    <th>Nazwa użytkownika</th>
                                     <th>Rola</th>
                                     <th>Akcje</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Jan Kowalski</td>
-                                    <td>jan@domena.pl</td>
-                                    <td>85a47aa9e6a6e83b2ba86abc8871c290899b1f54</td>
-                                    <td>Administrator</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline-primary">Edytuj</button>
-                                        <button class="btn btn-sm btn-outline-danger">Usuń</button>
-                                    </td>
-                                </tr>
+                                @php
+                                    $users = \App\Models\User::orderBy('name')->paginate(10);
+                                @endphp
+                                
+                                @forelse($users as $user)
+                                    <tr>
+                                        <td>{{ $user->email }}</td>
+                                        <td>{{ $user->name }}</td>
+                                        <td>
+                                            @if($user->role == 'admin')
+                                                <span class="badge bg-success">Administrator</span>
+                                            @else
+                                                <span class="badge bg-primary">Użytkownik</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                @if($user->id != auth()->id())
+                                                    <button type="button" class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#changeRoleModal{{ $user->id }}">
+                                                        Zmień rolę
+                                                    </button>
+                                                    
+                                                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć tego użytkownika?')">
+                                                            Usuń
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    <span class="badge bg-secondary">Aktualnie zalogowany</span>
+                                                @endif
+                                            </div>
+                                            
+                                            <!-- Modal do zmiany roli -->
+                                            <div class="modal fade" id="changeRoleModal{{ $user->id }}" tabindex="-1" aria-labelledby="changeRoleModalLabel{{ $user->id }}" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="changeRoleModalLabel{{ $user->id }}">Zmień rolę użytkownika</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <form action="{{ route('admin.users.update-role', $user->id) }}" method="POST">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label for="role" class="form-label">Rola</label>
+                                                                    <select class="form-select" id="role" name="role" required>
+                                                                        <option value="standard" {{ $user->role == 'standard' ? 'selected' : '' }}>Użytkownik</option>
+                                                                        <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Administrator</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                                                                <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center">Brak użytkowników w bazie danych</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
+                    </div>
+                    
+                    <div class="mt-3 text-center">
+                        {{ $users->links() }}
+                    </div>
+                    
+                    <div class="mt-3 text-center">
+                        <a href="{{ route('admin.users.index') }}" class="btn btn-primary">
+                            Zobacz wszystkich użytkowników
+                        </a>
                     </div>
                 </div>
             </div>

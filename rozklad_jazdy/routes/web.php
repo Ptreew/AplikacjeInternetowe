@@ -123,9 +123,11 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::clas
         return redirect()->back()->with('success', 'Kurs został dodany');
     })->name('admin.miejskie.store');
 
-    Route::post('/users', function () {
-        return redirect()->back()->with('success', 'Użytkownik został dodany');
-    })->name('admin.users.store');
+    // User management routes
+    Route::get('/users', [\App\Http\Controllers\Admin\AdminUserController::class, 'index'])->name('admin.users.index');
+    Route::post('/users', [\App\Http\Controllers\Admin\AdminUserController::class, 'store'])->name('admin.users.store');
+    Route::delete('/users/{user}', [\App\Http\Controllers\Admin\AdminUserController::class, 'destroy'])->name('admin.users.destroy');
+    Route::patch('/users/{user}/update-role', [\App\Http\Controllers\Admin\AdminUserController::class, 'updateRole'])->name('admin.users.update-role');
 
     Route::post('/vehicles', function () {
         return redirect()->back()->with('success', 'Pojazd został dodany');
