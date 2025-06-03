@@ -147,6 +147,15 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::clas
     Route::put('/carriers/{carrier}', [\App\Http\Controllers\Admin\AdminCarrierController::class, 'update'])->name('admin.carriers.update');
     Route::delete('/carriers/{carrier}', [\App\Http\Controllers\Admin\AdminCarrierController::class, 'destroy'])->name('admin.carriers.destroy');
     
+    // Line management routes
+    Route::get('/lines', [\App\Http\Controllers\Admin\AdminLineController::class, 'index'])->name('admin.lines.index');
+    Route::get('/lines/create', [\App\Http\Controllers\Admin\AdminLineController::class, 'create'])->name('admin.lines.create');
+    Route::post('/lines', [\App\Http\Controllers\Admin\AdminLineController::class, 'store'])->name('admin.lines.store');
+    Route::get('/lines/{line}', [\App\Http\Controllers\Admin\AdminLineController::class, 'show'])->name('admin.lines.show');
+    Route::get('/lines/{line}/edit', [\App\Http\Controllers\Admin\AdminLineController::class, 'edit'])->name('admin.lines.edit');
+    Route::put('/lines/{line}', [\App\Http\Controllers\Admin\AdminLineController::class, 'update'])->name('admin.lines.update');
+    Route::delete('/lines/{line}', [\App\Http\Controllers\Admin\AdminLineController::class, 'destroy'])->name('admin.lines.destroy');
+    
     // Admin ticket management
     Route::post('/tickets/{ticket}/mark-as-used', [TicketController::class, 'markAsUsed'])->name('admin.tickets.mark-as-used');
     

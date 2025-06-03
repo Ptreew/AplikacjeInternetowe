@@ -421,7 +421,7 @@
                             </thead>
                             <tbody>
                                 @php
-                                    $vehicles = \App\Models\Vehicle::with(['line', 'line.carrier'])->paginate(10);
+                                    $vehicles = \App\Models\Vehicle::with(['line', 'line.carrier'])->take(10)->get();
                                 @endphp
                                 
                                 @forelse($vehicles as $vehicle)
@@ -466,9 +466,7 @@
                         </table>
                     </div>
                     
-                    <div class="d-flex justify-content-center mt-3">
-                        {{ $vehicles->links() }}
-                    </div>
+
                     
                     <div class="d-flex justify-content-center mt-3">
                         <a href="{{ route('admin.vehicles.index') }}" class="btn btn-primary">
@@ -557,12 +555,88 @@
         <!-- Nowe kontenery zakładek -->
         <div class="tab-pane fade" id="lines" role="tabpanel" aria-labelledby="lines-tab">
             <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Zarządzanie Liniami</h5>
+                    <a href="{{ route('admin.lines.create') }}" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Dodaj nową linię
+                    </a>
                 </div>
                 <div class="card-body">
-                    <p>Tutaj będzie można zarządzać liniami (CRUD).</p>
-                    <!-- TODO: Add CRUD interface for Lines -->
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Numer</th>
+                                    <th>Nazwa</th>
+                                    <th>Przewoźnik</th>
+                                    <th>Kolor</th>
+                                    <th>Status</th>
+                                    <th>Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $lines = \App\Models\Line::with('carrier')->take(10)->get();
+                                @endphp
+                                
+                                @forelse($lines as $line)
+                                    <tr>
+                                        <td>{{ $line->id }}</td>
+                                        <td>
+                                            @if($line->number)
+                                                {{ $line->number }}
+                                            @else
+                                                <span class="fst-italic text-muted">Kurs międzymiastowy</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $line->name }}</td>
+                                        <td>{{ $line->carrier->name ?? 'Brak przewoźnika' }}</td>
+                                        <td>
+                                            <span class="color-box" style="background-color: {{ $line->color }}; display: inline-block; width: 20px; height: 20px; margin-right: 5px; border: 1px solid #ccc;"></span>
+                                            {{ $line->color }}
+                                        </td>
+                                        <td>
+                                            @if($line->is_active)
+                                                <span class="badge bg-success">Aktywna</span>
+                                            @else
+                                                <span class="badge bg-danger">Nieaktywna</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="d-inline-flex">
+                                                <a href="{{ route('admin.lines.edit', $line) }}" class="btn btn-sm btn-primary me-1">
+                                                    Edytuj
+                                                </a>
+                                                <a href="{{ route('admin.lines.show', $line) }}" class="btn btn-sm btn-success me-1">
+                                                    Pokaż
+                                                </a>
+                                                <form action="{{ route('admin.lines.destroy', $line) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć tę linię?')">
+                                                        Usuń
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center">Brak linii w bazie danych</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    
+
+                    
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="{{ route('admin.lines.index') }}" class="btn btn-primary">
+                            <i class="fas fa-list"></i> Zobacz pełną listę linii
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
