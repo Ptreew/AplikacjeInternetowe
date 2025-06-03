@@ -90,9 +90,8 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::clas
     Route::resource('lines', LineController::class)
         ->names('admin.lines')
         ->except(['index', 'show']);
-    Route::resource('routes', RouteController::class)
-        ->names('admin.routes')
-        ->except(['index', 'show']);
+    Route::resource('routes', \App\Http\Controllers\Admin\AdminRouteController::class)
+        ->names('admin.routes');
     Route::resource('cities', AdminCityController::class)
         ->names('admin.cities');
     Route::resource('stops', \App\Http\Controllers\Admin\AdminStopController::class)
@@ -101,6 +100,11 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::clas
     // Intercity routes management
     Route::resource('intercity', \App\Http\Controllers\Admin\AdminIntercityController::class)
         ->names('admin.intercity');
+        
+    // Route stops management
+    Route::resource('route_stops', \App\Http\Controllers\Admin\AdminRouteStopController::class)
+        ->names('admin.route_stops')
+        ->except(['index', 'create', 'show', 'edit']);
     Route::get('intercity/stops-for-city', [\App\Http\Controllers\Admin\AdminIntercityController::class, 'getStopsForCity'])
         ->name('admin.intercity.stops-for-city');
         
