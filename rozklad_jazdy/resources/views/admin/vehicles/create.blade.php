@@ -1,0 +1,75 @@
+@extends('layouts.app')
+
+@section('title', 'Dodaj nowy pojazd')
+
+@section('content')
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <a href="{{ route('admin.vehicles.index') }}" class="btn btn-primary">Powrót do listy pojazdów</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Dodaj nowy pojazd</h5>
+            </div>
+            <div class="card-body">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form action="{{ route('admin.vehicles.store') }}" method="POST">
+                    @csrf
+                    
+                    <div class="mb-3">
+                        <label for="vehicle_number" class="form-label">Numer pojazdu</label>
+                        <input type="text" class="form-control" id="vehicle_number" name="vehicle_number" value="{{ old('vehicle_number') }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Typ pojazdu</label>
+                        <select class="form-select" id="type" name="type" required>
+                            <option value="" disabled selected>Wybierz typ pojazdu</option>
+                            <option value="Pociąg ekspresowy" {{ old('type') == 'Pociąg ekspresowy' ? 'selected' : '' }}>Pociąg ekspresowy</option>
+                            <option value="Pociąg regionalny" {{ old('type') == 'Pociąg regionalny' ? 'selected' : '' }}>Pociąg regionalny</option>
+                            <option value="Autokar" {{ old('type') == 'Autokar' ? 'selected' : '' }}>Autokar</option>
+                            <option value="Autobus miejski" {{ old('type') == 'Autobus miejski' ? 'selected' : '' }}>Autobus miejski</option>
+                            <option value="Autobus przegubowy" {{ old('type') == 'Autobus przegubowy' ? 'selected' : '' }}>Autobus przegubowy</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="line_id" class="form-label">Przypisana linia</label>
+                        <select class="form-select" id="line_id" name="line_id" required>
+                            <option value="" disabled selected>Wybierz linię</option>
+                            @foreach($lines as $line)
+                                <option value="{{ $line->id }}" {{ old('line_id') == $line->id ? 'selected' : '' }}>
+                                    {{ $line->name }} (Przewoźnik: {{ $line->carrier->name ?? 'Brak' }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="capacity" class="form-label">Pojemność</label>
+                        <input type="number" class="form-control" id="capacity" name="capacity" value="{{ old('capacity') }}" min="1" required>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="is_active" name="is_active" value="1" {{ old('is_active') ? 'checked' : '' }}>
+                        <label class="form-check-label" for="is_active">Aktywny</label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">Dodaj pojazd</button>
+                </form>
+            </div>
+        </div>
+    </div>
+@endsection

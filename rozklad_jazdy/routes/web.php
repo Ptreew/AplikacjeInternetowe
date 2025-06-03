@@ -129,9 +129,14 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::clas
     Route::delete('/users/{user}', [\App\Http\Controllers\Admin\AdminUserController::class, 'destroy'])->name('admin.users.destroy');
     Route::patch('/users/{user}/update-role', [\App\Http\Controllers\Admin\AdminUserController::class, 'updateRole'])->name('admin.users.update-role');
 
-    Route::post('/vehicles', function () {
-        return redirect()->back()->with('success', 'Pojazd został dodany');
-    })->name('admin.vehicles.store');
+    // Vehicle management routes
+    Route::get('/vehicles', [\App\Http\Controllers\Admin\AdminVehicleController::class, 'index'])->name('admin.vehicles.index');
+    Route::get('/vehicles/create', [\App\Http\Controllers\Admin\AdminVehicleController::class, 'create'])->name('admin.vehicles.create');
+    Route::post('/vehicles', [\App\Http\Controllers\Admin\AdminVehicleController::class, 'store'])->name('admin.vehicles.store');
+    Route::get('/vehicles/{vehicle}', [\App\Http\Controllers\Admin\AdminVehicleController::class, 'show'])->name('admin.vehicles.show');
+    Route::get('/vehicles/{vehicle}/edit', [\App\Http\Controllers\Admin\AdminVehicleController::class, 'edit'])->name('admin.vehicles.edit');
+    Route::put('/vehicles/{vehicle}', [\App\Http\Controllers\Admin\AdminVehicleController::class, 'update'])->name('admin.vehicles.update');
+    Route::delete('/vehicles/{vehicle}', [\App\Http\Controllers\Admin\AdminVehicleController::class, 'destroy'])->name('admin.vehicles.destroy');
 
     // Carrier management routes
     Route::get('/carriers', [\App\Http\Controllers\Admin\AdminCarrierController::class, 'index'])->name('admin.carriers.index');

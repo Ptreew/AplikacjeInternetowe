@@ -14,9 +14,9 @@ class Vehicle extends Model
     use HasFactory;
     
     protected $fillable = [
-        'carrier_id',
+        'line_id',
         'type',
-        'number',
+        'vehicle_number',
         'capacity',
         'is_active'
     ];

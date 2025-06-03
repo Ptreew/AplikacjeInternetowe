@@ -397,64 +397,83 @@
         <!-- Pojazdy -->
         <div class="tab-pane fade" id="pojazdy" role="tabpanel" aria-labelledby="pojazdy-tab">
             <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Zarządzanie pojazdami</h5>
+                    <a href="{{ route('admin.vehicles.create') }}" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Dodaj nowy pojazd
+                    </a>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('admin.vehicles.store') }}" class="row g-3">
-                        @csrf
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="registration" name="registration" placeholder="Numer rejestracyjny" required />
-                                <label for="registration">Numer rejestracyjny</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="model" name="model" placeholder="Model" required />
-                                <label for="model">Model</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                <input type="number" class="form-control" id="seats" name="seats" placeholder="Liczba miejsc" required />
-                                <label for="seats">Liczba miejsc</label>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary">Dodaj pojazd</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
 
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Lista pojazdów</h5>
-                </div>
-                <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Rejestracja</th>
-                                    <th>Model</th>
-                                    <th>Miejsca</th>
+                                    <th>ID</th>
+                                    <th>Numer pojazdu</th>
+                                    <th>Typ</th>
+                                    <th>Linia</th>
+                                    <th>Przewoźnik</th>
+                                    <th>Pojemność</th>
+                                    <th>Status</th>
                                     <th>Akcje</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>RZ12345</td>
-                                    <td>Mercedes Sprinter</td>
-                                    <td>20</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline-primary">Edytuj</button>
-                                        <button class="btn btn-sm btn-outline-danger">Usuń</button>
-                                    </td>
-                                </tr>
+                                @php
+                                    $vehicles = \App\Models\Vehicle::with(['line', 'line.carrier'])->paginate(10);
+                                @endphp
+                                
+                                @forelse($vehicles as $vehicle)
+                                    <tr>
+                                        <td>{{ $vehicle->id }}</td>
+                                        <td>{{ $vehicle->vehicle_number }}</td>
+                                        <td>{{ $vehicle->type }}</td>
+                                        <td>{{ $vehicle->line->name ?? 'Brak linii' }}</td>
+                                        <td>{{ $vehicle->line->carrier->name ?? 'Brak przewoźnika' }}</td>
+                                        <td>{{ $vehicle->capacity }}</td>
+                                        <td>
+                                            @if($vehicle->is_active)
+                                                <span class="badge bg-success">Aktywny</span>
+                                            @else
+                                                <span class="badge bg-danger">Nieaktywny</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="d-inline-flex">
+                                                <a href="{{ route('admin.vehicles.edit', $vehicle) }}" class="btn btn-sm btn-primary me-1">
+                                                    Edytuj
+                                                </a>
+                                                <a href="{{ route('admin.vehicles.show', $vehicle) }}" class="btn btn-sm btn-success me-1">
+                                                    Pokaż
+                                                </a>
+                                                <form action="{{ route('admin.vehicles.destroy', $vehicle) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten pojazd?')">
+                                                        Usuń
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="text-center">Brak pojazdów w bazie danych</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
+                    </div>
+                    
+                    <div class="d-flex justify-content-center mt-3">
+                        {{ $vehicles->links() }}
+                    </div>
+                    
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="{{ route('admin.vehicles.index') }}" class="btn btn-primary">
+                            <i class="fas fa-list"></i> Zobacz pełną listę pojazdów
+                        </a>
                     </div>
                 </div>
             </div>
