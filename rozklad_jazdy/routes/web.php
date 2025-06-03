@@ -117,6 +117,8 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::clas
     Route::resource('vehicles', VehicleController::class)
         ->names('admin.vehicles')
         ->except('store');
+    Route::resource('tickets', \App\Http\Controllers\Admin\AdminTicketController::class)
+        ->names('admin.tickets');
     
     // Admin form submission routes
     Route::post('/miedzymiastowe', function () {

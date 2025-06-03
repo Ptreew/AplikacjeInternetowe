@@ -890,8 +890,109 @@
                     <h5 class="mb-0">Zarządzanie Biletami</h5>
                 </div>
                 <div class="card-body">
-                    <p>Tutaj będzie można zarządzać biletami (CRUD).</p>
-                    <!-- TODO: Add CRUD interface for Tickets -->
+                    @php
+                        // Pobierz najnowsze bilety z bazy danych
+                        $latestTickets = \App\Models\Ticket::with(['user', 'departure.schedule.route.line'])
+                            ->orderBy('purchase_date', 'desc')
+                            ->take(10)
+                            ->get();
+                    @endphp
+                    
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nr biletu</th>
+                                    <th>Pasażer</th>
+                                    <th>Trasa</th>
+                                    <th>Data odjazdu</th>
+                                    <th>Status</th>
+                                    <th>Data zakupu</th>
+                                    <th>Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($latestTickets as $ticket)
+                                    <tr>
+                                        <td>{{ $ticket->ticket_number }}</td>
+                                        <td>{{ $ticket->passenger_name }}</td>
+                                        <td>
+                                            @if($ticket->departure && $ticket->departure->schedule && $ticket->departure->schedule->route)
+                                                {{ $ticket->departure->schedule->route->name }}
+                                            @else
+                                                <span class="text-muted">Brak danych</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($ticket->departure)
+                                                @if($ticket->departure->departure_time instanceof \Carbon\Carbon)
+                                                    {{ $ticket->departure->departure_time->format('d.m.Y H:i') }}
+                                                @else
+                                                    {{ $ticket->departure->departure_time }}
+                                                @endif
+                                            @else
+                                                <span class="text-muted">Brak danych</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @php
+                                                $statusClass = [
+                                                    'reserved' => 'warning',
+                                                    'paid' => 'success',
+                                                    'used' => 'success',
+                                                    'cancelled' => 'danger'
+                                                ][$ticket->status] ?? 'secondary';
+                                                
+                                                $statusLabel = [
+                                                    'reserved' => 'Zarezerwowany',
+                                                    'paid' => 'Opłacony',
+                                                    'used' => 'Wykorzystany',
+                                                    'cancelled' => 'Anulowany'
+                                                ][$ticket->status] ?? 'Nieznany';
+                                            @endphp
+                                            <span class="badge bg-{{ $statusClass }}">{{ $statusLabel }}</span>
+                                        </td>
+                                        <td>
+                                            @if($ticket->purchase_date instanceof \Carbon\Carbon)
+                                                {{ $ticket->purchase_date->format('d.m.Y') }}
+                                            @elseif($ticket->purchase_date)
+                                                {{ $ticket->purchase_date }}
+                                            @else
+                                                <span class="text-muted">Brak danych</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="d-inline-flex">
+                                                <a href="{{ route('admin.tickets.show', $ticket) }}" class="btn btn-sm btn-success me-1" title="Szczegóły">
+                                                    Szczegóły
+                                                </a>
+                                                <a href="{{ route('admin.tickets.edit', $ticket) }}" class="btn btn-sm btn-primary me-1" title="Edytuj">
+                                                    Edytuj
+                                                </a>
+                                                <form action="{{ route('admin.tickets.destroy', $ticket) }}" method="POST" class="d-inline" onsubmit="return confirm('Czy na pewno chcesz usunąć ten bilet?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" title="Usuń">
+                                                        Usuń
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center">Brak biletów w systemie</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <a href="{{ route('admin.tickets.index') }}" class="btn btn-primary">
+                            Przejdź do pełnego zarządzania biletami
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
