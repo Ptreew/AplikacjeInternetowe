@@ -463,64 +463,73 @@
         <!-- Przewoźnicy -->
         <div class="tab-pane fade" id="przewoznicy" role="tabpanel" aria-labelledby="przewoznicy-tab">
             <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Zarządzanie przewoźnikami</h5>
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Zarządzanie Przewoźnikami</h5>
+                    <a href="{{ route('admin.carriers.create') }}" class="btn btn-sm btn-success">
+                        <i class="fas fa-plus"></i> Dodaj Przewoźnika
+                    </a>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('admin.carriers.store') }}" class="row g-3">
-                        @csrf
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Nazwa przewoźnika" required />
-                                <label for="name">Nazwa przewoźnika</label>
-                            </div>
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="phone" name="phone" placeholder="Telefon kontaktowy" />
-                                <label for="phone">Telefon kontaktowy</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                <input type="url" class="form-control" id="website" name="website" placeholder="Strona internetowa" />
-                                <label for="website">Strona internetowa</label>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary">Dodaj przewoźnika</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+                    @endif
 
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Lista przewoźników</h5>
-                </div>
-                <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead class="table-light">
                                 <tr>
+                                    <th>ID</th>
                                     <th>Nazwa</th>
-                                    <th>Telefon</th>
-                                    <th>WWW</th>
+                                    <th>Email</th>
+                                    <th>Strona internetowa</th>
                                     <th>Akcje</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>FlixBus</td>
-                                    <td>+48 123 456 789</td>
-                                    <td><a href="#">flixbus.pl</a></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline-primary">Edytuj</button>
-                                        <button class="btn btn-sm btn-outline-danger">Usuń</button>
-                                    </td>
-                                </tr>
+                                @php
+                                    $carriers = \App\Models\Carrier::take(10)->get();
+                                @endphp
+                                
+                                @foreach($carriers as $carrier)
+                                    <tr>
+                                        <td>{{ $carrier->id }}</td>
+                                        <td>{{ $carrier->name }}</td>
+                                        <td>{{ $carrier->email }}</td>
+                                        <td>
+                                            <a href="{{ $carrier->website }}" target="_blank">{{ $carrier->website }}</a>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="d-inline-flex">
+                                                <a href="{{ route('admin.carriers.edit', $carrier) }}" 
+                                                   class="btn btn-sm btn-primary me-1">
+                                                    Edytuj
+                                                </a>
+                                                <a href="{{ route('admin.carriers.show', $carrier) }}" 
+                                                   class="btn btn-sm btn-success me-1">
+                                                    Pokaż
+                                                </a>
+                                                <form action="{{ route('admin.carriers.destroy', $carrier) }}" 
+                                                      method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" 
+                                                            onclick="return confirm('Czy na pewno chcesz usunąć tego przewoźnika?')">
+                                                        Usuń
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
+                        <div class="d-flex justify-content-center mt-3">
+                            <a href="{{ route('admin.carriers.index') }}" class="btn btn-primary">
+                                <i class="fas fa-list"></i> Zobacz pełną listę przewoźników
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

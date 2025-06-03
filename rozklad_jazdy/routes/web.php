@@ -133,9 +133,14 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::clas
         return redirect()->back()->with('success', 'Pojazd został dodany');
     })->name('admin.vehicles.store');
 
-    Route::post('/carriers', function () {
-        return redirect()->back()->with('success', 'Przewoźnik został dodany');
-    })->name('admin.carriers.store');
+    // Carrier management routes
+    Route::get('/carriers', [\App\Http\Controllers\Admin\AdminCarrierController::class, 'index'])->name('admin.carriers.index');
+    Route::get('/carriers/create', [\App\Http\Controllers\Admin\AdminCarrierController::class, 'create'])->name('admin.carriers.create');
+    Route::post('/carriers', [\App\Http\Controllers\Admin\AdminCarrierController::class, 'store'])->name('admin.carriers.store');
+    Route::get('/carriers/{carrier}', [\App\Http\Controllers\Admin\AdminCarrierController::class, 'show'])->name('admin.carriers.show');
+    Route::get('/carriers/{carrier}/edit', [\App\Http\Controllers\Admin\AdminCarrierController::class, 'edit'])->name('admin.carriers.edit');
+    Route::put('/carriers/{carrier}', [\App\Http\Controllers\Admin\AdminCarrierController::class, 'update'])->name('admin.carriers.update');
+    Route::delete('/carriers/{carrier}', [\App\Http\Controllers\Admin\AdminCarrierController::class, 'destroy'])->name('admin.carriers.destroy');
     
     // Admin ticket management
     Route::post('/tickets/{ticket}/mark-as-used', [TicketController::class, 'markAsUsed'])->name('admin.tickets.mark-as-used');
