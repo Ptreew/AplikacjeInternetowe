@@ -643,12 +643,89 @@
 
         <div class="tab-pane fade" id="routes" role="tabpanel" aria-labelledby="routes-tab">
             <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Zarządzanie Trasami</h5>
+                    <a href="{{ route('admin.routes.create') }}" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Dodaj nową trasę
+                    </a>
                 </div>
                 <div class="card-body">
-                    <p>Tutaj będzie można zarządzać trasami (CRUD).</p>
-                    <!-- TODO: Add CRUD interface for Routes -->
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nazwa</th>
+                                    <th>Linia</th>
+                                    <th>Przewoźnik</th>
+                                    <th>Czas podróży</th>
+                                    <th>Status</th>
+                                    <th>Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $routes = \App\Models\Route::with(['line', 'line.carrier'])->take(10)->get();
+                                @endphp
+                                
+                                @forelse($routes as $route)
+                                    <tr>
+                                        <td>{{ $route->id }}</td>
+                                        <td>{{ $route->name }}</td>
+                                        <td>
+                                            @if($route->line->number)
+                                                {{ $route->line->number }}
+                                            @else
+                                                <span class="fst-italic text-muted">Kurs międzymiastowy</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $route->line->carrier->name ?? 'Brak przewoźnika' }}</td>
+                                        <td>
+                                            @if($route->travel_time)
+                                                {{ $route->travel_time }} min
+                                            @else
+                                                <span class="text-muted">Nie określono</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($route->is_active)
+                                                <span class="badge bg-success">Aktywna</span>
+                                            @else
+                                                <span class="badge bg-danger">Nieaktywna</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="d-inline-flex">
+                                                <a href="{{ route('admin.routes.edit', $route) }}" class="btn btn-sm btn-primary me-1">
+                                                    Edytuj
+                                                </a>
+                                                <a href="{{ route('admin.routes.show', $route) }}" class="btn btn-sm btn-success me-1">
+                                                    Pokaż
+                                                </a>
+                                                <form action="{{ route('admin.routes.destroy', $route) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć tę trasę?')">
+                                                        Usuń
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center">Brak tras w bazie danych</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="{{ route('admin.routes.index') }}" class="btn btn-primary">
+                            <i class="fas fa-list"></i> Zobacz pełną listę tras
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
