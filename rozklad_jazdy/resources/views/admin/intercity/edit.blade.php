@@ -40,33 +40,29 @@
                         @enderror
                     </div>
                     
-                    <div class="col-md-2">
-                        <label for="line_number" class="form-label">Numer linii</label>
-                        <input type="number" class="form-control @error('line_number') is-invalid @enderror" id="line_number" name="line_number" value="{{ old('line_number', $route->line->number) }}" min="1" required>
-                        <div class="form-text small">Podaj liczbę</div>
-                        @error('line_number')
+                    <div class="col-md-4">
+                        <label for="vehicle_id" class="form-label">Pojazd</label>
+                        <select class="form-select @error('vehicle_id') is-invalid @enderror" id="vehicle_id" name="vehicle_id" required disabled>
+                            <option value="">Najpierw wybierz przewoźnika</option>
+                            @foreach($vehicles as $vehicle)
+                                <option value="{{ $vehicle->id }}" data-carrier="{{ $vehicle->line->carrier->id ?? '' }}" class="vehicle-option" {{ old('vehicle_id', $departureVehicleId) == $vehicle->id ? 'selected' : '' }} style="display:none;">
+                                    {{ $vehicle->type }} #{{ $vehicle->vehicle_number }} ({{ $vehicle->capacity }} miejsc)
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('vehicle_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     
+                    <input type="hidden" id="line_number" name="line_number" value="INTERCITY">
+                    
                     <div class="col-md-3">
-                        <label for="line_name" class="form-label">Nazwa linii</label>
-                        <input type="text" class="form-control @error('line_name') is-invalid @enderror" id="line_name" name="line_name" value="{{ old('line_name', $route->line->name) }}" required>
+                        <label class="form-label">Nazwa linii</label>
+                        <input type="text" class="form-control" value="{{ $route->line->name }}" readonly disabled>
+                        <div class="form-text small">Nazwa linii zostanie zaktualizowana automatycznie w formacie "Miasto1 - Miasto2"</div>
+                        <input type="hidden" id="line_name" name="line_name" value="AUTO_GENERATE">
                         @error('line_name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    
-                    <div class="col-md-3">
-                        <label for="line_color" class="form-label">Kolor linii</label>
-                        <div class="input-group">
-                            <span class="input-group-text" style="padding: 0; width: 50px; overflow: hidden;">
-                                <input type="color" class="form-control border-0 @error('line_color') is-invalid @enderror" id="line_color" name="line_color" value="{{ old('line_color', $route->line->color ?? '#0066CC') }}" title="Wybierz kolor linii" required style="height: 37px; width: 50px; padding: 0; border: none;">
-                            </span>
-                            <input type="text" class="form-control @error('line_color') is-invalid @enderror" id="line_color_text" value="{{ old('line_color', $route->line->color ?? '#0066CC') }}" placeholder="#0066CC">
-                        </div>
-                        <div class="form-text small">Format: #RRGGBB</div>
-                        @error('line_color')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -89,12 +85,8 @@
                     <div class="col-md-6">
                         <label for="origin_stop_id" class="form-label">Przystanek początkowy</label>
                         <select class="form-select @error('origin_stop_id') is-invalid @enderror" id="origin_stop_id" name="origin_stop_id" required>
-                            <option value="">Wybierz przystanek</option>
-                            @foreach($originStops as $stop)
-                                <option value="{{ $stop->id }}" {{ old('origin_stop_id', $originStop->id ?? '') == $stop->id ? 'selected' : '' }}>
-                                    {{ $stop->name }}
-                                </option>
-                            @endforeach
+                            <option value="">Najpierw wybierz miasto</option>
+                            <!-- Stops will be loaded by JavaScript -->
                         </select>
                         @error('origin_stop_id')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -119,12 +111,8 @@
                     <div class="col-md-6">
                         <label for="destination_stop_id" class="form-label">Przystanek docelowy</label>
                         <select class="form-select @error('destination_stop_id') is-invalid @enderror" id="destination_stop_id" name="destination_stop_id" required>
-                            <option value="">Wybierz przystanek</option>
-                            @foreach($destinationStops as $stop)
-                                <option value="{{ $stop->id }}" {{ old('destination_stop_id', $destinationStop->id ?? '') == $stop->id ? 'selected' : '' }}>
-                                    {{ $stop->name }}
-                                </option>
-                            @endforeach
+                            <option value="">Najpierw wybierz miasto</option>
+                            <!-- Stops will be loaded by JavaScript -->
                         </select>
                         @error('destination_stop_id')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -140,17 +128,18 @@
                     </div>
                     
                     <div class="col-md-4">
-                        <label for="arrival_time" class="form-label">Czas przyjazdu</label>
-                        <input type="time" class="form-control @error('arrival_time') is-invalid @enderror" id="arrival_time" name="arrival_time" value="{{ old('arrival_time', $departureTime) }}" required>
-                        @error('arrival_time')
+                        <label for="price" class="form-label">Cena biletu (zł)</label>
+                        <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price', $price) }}" required>
+                        @error('price')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     
                     <div class="col-md-4">
-                        <label for="price" class="form-label">Cena biletu (zł)</label>
-                        <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price', $price) }}" required>
-                        @error('price')
+                        <label for="travel_time" class="form-label">Czas podróży (minuty)</label>
+                        <input type="number" min="1" class="form-control @error('travel_time') is-invalid @enderror" id="travel_time" name="travel_time" value="{{ old('travel_time', $route->travel_time ?? 120) }}" required>
+                        <div class="form-text small">Całkowity czas przejazdu trasy</div>
+                        @error('travel_time')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -168,7 +157,15 @@
                                     5 => 'Piątek',
                                     6 => 'Sobota'
                                 ];
-                                $oldDays = old('days_of_week', $daysOfWeek); 
+                                // Jeśli mamy dane z formularza, użyj ich, w przeciwnym razie pobierz z bazy
+                                $scheduleDays = [];
+                                if (isset($route->schedules) && $route->schedules->count() > 0) {
+                                    $schedule = $route->schedules->first();
+                                    if ($schedule) {
+                                        $scheduleDays = $schedule->days_of_week;
+                                    }
+                                }
+                                $oldDays = old('days_of_week', $scheduleDays);
                             @endphp
                             
                             @foreach($days as $value => $day)
@@ -309,8 +306,7 @@
             
             // Initialize form
             updateCitySelections();
-            
-            // Load stops for selected cities (if they are already selected)
+            // Automatically load stops if cities are already selected (e.g. on validation errors)
             if (originCitySelect.value) {
                 loadStopsForCity(originCitySelect.value, originStopSelect, originStopId);
             }
@@ -318,6 +314,83 @@
             if (destinationCitySelect.value) {
                 loadStopsForCity(destinationCitySelect.value, destinationStopSelect, destinationStopId);
             }
+            
+            // Function to filter vehicles based on selected carrier
+            const carrierSelect = document.getElementById('carrier_id');
+            const vehicleSelect = document.getElementById('vehicle_id');
+            const vehicleOptions = document.querySelectorAll('.vehicle-option');
+            
+            function filterVehicles() {
+                const selectedCarrierId = carrierSelect.value;
+                let hasValidOptions = false;
+                
+                // Remember currently selected vehicle (if exists)
+                const currentlySelectedVehicle = vehicleSelect.value;
+                
+                if (!selectedCarrierId) {
+                    // If no carrier selected, disable the vehicle dropdown
+                    vehicleOptions.forEach(option => {
+                        option.style.display = 'none';
+                    });
+                    vehicleSelect.querySelector('option:first-child').text = 'Najpierw wybierz przewoźnika';
+                    vehicleSelect.disabled = true;
+                } else {
+                    // Enable dropdown and show only vehicles belonging to selected carrier's lines
+                    vehicleSelect.disabled = false;
+                    // Check if currently selected vehicle belongs to this carrier
+                    let currentVehicleValid = false;
+                    
+                    vehicleOptions.forEach(option => {
+                        const carrierId = option.getAttribute('data-carrier');
+                        if (carrierId && carrierId === selectedCarrierId) {
+                            option.style.display = '';
+                            hasValidOptions = true;
+                            
+                            // Check if this is the currently selected vehicle
+                            if (option.value === currentlySelectedVehicle) {
+                                currentVehicleValid = true;
+                            }
+                        } else {
+                            option.style.display = 'none';
+                        }
+                    });
+                    vehicleSelect.querySelector('option:first-child').text = hasValidOptions ? 
+                        'Wybierz pojazd' : 'Brak dostępnych pojazdów dla tego przewoźnika';
+                    
+                    // If the currently selected vehicle doesn't belong to this carrier, reset the selection
+                    if (!currentVehicleValid) {
+                        vehicleSelect.value = '';
+                    }
+                }
+            }
+            
+            // If carrier is already selected, and vehicle has a value from the controller,
+            // unlock the vehicle select and show only vehicles belonging to the selected carrier
+            if (carrierSelect.value) {
+                const selectedCarrierId = carrierSelect.value;
+                
+                // Unlock the vehicle select
+                vehicleSelect.disabled = false;
+                
+                // Show only vehicles for the selected carrier
+                vehicleOptions.forEach(option => {
+                    const carrierId = option.getAttribute('data-carrier');
+                    if (carrierId && carrierId === selectedCarrierId) {
+                        option.style.display = '';
+                    } else {
+                        option.style.display = 'none';
+                    }
+                });
+                
+                // Change the text of the first option
+                vehicleSelect.querySelector('option:first-child').text = 'Wybierz pojazd';
+            }
+            
+            // Initialize vehicles filter
+            filterVehicles();
+            
+            // Listen for carrier changes
+            carrierSelect.addEventListener('change', filterVehicles);
         });
         
         // Handle color synchronization

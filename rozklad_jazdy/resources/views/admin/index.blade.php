@@ -65,13 +65,12 @@
                 </div>
                 <div class="card-body">
                     @php
-                        // Pobierz najnowsze kursy międzymiastowe z bazy danych
-                        $intercityRoutes = \App\Models\Route::with(['line.carrier', 'routeStops.stop.city'])
+                        // Pobierz kursy międzymiastowe z bazy danych
+                        $intercityRoutes = \App\Models\Route::with(['line.carrier', 'routeStops.stop.city', 'schedules'])
                             ->whereHas('line', function($query) {
-                                $query->where('number', 'NOT LIKE', 'M%'); // Filtruj kursy miejskie
+                                $query->whereNull('number'); // Kursy międzymiastowe mają NULL w polu number
                             })
                             ->orderBy('id', 'desc')
-                            ->take(5)
                             ->get();
                     @endphp
                     
@@ -79,17 +78,22 @@
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Linia</th>
+                                    <th>Przewoźnik</th>
                                     <th>Miasto początkowe</th>
                                     <th>Miasto docelowe</th>
-                                    <th>Przewoźnik</th>
+                                    <th>Dni kursowania</th>
+                                    <th>Status</th>
                                     <th>Akcje</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($intercityRoutes as $route)
                                     <tr>
+                                        <td>{{ $route->id }}</td>
                                         <td>{{ $route->line->number }} - {{ $route->line->name }}</td>
+                                        <td>{{ $route->line->carrier->name }}</td>
                                         <td>
                                             @if($route->routeStops->isNotEmpty() && $route->routeStops->first()->stop && $route->routeStops->first()->stop->city)
                                                 {{ $route->routeStops->first()->stop->city->name }}
@@ -106,7 +110,46 @@
                                                 Brak danych
                                             @endif
                                         </td>
-                                        <td>{{ $route->line->carrier->name }}</td>
+                                        <td>
+                                            @if($route->schedules->isNotEmpty())
+                                                @php
+                                                    $dayNames = [
+                                                        0 => 'Nd',
+                                                        1 => 'Pn',
+                                                        2 => 'Wt',
+                                                        3 => 'Śr',
+                                                        4 => 'Cz',
+                                                        5 => 'Pt',
+                                                        6 => 'Sb'
+                                                    ];
+                                                    
+                                                    $allDays = [];
+                                                    if ($route->schedules) { // Ensure schedules collection exists
+                                                        foreach($route->schedules as $schedule) {
+                                                            if (is_array($schedule->days_of_week)) { // Check if days_of_week is an array
+                                                                foreach($schedule->days_of_week as $day) {
+                                                                    // Ensure $day is a valid key for $dayNames and not already added
+                                                                    if (isset($dayNames[$day]) && !isset($allDays[$day])) { 
+                                                                        $allDays[$day] = $dayNames[$day];
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    ksort($allDays); // ksort works fine on an empty array
+                                                @endphp
+                                                {{ implode(', ', $allDays) }}
+                                            @else
+                                                <span class="text-muted">Brak danych</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($route->is_active)
+                                                <span class="badge bg-success">Aktywny</span>
+                                            @else
+                                                <span class="badge bg-danger">Nieaktywny</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('admin.intercity.edit', $route->id) }}" class="btn btn-sm btn-primary me-1">
@@ -124,7 +167,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center">Brak kursów międzymiastowych w bazie danych</td>
+                                        <td colspan="8" class="text-center">Brak kursów międzymiastowych w bazie danych</td>
                                     </tr>
                                 @endforelse
                             </tbody>

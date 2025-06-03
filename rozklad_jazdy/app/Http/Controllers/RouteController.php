@@ -108,7 +108,7 @@ class RouteController extends Controller
             'routeStops.stop.city',
             'schedules.departures.vehicle',
             'schedules' => function($query) {
-                $query->orderBy('day_type');
+                $query->orderBy('id');
             }
         ]);
         
@@ -227,6 +227,9 @@ class RouteController extends Controller
         
         // Find routes that connect the two cities with correct order (from_city must come before to_city)
         $routesQuery = Route::where('is_active', true)
+            ->whereHas('line', function($query) {
+                $query->whereNull('number'); // Intercity routes always have number=NULL
+            })
             ->whereHas('routeStops', function($query) use ($request) {
                 $query->whereHas('stop', function($q) use ($request) {
                     $q->where('city_id', $request->from_city);
@@ -239,7 +242,7 @@ class RouteController extends Controller
                     $q->where('city_id', $request->to_city);
                 });
                 // Ensure that the 'to' city stop comes after the 'from' city stop
-                $query->whereRaw('stop_number > (SELECT rs.stop_number FROM route_stops rs JOIN stops s ON rs.stop_id = s.id WHERE rs.route_id = route_stops.route_id AND s.city_id = ?)', [$request->from_city]);
+                $query->whereRaw('stop_number > (SELECT MIN(rs.stop_number) FROM route_stops rs JOIN stops s ON rs.stop_id = s.id WHERE rs.route_id = route_stops.route_id AND s.city_id = ?)', [$request->from_city]);
             })
             ->with([
                 'line.carrier',
@@ -248,20 +251,12 @@ class RouteController extends Controller
                 },
                 'routeStops.stop.city',
                 'schedules' => function($query) use ($request) {
-                    // If date is provided, map to the appropriate day_type
+                    // If date is provided, get day of week
                     if ($request->filled('date')) {
-                        $dayOfWeek = date('w', strtotime($request->date));
+                        $dayOfWeek = (int)date('w', strtotime($request->date));
                         
-                        // Convert numeric day of week to day_type enum value
-                        // 0 = Sunday, 6 = Saturday, 1-5 = weekdays
-                        $dayType = 'weekday';
-                        if ($dayOfWeek == 0) {
-                            $dayType = 'sunday';
-                        } elseif ($dayOfWeek == 6) {
-                            $dayType = 'saturday';
-                        }
-                        
-                        $query->where('day_type', $dayType);
+                        // Find schedules containing this day of week in days_of_week array
+                        $query->whereJsonContains('days_of_week', $dayOfWeek);
                     }
                     
                     // Filter by valid date range
@@ -299,7 +294,7 @@ class RouteController extends Controller
         // Get cities for the search form
         $cities = City::orderBy('name')->get();
         
-        // Pobierz unikalne typy pojazdów do dropdown'u
+        // Get unique vehicle types for the dropdown menu
         $vehicleTypes = DB::table('vehicles')
             ->select('type')
             ->distinct()
@@ -357,8 +352,11 @@ class RouteController extends Controller
             'to_stop.different' => 'Przystanek początkowy i docelowy nie mogą być takie same. Wybierz różne przystanki.'
         ]);
         
-        // Find routes that connect the two stops
+        // Find routes that connect the two stops (only city routes where line.number is NOT NULL and not empty string)
         $routesQuery = Route::where('is_active', true)
+            ->whereHas('line', function($query) {
+                $query->whereNotNull('number'); // City routes always have number as a numeric value
+            })
             ->whereHas('routeStops', function($query) use ($request) {
                 $query->where('stop_id', $request->from_stop);
             })
@@ -379,20 +377,12 @@ class RouteController extends Controller
                     $query->where('valid_from', '<=', $dateToUse)
                           ->where('valid_to', '>=', $dateToUse);
                           
-                    // If date is provided, map to the appropriate day_type
+                    // If date is provided, get day of week
                     if ($request->filled('date')) {
-                        $dayOfWeek = date('w', strtotime($request->date));
+                        $dayOfWeek = (int)date('w', strtotime($request->date));
                         
-                        // Convert numeric day of week to day_type enum value
-                        // 0 = Sunday, 6 = Saturday, 1-5 = weekdays
-                        $dayType = 'weekday';
-                        if ($dayOfWeek == 0) {
-                            $dayType = 'sunday';
-                        } elseif ($dayOfWeek == 6) {
-                            $dayType = 'saturday';
-                        }
-                        
-                        $query->where('day_type', $dayType);
+                        // Find schedules containing this day of week in days_of_week array
+                        $query->whereJsonContains('days_of_week', $dayOfWeek);
                     }
                 },
                 'schedules.departures' => function($query) use ($request) {

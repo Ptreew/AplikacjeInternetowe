@@ -101,7 +101,6 @@ class TicketController extends Controller
             $ticket->user_id = Auth::id();
             $ticket->departure_id = $request->departure_id;
             $ticket->ticket_number = 'TKT-' . Str::upper(Str::random(8));
-            $ticket->price = 25.00; // In a real app, this would be calculated based on the route, etc.
             $ticket->status = 'reserved';
             $ticket->passenger_name = $request->passenger_name;
             $ticket->passenger_email = $request->passenger_email;
@@ -291,8 +290,7 @@ class TicketController extends Controller
                 ->with('error', 'This ticket is not available for payment.');
         }
         
-        // In a real app, you would integrate with a payment gateway here
-        // For now, we'll just simulate successful payment
+        // simulate payment
         
         $ticket->status = 'paid';
         $ticket->purchase_date = now();

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('departure_id');
             $table->string('ticket_number')->unique();
-            $table->decimal('price', 8, 2);
             $table->enum('status', ['reserved', 'paid', 'cancelled', 'used'])->default('reserved');
             $table->dateTime('purchase_date')->nullable();
             $table->string('passenger_name')->nullable();

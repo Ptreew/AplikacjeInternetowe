@@ -17,7 +17,9 @@ class Departure extends Model
     protected $fillable = [
         'schedule_id',
         'vehicle_id',
+        'stop_id',
         'departure_time',
+        'price',
         'is_active'
     ];
     

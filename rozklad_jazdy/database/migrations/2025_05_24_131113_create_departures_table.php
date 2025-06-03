@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('departures', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('schedule_id');
-            $table->unsignedBigInteger('vehicle_id')->nullable();
+            $table->unsignedBigInteger('vehicle_id');
             $table->unsignedBigInteger('stop_id');
             $table->time('departure_time');
+            $table->decimal('price', 8, 2);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
             

@@ -170,11 +170,13 @@
                                             <tr>
                                                 <th>Linia</th>
                                                 <th>Przewoźnik</th>
-                                                <th>Trasa</th>
+                                                <th>Miasto początkowe</th>
+                                                <th>Miasto docelowe</th>
+                                                <th>Dni kursowania</th>
                                                 <th>Odjazd</th>
                                                 <th>Przyjazd</th>
-                                                <th>Dzień</th>
                                                 <th>Pojazd</th>
+                                                <th>Cena</th>
                                                 <th>Akcje</th>
                                             </tr>
                                         </thead>
@@ -188,32 +190,46 @@
                                                                     <td class="align-middle">{{ $route->line->name ?? 'Brak' }}</td>
                                                                     <td class="align-middle">{{ $route->line->carrier->name ?? 'Brak' }}</td>
                                                                     <td class="align-middle">
-                                                                        @if(isset($fromCity) && isset($toCity))
-                                                                            {{ $fromCity->name }} → {{ $toCity->name }}
-                                                                        @elseif(isset($fromStop) && isset($toStop))
-                                                                            {{ $fromStop->name }} → {{ $toStop->name }}
+                                                                        @if(isset($fromCity))
+                                                                            {{ $fromCity->name }}
+                                                                        @elseif(isset($fromStop))
+                                                                            {{ $fromStop->name }}
                                                                         @else
-                                                                            Brak danych o trasie
+                                                                            Brak danych
                                                                         @endif
+                                                                    </td>
+                                                                    <td class="align-middle">
+                                                                        @if(isset($toCity))
+                                                                            {{ $toCity->name }}
+                                                                        @elseif(isset($toStop))
+                                                                            {{ $toStop->name }}
+                                                                        @else
+                                                                            Brak danych
+                                                                        @endif
+                                                                    </td>
+                                                                    <td class="align-middle">
+                                                                        @php
+                                                                            $dayNames = [
+                                                                                0 => 'Nd',
+                                                                                1 => 'Pn',
+                                                                                2 => 'Wt',
+                                                                                3 => 'Śr',
+                                                                                4 => 'Cz',
+                                                                                5 => 'Pt',
+                                                                                6 => 'Sb'
+                                                                            ];
+                                                                            
+                                                                            $daysText = [];
+                                                                            foreach ($schedule->days_of_week as $day) {
+                                                                                $daysText[] = $dayNames[$day];
+                                                                            }
+                                                                        @endphp
+                                                                        {{ implode(', ', $daysText) }}
                                                                     </td>
                                                                     <td class="align-middle">{{ $departure->departure_time }}</td>
                                                                     <td class="align-middle">{{ $departure->arrival_time ?? 'Brak danych' }}</td>
-                                                                    <td class="align-middle">
-                                                                        @switch($schedule->day_type)
-                                                                            @case('weekday')
-                                                                                Dzień roboczy
-                                                                                @break
-                                                                            @case('saturday')
-                                                                                Sobota
-                                                                                @break
-                                                                            @case('sunday')
-                                                                                Niedziela
-                                                                                @break
-                                                                            @default
-                                                                                {{ $schedule->day_type }}
-                                                                        @endswitch
-                                                                    </td>
                                                                     <td class="align-middle">{{ $departure->vehicle->type ?? 'Brak' }}</td>
+                                                                    <td class="align-middle text-success fw-bold">{{ number_format($departure->price, 2) }} zł</td>
                                                                     <td class="align-middle" style="white-space: nowrap;">
                                                                         <a href="{{ route('routes.show', ['route' => $route->id]) }}" class="btn btn-sm btn-warning">Szczegóły</a>
                                                                         @if(auth()->check())

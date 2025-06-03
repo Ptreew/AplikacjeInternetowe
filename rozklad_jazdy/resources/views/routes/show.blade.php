@@ -60,13 +60,22 @@
                                     <h6>
                                         <span class="badge bg-secondary">
                                             @php
-                                                $dayTypes = [
-                                                    'weekday' => 'Dni powszednie (pon-pt)',
-                                                    'saturday' => 'Sobota',
-                                                    'sunday' => 'Niedziela'
+                                                $dayNames = [
+                                                    0 => 'Nd',
+                                                    1 => 'Pn',
+                                                    2 => 'Wt',
+                                                    3 => 'Śr',
+                                                    4 => 'Cz',
+                                                    5 => 'Pt',
+                                                    6 => 'Sb'
                                                 ];
+                                                
+                                                $daysText = [];
+                                                foreach ($schedule->days_of_week as $day) {
+                                                    $daysText[] = $dayNames[$day];
+                                                }
                                             @endphp
-                                            {{ $dayTypes[$schedule->day_type] }}
+                                            {{ implode(', ', $daysText) }}
                                         </span>
                                         <small class="text-muted ms-2">
                                             Ważny od {{ date('d.m.Y', strtotime($schedule->valid_from)) }} 
@@ -87,6 +96,9 @@
                                                         <div class="vehicle-info small text-muted mb-2">
                                                             {{ $departure->vehicle->type ?? 'Autobus' }} 
                                                             {{ $departure->vehicle->number ?? '' }}
+                                                        </div>
+                                                        <div class="price-info text-success fw-bold mb-2">
+                                                            {{ number_format($departure->price, 2) }} zł
                                                         </div>
                                                         @if(Auth::check())
                                                             <a href="{{ route('tickets.create', ['departure_id' => $departure->id]) }}" class="btn btn-sm btn-primary w-100">

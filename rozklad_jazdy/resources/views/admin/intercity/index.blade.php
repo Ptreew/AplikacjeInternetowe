@@ -38,6 +38,7 @@
                                     <th>Przewoźnik</th>
                                     <th>Miasto początkowe</th>
                                     <th>Miasto docelowe</th>
+                                    <th>Dni kursowania</th>
                                     <th>Status</th>
                                     <th>Akcje</th>
                                 </tr>
@@ -62,6 +63,34 @@
                                                 ({{ $route->routeStops->last()->stop->name }})
                                             @else
                                                 Brak danych
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($route->schedules->isNotEmpty())
+                                                @php
+                                                    $dayNames = [
+                                                        0 => 'Niedziela',
+                                                        1 => 'Poniedziałek',
+                                                        2 => 'Wtorek',
+                                                        3 => 'Środa',
+                                                        4 => 'Czwartek',
+                                                        5 => 'Piątek',
+                                                        6 => 'Sobota'
+                                                    ];
+                                                    
+                                                    $allDays = [];
+                                                    foreach($route->schedules as $schedule) {
+                                                        foreach($schedule->days_of_week as $day) {
+                                                            if (!in_array($day, array_keys($allDays))) {
+                                                                $allDays[$day] = $dayNames[$day];
+                                                            }
+                                                        }
+                                                    }
+                                                    ksort($allDays);
+                                                @endphp
+                                                {{ implode(', ', $allDays) }}
+                                            @else
+                                                <span class="text-muted">Brak danych</span>
                                             @endif
                                         </td>
                                         <td>

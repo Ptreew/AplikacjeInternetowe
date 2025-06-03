@@ -14,6 +14,7 @@ class Route extends Model
     protected $fillable = [
         'line_id',
         'name',
+        'travel_time',
         'is_active'
     ];
 

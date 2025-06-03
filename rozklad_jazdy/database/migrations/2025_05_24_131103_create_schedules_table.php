@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('route_id');
             $table->date('valid_from');
             $table->date('valid_to');
-            $table->enum('day_type', ['weekday', 'saturday', 'sunday', 'holiday'])->default('weekday');
+            $table->json('days_of_week')->comment('JSON array of days: [0,1,2,3,4,5,6] where 0-Sunday, 1-Monday, etc.');
             $table->timestamps();
             
             $table->foreign('route_id')->references('id')->on('routes')->onDelete('cascade');

@@ -20,7 +20,6 @@ class TicketsTableSeeder extends Seeder
                 'user_id' => 2,
                 'departure_id' => 1, // Warsaw - Krakow 07:00 weekday
                 'ticket_number' => 'TKT-' . Str::upper(Str::random(8)),
-                'price' => 75.00,
                 'status' => 'reserved',
                 'purchase_date' => null,
                 'passenger_name' => 'Jan Kowalski',
@@ -37,7 +36,6 @@ class TicketsTableSeeder extends Seeder
                 'user_id' => 2,
                 'departure_id' => 12, // Krakow - Rzeszow 07:30 weekday
                 'ticket_number' => 'TKT-' . Str::upper(Str::random(8)),
-                'price' => 45.00,
                 'status' => 'paid',
                 'purchase_date' => Carbon::now()->subDays(5),
                 'passenger_name' => 'Jan Kowalski',
@@ -54,7 +52,6 @@ class TicketsTableSeeder extends Seeder
                 'user_id' => 2,
                 'departure_id' => 3, // Warsaw - Krakow 12:00 weekday
                 'ticket_number' => 'TKT-' . Str::upper(Str::random(8)),
-                'price' => 75.00,
                 'status' => 'used',
                 'purchase_date' => Carbon::now()->subDays(15),
                 'passenger_name' => 'Jan Kowalski',
@@ -71,7 +68,6 @@ class TicketsTableSeeder extends Seeder
                 'user_id' => 2,
                 'departure_id' => 5, // Warsaw - Krakow 18:00 weekday
                 'ticket_number' => 'TKT-' . Str::upper(Str::random(8)),
-                'price' => 75.00,
                 'status' => 'cancelled',
                 'purchase_date' => Carbon::now()->subDays(10),
                 'passenger_name' => 'Jan Kowalski',
@@ -88,7 +84,6 @@ class TicketsTableSeeder extends Seeder
                 'user_id' => 3,
                 'departure_id' => 6, // Warsaw - Krakow 08:00 saturday
                 'ticket_number' => 'TKT-' . Str::upper(Str::random(8)),
-                'price' => 85.00, // Weekend rate
                 'status' => 'paid',
                 'purchase_date' => Carbon::now()->subDays(3),
                 'passenger_name' => 'Anna Nowak',
@@ -103,7 +98,6 @@ class TicketsTableSeeder extends Seeder
                 'user_id' => 3,
                 'departure_id' => 14, // Krakow - Rzeszow 15:30 weekday
                 'ticket_number' => 'TKT-' . Str::upper(Str::random(8)),
-                'price' => 45.00,
                 'status' => 'reserved',
                 'purchase_date' => null,
                 'passenger_name' => 'Anna Nowak',
@@ -118,7 +112,6 @@ class TicketsTableSeeder extends Seeder
                 'user_id' => 3,
                 'departure_id' => 17, // Warszawa - Lublin 12:00 weekday
                 'ticket_number' => 'TKT-' . Str::upper(Str::random(8)),
-                'price' => 50.00,
                 'status' => 'used',
                 'purchase_date' => Carbon::now()->subDays(20),
                 'passenger_name' => 'Anna Nowak',
@@ -135,7 +128,6 @@ class TicketsTableSeeder extends Seeder
                 'user_id' => 2, // Jan Kowalski buying for family
                 'departure_id' => 7, // Warsaw - Krakow 12:00 saturday
                 'ticket_number' => 'TKT-' . Str::upper(Str::random(8)),
-                'price' => 85.00,
                 'status' => 'paid',
                 'purchase_date' => Carbon::now()->subDays(7),
                 'passenger_name' => 'Maria Kowalska',
@@ -150,7 +142,6 @@ class TicketsTableSeeder extends Seeder
                 'user_id' => 2, // Jan Kowalski buying for family
                 'departure_id' => 7, // Warsaw - Krakow 12:00 saturday
                 'ticket_number' => 'TKT-' . Str::upper(Str::random(8)),
-                'price' => 85.00,
                 'status' => 'paid',
                 'purchase_date' => Carbon::now()->subDays(7),
                 'passenger_name' => 'Tomasz Kowalski',
@@ -165,7 +156,6 @@ class TicketsTableSeeder extends Seeder
                 'user_id' => 2, // Jan Kowalski buying for family
                 'departure_id' => 7, // Warsaw - Krakow 12:00 saturday
                 'ticket_number' => 'TKT-' . Str::upper(Str::random(8)),
-                'price' => 85.00,
                 'status' => 'paid',
                 'purchase_date' => Carbon::now()->subDays(7),
                 'passenger_name' => 'Jan Kowalski',

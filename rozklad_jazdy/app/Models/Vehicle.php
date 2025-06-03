@@ -36,4 +36,12 @@ class Vehicle extends Model
     {
         return $this->hasMany(Departure::class);
     }
+    
+    /**
+     * Get the line that this vehicle is assigned to
+     */
+    public function line(): BelongsTo
+    {
+        return $this->belongsTo(Line::class);
+    }
 }
