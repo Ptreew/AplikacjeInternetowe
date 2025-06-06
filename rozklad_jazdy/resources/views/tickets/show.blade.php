@@ -89,7 +89,7 @@
                                     </tr>
                                     <tr>
                                         <th scope="row">Data i godzina odjazdu</th>
-                                        <td>{{ \Carbon\Carbon::parse($ticket->departure->departure_time)->format('d.m.Y H:i') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($ticket->travel_date . ' ' . $ticket->departure->departure_time)->format('d.m.Y H:i') }}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Cena</th>
@@ -166,7 +166,7 @@
                                 </form>
                             @endif
                             
-                            @if(auth()->user()->role === 'Admin' && $ticket->status === 'paid')
+                            @if(auth()->user()->role === 'admin' && $ticket->status === 'paid')
                                 <form action="{{ route('tickets.mark-used', $ticket) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="btn btn-info text-white">

@@ -105,7 +105,7 @@
                         </tr>
                         <tr>
                             <th class="bg-light">Przewoźnik</th>
-                            <td>{{ $departure->vehicle->carrier->name }}</td>
+                            <td>{{ $departure->vehicle->line->carrier->name ?? 'Brak danych' }}</td>
                         </tr>
                         <tr>
                             <th class="bg-light">Typ pojazdu</th>

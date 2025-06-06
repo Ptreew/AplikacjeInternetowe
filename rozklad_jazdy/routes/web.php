@@ -43,6 +43,7 @@ Route::get('/carriers/{carrier}', [CarrierController::class, 'show'])->name('car
 
 // Line routes (public listing)
 Route::get('/lines', [LineController::class, 'index'])->name('lines.index');
+Route::get('/lines/favorites', [LineController::class, 'favorites'])->name('lines.favorites');
 Route::get('/lines/{line}', [LineController::class, 'show'])->name('lines.show');
 
 // Route routes (public listing)
@@ -63,11 +64,27 @@ Route::post('/tickets/search', [TicketController::class, 'search'])->name('ticke
 // User authenticated routes
 Route::middleware(['auth'])->group(function () {
     // User favorite lines
-    Route::get('/favorites', [LineController::class, 'favorites'])->name('lines.favorites');
-    Route::post('/lines/{line}/favorite', [LineController::class, 'toggleFavorite'])->name('lines.toggleFavorite');
+    Route::get('/favourites', [FavouriteLineController::class, 'index'])->name('favourite-lines.index');
+    Route::post('/favourites', [FavouriteLineController::class, 'store'])->name('favourite-lines.store');
+    Route::delete('/favourites/{favouriteLine}', [FavouriteLineController::class, 'destroy'])->name('favourite-lines.destroy');
+    
+    // AJAX routes for favorites
+    Route::post('/lines/{line}/favorite/add', [FavouriteLineController::class, 'addToFavorites'])->name('lines.favorite.add');
+    Route::delete('/lines/{line}/favorite/remove', [FavouriteLineController::class, 'removeFromFavorites'])->name('lines.favorite.remove');
+    
+    // User account management
+    Route::prefix('account')->name('account.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\AccountController::class, 'index'])->name('index');
+        Route::put('/profile', [\App\Http\Controllers\AccountController::class, 'updateProfile'])->name('update-profile');
+        Route::put('/password', [\App\Http\Controllers\AccountController::class, 'updatePassword'])->name('update-password');
+        Route::delete('/', [\App\Http\Controllers\AccountController::class, 'destroy'])->name('destroy');
+    });
     
     // Standard resource routes for tickets
     Route::resource('tickets', TicketController::class);
+    
+    // Routes for favourite lines
+    Route::post('/lines/{line}/toggle-favorite', [LineController::class, 'toggleFavorite'])->name('lines.toggle-favorite');
     
     // Additional custom routes for ticket management
     Route::post('/tickets/{ticket}/pay', [TicketController::class, 'pay'])->name('tickets.pay');

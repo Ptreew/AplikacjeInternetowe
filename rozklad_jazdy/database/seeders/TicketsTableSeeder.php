@@ -21,7 +21,7 @@ class TicketsTableSeeder extends Seeder
                 'departure_id' => 1, // Warsaw - Krakow 07:00 weekday
                 'ticket_number' => 'TKT-' . Str::upper(Str::random(8)),
                 'status' => 'reserved',
-                'purchase_date' => null,
+                'purchase_date' => Carbon::now()->subDays(1),
                 'passenger_name' => 'Jan Kowalski',
                 'passenger_email' => 'jan.kowalski@example.com',
                 'passenger_phone' => '+48 123 456 789',
@@ -99,7 +99,7 @@ class TicketsTableSeeder extends Seeder
                 'departure_id' => 14, // Krakow - Rzeszow 15:30 weekday
                 'ticket_number' => 'TKT-' . Str::upper(Str::random(8)),
                 'status' => 'reserved',
-                'purchase_date' => null,
+                'purchase_date' => Carbon::now()->subDays(1),
                 'passenger_name' => 'Anna Nowak',
                 'passenger_email' => 'anna.nowak@example.com',
                 'passenger_phone' => '+48 987 654 321',

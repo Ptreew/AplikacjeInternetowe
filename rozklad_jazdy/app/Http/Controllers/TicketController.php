@@ -23,7 +23,7 @@ class TicketController extends Controller
         $user = Auth::user();
         
         // For admin users, show all tickets with pagination and filters
-        if ($user && $user->role === 'Admin') {
+        if ($user && $user->role === 'admin') {
             $query = Ticket::with(['user', 'departure.schedule.route', 'departure.vehicle'])
                 ->orderBy('created_at', 'desc');
                 
@@ -169,10 +169,8 @@ class TicketController extends Controller
             $ticket->notes = $request->notes;
             $ticket->is_active = true;
             
-            // (Optionally) store travel_date in ticket if column exists
-            if (Schema::hasColumn('tickets', 'travel_date')) {
-                $ticket->travel_date = $travelDateCarbon->format('Y-m-d');
-            }
+            // Always save travel date
+            $ticket->travel_date = $travelDateCarbon->format('Y-m-d');
             
             $ticket->save();
             
@@ -199,7 +197,7 @@ class TicketController extends Controller
     public function show(Ticket $ticket)
     {
         // Make sure users can only see their own tickets unless they're admin
-        if (Auth::id() !== $ticket->user_id && Auth::user()->role !== 'Admin') {
+        if (Auth::id() !== $ticket->user_id && Auth::user()->role !== 'admin') {
             return redirect()->route('tickets.index')
                 ->with('error', 'You are not authorized to view this ticket.');
         }
@@ -215,7 +213,7 @@ class TicketController extends Controller
     public function edit(Ticket $ticket)
     {
         // Only admins or ticket owners can edit tickets
-        if (Auth::id() !== $ticket->user_id && Auth::user()->role !== 'Admin') {
+        if (Auth::id() !== $ticket->user_id && Auth::user()->role !== 'admin') {
             return redirect()->route('tickets.index')
                 ->with('error', 'You are not authorized to edit this ticket.');
         }
@@ -237,7 +235,7 @@ class TicketController extends Controller
     public function update(Request $request, Ticket $ticket)
     {
         // Only admins or ticket owners can update tickets
-        if (Auth::id() !== $ticket->user_id && !Auth::user()->hasRole('Admin')) {
+        if (Auth::id() !== $ticket->user_id && Auth::user()->role !== 'admin') {
             return redirect()->route('tickets.index')
                 ->with('error', 'Nie masz uprawnień do edycji tego biletu.');
         }
@@ -248,6 +246,27 @@ class TicketController extends Controller
                 ->with('error', 'Nie można edytować biletu, który został ' . ($ticket->status === 'used' ? 'wykorzystany' : 'anulowany') . '.');
         }
         
+        // For normal users, only allow status changes (cancel tickets)
+        if (Auth::user()->role !== 'admin') {
+            $request->validate([
+                'status' => 'required|in:cancelled',
+            ]);
+            
+            // Can't cancel paid tickets
+            if ($ticket->status === 'paid') {
+                return redirect()->route('tickets.show', $ticket)
+                    ->with('error', 'Nie można anulować opłaconego biletu. Skontaktuj się z obsługą klienta.');
+            }
+            
+            $ticket->status = 'cancelled';
+            $ticket->is_active = false;
+            $ticket->save();
+            
+            return redirect()->route('tickets.show', $ticket)
+                ->with('success', 'Bilet został anulowany.');
+        }
+        
+        // For admins, allow full edits
         $request->validate([
             'passenger_name' => 'required|string|max:255',
             'passenger_email' => 'required|email|max:255',
@@ -256,8 +275,7 @@ class TicketController extends Controller
             'status' => 'sometimes|in:reserved,paid,used,cancelled',
         ]);
         
-        // Only admins can change the status
-        if ($request->has('status') && Auth::user()->hasRole('Admin')) {
+        if ($request->has('status')) {
             $ticket->status = $request->status;
             
             // Deactivate ticket if it's used or cancelled
@@ -282,7 +300,7 @@ class TicketController extends Controller
     public function destroy(Ticket $ticket)
     {
         // Check if user is authorized to cancel this ticket
-        if (Auth::id() !== $ticket->user_id && !Auth::user()->hasRole('Admin')) {
+        if (Auth::id() !== $ticket->user_id && Auth::user()->role !== 'admin') {
             return redirect()->route('tickets.index')
                 ->with('error', 'Nie masz uprawnień do anulowania tego biletu.');
         }
@@ -296,6 +314,11 @@ class TicketController extends Controller
         if ($ticket->status === 'used') {
             return redirect()->back()
                 ->with('error', 'Nie można anulować już wykorzystanego biletu.');
+        }
+        
+        if ($ticket->status === 'paid') {
+            return redirect()->back()
+                ->with('error', 'Nie można anulować opłaconego biletu. Skontaktuj się z obsługą klienta.');
         }
         
         // Update ticket status to cancelled
@@ -415,7 +438,7 @@ class TicketController extends Controller
     public function markAsUsed(Ticket $ticket)
     {
         // Only admins can mark tickets as used
-        if (Auth::user()->role !== 'Admin') {
+        if (Auth::user()->role !== 'admin') {
             return redirect()->route('tickets.index')
                 ->with('error', 'You are not authorized to perform this action.');
         }

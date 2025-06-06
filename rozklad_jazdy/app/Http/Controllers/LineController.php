@@ -21,7 +21,7 @@ class LineController extends Controller
         $this->middleware('auth')->except(['index', 'show']);
         
         // Require admin role for create, store, edit, update, destroy
-        $this->middleware(CheckRole::class . ':admin')->except(['index', 'show']);
+        $this->middleware(CheckRole::class . ':admin')->except(['index', 'show', 'favorites', 'toggleFavorite']);
     }
     
     /**
@@ -32,18 +32,19 @@ class LineController extends Controller
         // Add search filters if provided
         $query = Line::with('carrier');
         
-        if ($request->has('search')) {
+        if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
-            $query->where('name', 'like', "%{$search}%")
-                  ->orWhere('type', 'like', "%{$search}%");
+            // Search for lines by name or carrier name
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhereHas('carrier', function($q2) use ($search) {
+                      $q2->where('name', 'like', "%{$search}%");
+                  });
+            });
         }
         
-        if ($request->has('carrier_id')) {
+        if ($request->has('carrier_id') && !empty($request->carrier_id)) {
             $query->where('carrier_id', $request->carrier_id);
-        }
-        
-        if ($request->has('type')) {
-            $query->where('type', $request->type);
         }
         
         // Paginate the results

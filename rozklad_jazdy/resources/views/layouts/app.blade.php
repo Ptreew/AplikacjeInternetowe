@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- SweetAlert2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <!-- Niestandardowe style (mają niższy priorytet niż Bootstrap) -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <!-- Dodatkowe style -->
@@ -118,37 +120,124 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+        /* Style dla dropdown menu */
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+        }
+        
+        .dropdown-item i {
+            width: 20px;
+            text-align: center;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .dropdown-menu {
+            min-width: 200px;
+            padding: 0.5rem 0;
+        }
+        
+        /* Centrowanie nawigacji niezależnie od widoczności przycisku admin */
+        .navbar-nav.mx-auto {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            display: flex;
+            justify-content: center;
+        }
+        
+        /* Zmniejszenie wysokości nagłówka */
+        header.bg-dark {
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+        }
     </style>
     @yield('styles')
     @yield('extra_css')
 </head>
 <body>
-    <header>
-        <h1>@yield('header', 'Rozkład jazdy autobusów')</h1>
-        <nav>
-            <a href="{{ route('home') }}">Strona główna</a>
-            
-            @auth
-                {{-- Show admin panel link only to admin users --}}
-                @if(Auth::user()->role === 'admin')
-                    <a href="{{ route('admin') }}">Panel administratora</a>
-                @endif
+    <header class="bg-dark text-white py-2">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between">
+                <!-- Logo/Title section on the left -->
+                <div class="navbar-brand">
+                    <h1 class="h3 mb-0">@yield('header', 'Rozkład jazdy autobusów')</h1>
+                </div>
                 
-                <span class="user-info">Zalogowany jako: {{ Auth::user()->name }}</span>
-                
-                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                    @csrf
-                    <button type="submit" class="nav-link-button">Wyloguj</button>
-                </form>
-            @else
-                {{-- Show login/register links only for guests --}}
-                <a href="{{ route('login') }}">Logowanie</a>
-                <a href="{{ route('register') }}">Zarejestruj</a>
-            @endauth
-            
-            {{-- Additional custom navigation items if needed --}}
-            @yield('navigation')
-        </nav>
+                <!-- Navigation section in the center -->
+                <nav class="navbar navbar-expand-lg navbar-dark py-0">
+                    <div class="container-fluid p-0">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        
+                        <div class="collapse navbar-collapse" id="navbarMain">
+                            <ul class="navbar-nav mx-auto mb-0">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="{{ route('home') }}">Strona główna</a>
+                                </li>
+                                
+                                @auth
+                                    {{-- Show admin panel link only to admin users --}}
+                                    @if(Auth::user()->role === 'admin')
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ route('admin') }}">Panel administratora</a>
+                                        </li>
+                                    @endif
+                                    
+                                    {{-- User account dropdown --}}
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            {{ Auth::user()->name }}
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('lines.favorites') }}">
+                                                    <i class="fas fa-star"></i>
+                                                    <span>Ulubione linie</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('tickets.index') }}">
+                                                    <i class="fas fa-ticket-alt"></i>
+                                                    <span>Bilety</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('account.index') }}">
+                                                    <i class="fas fa-cog"></i>
+                                                    <span>Ustawienia konta</span>
+                                                </a>
+                                            </li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <form method="POST" action="{{ route('logout') }}" class="w-100">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item w-100 text-start">
+                                                        <i class="fas fa-sign-out-alt"></i>
+                                                        <span>Wyloguj</span>
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                @else
+                                    {{-- Show login/register links only for guests --}}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('login') }}">Logowanie</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('register') }}">Rejestracja</a>
+                                    </li>
+                                @endauth
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
     </header>
 
     <main>

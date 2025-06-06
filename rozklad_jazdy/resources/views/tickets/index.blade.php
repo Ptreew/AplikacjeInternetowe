@@ -58,7 +58,7 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                {{ \Carbon\Carbon::parse($departure->departure_time)->format('d.m.Y H:i') }}
+                                                {{ \Carbon\Carbon::parse($ticket->travel_date . ' ' . $departure->departure_time)->format('d.m.Y H:i') }}
                                                 <div class="text-muted small">
                                                     {{ $departure->vehicle->type ?? 'Brak danych' }}
                                                     @if(!empty($departure->vehicle->vehicle_number))
@@ -93,7 +93,7 @@
                                                     <a href="{{ route('tickets.show', $ticket) }}" class="btn btn-sm btn-outline-primary">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    @if($ticket->status === 'reserved' || $ticket->status === 'paid')
+                                                    @if(($ticket->status === 'reserved' || $ticket->status === 'paid') && Auth::user()->role === 'admin')
                                                         <a href="{{ route('tickets.edit', $ticket) }}" class="btn btn-sm btn-outline-secondary">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
