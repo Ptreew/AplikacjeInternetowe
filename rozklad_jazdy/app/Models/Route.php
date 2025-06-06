@@ -13,9 +13,20 @@ class Route extends Model
 
     protected $fillable = [
         'line_id',
+        'type',
         'name',
         'travel_time',
         'is_active'
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'is_active' => 'boolean',
+        'travel_time' => 'integer',
     ];
 
     /**

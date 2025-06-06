@@ -16,10 +16,10 @@
         
         <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="miedzymiastowe-tab" data-bs-toggle="tab" data-bs-target="#miedzymiastowe" type="button" role="tab" aria-controls="miedzymiastowe" aria-selected="true">Międzymiastowe</button>
+                <button class="nav-link active" id="miedzymiastowe-tab" data-bs-toggle="tab" data-bs-target="#miedzymiastowe" type="button" role="tab" aria-controls="miedzymiastowe" aria-selected="true">Kursy Międzymiastowe</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="miejskie-tab" data-bs-toggle="tab" data-bs-target="#miejskie" type="button" role="tab" aria-controls="miejskie" aria-selected="false">Miejskie</button>
+                <button class="nav-link" id="miejskie-tab" data-bs-toggle="tab" data-bs-target="#miejskie" type="button" role="tab" aria-controls="miejskie" aria-selected="false">Kursy Miejskie</button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="uzytkownicy-tab" data-bs-toggle="tab" data-bs-target="#uzytkownicy" type="button" role="tab" aria-controls="uzytkownicy" aria-selected="false">Użytkownicy</button>
@@ -186,96 +186,98 @@
         <!-- Miejskie -->
         <div class="tab-pane fade" id="miejskie" role="tabpanel" aria-labelledby="miejskie-tab">
             <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Zarządzanie autobusami miejskimi</h5>
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Kursy miejskie</h5>
+                    <a href="{{ route('admin.city_routes.create') }}" class="btn btn-sm btn-success">
+                        <i class="fas fa-plus"></i> Dodaj nowy kurs
+                    </a>
                 </div>
                 <div class="card-body">
-                    <form id="form-miejskie" method="POST" action="{{ route('admin.miejskie.store') }}" class="row g-3">
-                        @csrf
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="miasto" name="miasto" placeholder="Miasto" required />
-                                <label for="miasto">Miasto</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="numer_linii" name="numer_linii" placeholder="Numer linii" required />
-                                <label for="numer_linii">Numer linii</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                <input type="time" class="form-control" id="godzina_startowa" name="godzina_startowa" required />
-                                <label for="godzina_startowa">Godzina startowa</label>
-                            </div>
-                        </div>
-                        
-                        <div class="col-12 mb-3">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5>Przystanki</h5>
-                                </div>
-                                <div class="card-body" id="przystanki-wrapper">
-                                    <!-- Dodawanie przystanków -->
-                                </div>
-                                <div class="card-footer">
-                                    <button type="button" class="btn btn-outline-primary" id="dodaj-przystanek">
-                                        <i class="bi bi-plus-circle"></i> Dodaj przystanek
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary">Dodaj kurs</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Lista linii autobusowych</h5>
-                </div>
-                <div class="card-body">
+                    @php
+                        // Pobierz kursy miejskie z bazy danych
+                        $cityRoutes = \App\Models\Route::with(['line.carrier', 'routeStops.stop.city', 'schedules'])
+                            ->whereHas('line', function($query) {
+                                $query->whereNotNull('number');
+                            })
+                            ->orderBy('created_at', 'desc')
+                            ->take(5)
+                            ->get();
+                    @endphp
+                    
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
-                            <thead class="table-light">
+                            <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Linia</th>
-                                    <th>Start</th>
+                                    <th>Przewoźnik</th>
+                                    <th>Trasa</th>
+                                    <th>Liczba przystanków</th>
+                                    <th>Status</th>
                                     <th>Akcje</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Linia 12 – Kraków</td>
-                                    <td>07:00</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline-info toggle-stops" data-bs-toggle="collapse" data-bs-target="#przystanki-1">
-                                            Pokaż przystanki
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-primary">Edytuj</button>
-                                        <button class="btn btn-sm btn-outline-danger">Usuń</button>
-                                    </td>
-                                </tr>
-                                <tr class="collapse" id="przystanki-1">
-                                    <td colspan="3">
-                                        <div class="card card-body">
-                                            <ul class="list-group">
-                                                <li class="list-group-item">Dworzec Główny – 07:00</li>
-                                                <li class="list-group-item">Rondo Grunwaldzkie – 07:12</li>
-                                                <li class="list-group-item">Nowa Huta – 07:30</li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
+                                @forelse($cityRoutes as $route)
+                                    <tr>
+                                        <td>{{ $route->id }}</td>
+                                        <td>
+                                            <span class="badge" style="background-color: {{ $route->line->color ?? '#007bff' }}; color: white;">
+                                                {{ $route->line->number }}
+                                            </span>
+                                        </td>
+                                        <td>{{ $route->line->carrier->name }}</td>
+                                        <td>
+                                            @php
+                                                $firstStop = $route->routeStops->first();
+                                                $lastStop = $route->routeStops->last();
+                                            @endphp
+                                            @if($firstStop && $lastStop)
+                                                {{ $firstStop->stop->name }} → {{ $lastStop->stop->name }}
+                                            @else
+                                                Brak zdefiniowanych przystanków
+                                            @endif
+                                        </td>
+                                        <td>{{ $route->routeStops->count() }}</td>
+                                        <td>
+                                            @if($route->is_active)
+                                                <span class="badge bg-success">Aktywny</span>
+                                            @else
+                                                <span class="badge bg-secondary">Nieaktywny</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{{ route('admin.city_routes.edit', $route->id) }}" class="btn btn-sm btn-primary me-1">
+                                                    <i class="fas fa-edit"></i> Edytuj
+                                                </a>
+                                                <form action="{{ route('admin.city_routes.destroy', $route->id) }}" method="POST" onsubmit="return confirm('Czy na pewno chcesz usunąć ten kurs?');" style="display: inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                        <i class="fas fa-trash"></i> Usuń
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center">Brak kursów miejskich w bazie danych</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
+                    
+                    <div class="mt-3 text-center">
+                        <a href="{{ route('admin.city_routes.index') }}" class="btn btn-primary">
+                            Zobacz wszystkie kursy miejskie
+                        </a>
+                    </div>
                 </div>
             </div>
+
         </div>
 
         <!-- Użytkownicy -->
@@ -645,8 +647,8 @@
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Zarządzanie Trasami</h5>
-                    <a href="{{ route('admin.routes.create') }}" class="btn btn-success">
-                        <i class="fas fa-plus"></i> Dodaj nową trasę
+                    <a href="{{ route('admin.routes.builder.step1') }}" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Dodaj nową trasę (Builder)
                     </a>
                 </div>
                 <div class="card-body">
@@ -862,24 +864,164 @@
 
         <div class="tab-pane fade" id="schedules" role="tabpanel" aria-labelledby="schedules-tab">
             <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Zarządzanie Rozkładami Jazdy</h5>
+                    <a href="{{ route('admin.schedules.create') }}" class="btn btn-sm btn-success">
+                        <i class="fas fa-plus"></i> Dodaj nowy rozkład
+                    </a>
                 </div>
                 <div class="card-body">
-                    <p>Tutaj będzie można zarządzać rozkładami jazdy (CRUD).</p>
-                    <!-- TODO: Add CRUD interface for Schedules -->
+                    @php
+                        // Pobierz najnowsze rozkłady jazdy
+                        $recentSchedules = App\Models\Schedule::with(['route.line.carrier'])
+                            ->orderBy('id', 'desc')
+                            ->take(5)
+                            ->get();
+                    @endphp
+                    
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Trasa</th>
+                                    <th>Okres obowiązywania</th>
+                                    <th>Dni tygodnia</th>
+                                    <th>Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($recentSchedules as $schedule)
+                                    <tr>
+                                        <td>{{ $schedule->id }}</td>
+                                        <td>
+                                            {{ $schedule->route->name }}
+                                            <span class="badge bg-info">{{ $schedule->route->line->name }}</span>
+                                        </td>
+                                        <td>{{ \Carbon\Carbon::parse($schedule->valid_from)->format('d.m.Y') }} - {{ \Carbon\Carbon::parse($schedule->valid_to)->format('d.m.Y') }}</td>
+                                        <td>
+                                            @php
+                                                $dayNames = [
+                                                    0 => 'Nd',
+                                                    1 => 'Pn',
+                                                    2 => 'Wt',
+                                                    3 => 'Śr',
+                                                    4 => 'Cz',
+                                                    5 => 'Pt',
+                                                    6 => 'Sb'
+                                                ];
+                                                
+                                                $daysText = [];
+                                                foreach ($schedule->days_of_week as $day) {
+                                                    $daysText[] = $dayNames[$day];
+                                                }
+                                                echo implode(', ', $daysText);
+                                            @endphp
+                                        </td>
+                                        <td>
+                                            <div class="d-inline-flex">
+                                                <a href="{{ route('admin.schedules.show', $schedule) }}" class="btn btn-sm btn-success me-1">
+                                                    <i class="fas fa-eye"></i> Pokaż
+                                                </a>
+                                                <a href="{{ route('admin.schedules.edit', $schedule) }}" class="btn btn-sm btn-primary me-1">
+                                                    <i class="fas fa-edit"></i> Edytuj
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center">Brak dostępnych rozkładów jazdy</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-end mt-3">
+                        <a href="{{ route('admin.schedules.index') }}" class="btn btn-primary">
+                            <i class="fas fa-list"></i> Pokaż wszystkie rozkłady
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="tab-pane fade" id="departures" role="tabpanel" aria-labelledby="departures-tab">
             <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Zarządzanie Odjazdami</h5>
+                    <a href="{{ route('admin.departures.create') }}" class="btn btn-sm btn-success">
+                        <i class="fas fa-plus"></i> Dodaj nowy odjazd
+                    </a>
                 </div>
                 <div class="card-body">
-                    <p>Tutaj będzie można zarządzać odjazdami (CRUD).</p>
-                    <!-- TODO: Add CRUD interface for Departures -->
+                    @php
+                        // Pobierz najnowsze odjazdy
+                        $recentDepartures = App\Models\Departure::with(['schedule.route.line', 'vehicle'])
+                            ->orderBy('departure_time', 'desc')
+                            ->take(5)
+                            ->get();
+                    @endphp
+                    
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Rozkład (Trasa)</th>
+                                    <th>Czas odjazdu</th>
+                                    <th>Pojazd</th>
+                                    <th>Status</th>
+                                    <th>Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($recentDepartures as $departure)
+                                    <tr>
+                                        <td>{{ $departure->id }}</td>
+                                        <td>
+                                            {{ $departure->schedule->route->name }}
+                                            <span class="badge bg-info">{{ $departure->schedule->route->line->name }}</span>
+                                        </td>
+                                        <td>{{ \Carbon\Carbon::parse($departure->departure_time)->format('H:i') }}</td>
+                                        <td>
+                                            @if($departure->vehicle && $departure->vehicle->carrier)
+                                                {{ $departure->vehicle->number }} ({{ $departure->vehicle->carrier->name }})
+                                            @else
+                                                Brak przypisanego pojazdu
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($departure->is_active)
+                                                <span class="badge bg-success">Aktywny</span>
+                                            @else
+                                                <span class="badge bg-danger">Nieaktywny</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="d-inline-flex">
+                                                <a href="{{ route('admin.departures.show', $departure) }}" class="btn btn-sm btn-success me-1">
+                                                    <i class="fas fa-eye"></i> Pokaż
+                                                </a>
+                                                <a href="{{ route('admin.departures.edit', $departure) }}" class="btn btn-sm btn-primary me-1">
+                                                    <i class="fas fa-edit"></i> Edytuj
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6" class="text-center">Brak dostępnych odjazdów</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-end mt-3">
+                        <a href="{{ route('admin.departures.index') }}" class="btn btn-primary">
+                            <i class="fas fa-list"></i> Pokaż wszystkie odjazdy
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

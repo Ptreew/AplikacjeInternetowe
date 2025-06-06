@@ -17,6 +17,7 @@ use App\Http\Controllers\StopController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\Admin\AdminCityController;
+use App\Http\Controllers\RouteBuilderController;
 
 // Main pages
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -79,6 +80,41 @@ Route::middleware(['auth'])->group(function () {
 Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::class.':admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     
+    // Route Builder - multi-step route creation wizard
+    Route::prefix('routes/builder')->name('admin.routes.builder.')->group(function() {
+        // Redirect from base path to step1
+        Route::get('/', function() {
+            return redirect()->route('admin.routes.builder.step1');
+        })->name('index');
+        
+        // Step 1: Basic route info
+        Route::get('/step1', [RouteBuilderController::class, 'showStep1'])->name('step1');
+        Route::post('/step1', [RouteBuilderController::class, 'processStep1'])->name('step1.process');
+        
+        // Step 2: Stops management
+        Route::get('/step2', [RouteBuilderController::class, 'showStep2'])->name('step2');
+        Route::post('/step2', [RouteBuilderController::class, 'processStep2'])->name('step2.process');
+        Route::get('/stops-by-city/{city}', [RouteBuilderController::class, 'getStopsByCity'])->name('stops-by-city');
+        
+        // Step 3: Schedules and departures
+        Route::get('/step3', [RouteBuilderController::class, 'showStep3'])->name('step3');
+        Route::post('/step3', [RouteBuilderController::class, 'processStep3'])->name('step3.process');
+        
+        // Cancel route creation
+        Route::get('/cancel', [RouteBuilderController::class, 'cancel'])->name('cancel');
+    });
+    
+    // City Routes Management
+    Route::prefix('city-routes')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\AdminCityRouteController::class, 'index'])->name('admin.city_routes.index');
+        Route::get('/create', [\App\Http\Controllers\Admin\AdminCityRouteController::class, 'create'])->name('admin.city_routes.create');
+        Route::post('/', [\App\Http\Controllers\Admin\AdminCityRouteController::class, 'store'])->name('admin.city_routes.store');
+        Route::get('/{route}/edit', [\App\Http\Controllers\Admin\AdminCityRouteController::class, 'edit'])->name('admin.city_routes.edit');
+        Route::put('/{route}', [\App\Http\Controllers\Admin\AdminCityRouteController::class, 'update'])->name('admin.city_routes.update');
+        Route::delete('/{route}', [\App\Http\Controllers\Admin\AdminCityRouteController::class, 'destroy'])->name('admin.city_routes.destroy');
+        Route::get('/get-stops', [\App\Http\Controllers\Admin\AdminCityRouteController::class, 'getStopsForCity'])->name('admin.city_routes.get_stops');
+    });
+    
     // Admin panel management view
     Route::get('/', function() {
         // Fetch the latest cities and stops to display in the panel
@@ -96,7 +132,13 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::clas
         ->names('admin.lines')
         ->except(['index', 'show']);
     Route::resource('routes', \App\Http\Controllers\Admin\AdminRouteController::class)
-        ->names('admin.routes');
+        ->names('admin.routes')
+        ->except(['create']);
+
+    // Przekierowanie z create na builder
+    Route::get('/routes/create', function() {
+        return redirect()->route('admin.routes.builder.step1');
+    })->name('admin.routes.create');
     Route::resource('cities', AdminCityController::class)
         ->names('admin.cities');
     Route::resource('stops', \App\Http\Controllers\Admin\AdminStopController::class)
@@ -180,4 +222,6 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::clas
         'update' => 'admin.cities.update',
         'destroy' => 'admin.cities.destroy',
     ]);
+    
+
 });

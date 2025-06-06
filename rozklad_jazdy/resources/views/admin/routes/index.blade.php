@@ -9,8 +9,8 @@
             <a href="{{ route('admin') }}?tab=routes" class="btn btn-primary">
                 <i class="fas fa-arrow-left"></i> Powrót do panelu
             </a>
-            <a href="{{ route('admin.routes.create') }}" class="btn btn-success">
-                <i class="fas fa-plus"></i> Dodaj nową trasę
+            <a href="{{ route('admin.routes.builder.step1') }}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Dodaj nową trasę (Builder)
             </a>
         </div>
     </div>
@@ -40,6 +40,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Nazwa</th>
+                            <th>Typ</th>
                             <th>Linia</th>
                             <th>Przewoźnik</th>
                             <th>Czas podróży</th>
@@ -52,6 +53,13 @@
                             <tr>
                                 <td>{{ $route->id }}</td>
                                 <td>{{ $route->name }}</td>
+                                <td>
+                                    @if($route->type == 'city')
+                                        <span class="badge bg-info">Miejska</span>
+                                    @else
+                                        <span class="badge bg-warning">Międzymiastowa</span>
+                                    @endif
+                                </td>
                                 <td>
                                     @if($route->line->number)
                                         {{ $route->line->number }}
@@ -94,7 +102,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center">Brak tras w bazie danych</td>
+                                <td colspan="8" class="text-center">Brak tras w bazie danych</td>
                             </tr>
                         @endforelse
                     </tbody>

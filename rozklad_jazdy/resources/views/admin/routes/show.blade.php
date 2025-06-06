@@ -30,6 +30,14 @@
             <div class="row">
                 <div class="col-md-6">
                     <p><strong>Nazwa trasy:</strong> {{ $route->name }}</p>
+                    <p>
+                        <strong>Typ trasy:</strong> 
+                        @if($route->type == 'city')
+                            <span class="badge bg-info">Miejska</span>
+                        @else
+                            <span class="badge bg-warning">Międzymiastowa</span>
+                        @endif
+                    </p>
                     <p><strong>Linia:</strong> 
                         @if($route->line->number)
                             {{ $route->line->number }}

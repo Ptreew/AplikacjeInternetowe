@@ -204,9 +204,9 @@ class AdminIntercityController extends Controller
             ->orderBy('vehicle_number')
             ->get();
         
-        // Get origin and destination stops
-        $originStop = $route->routeStops->where('stop_number', 1)->first()->stop ?? null;
-        $destinationStop = $route->routeStops->sortByDesc('stop_number')->first()->stop ?? null;
+        // Get origin and destination stops safely
+        $originStop = optional($route->routeStops->where('stop_number', 1)->first())->stop;
+        $destinationStop = optional($route->routeStops->sortByDesc('stop_number')->first())->stop;
         
         // Get stops for each city
         $cityStops = [];
@@ -225,16 +225,17 @@ class AdminIntercityController extends Controller
             '6' => 'Sobota',
             '0' => 'Niedziela',
         ];
-        // Get days of week from the first schedule
-        $selectedDaysOfWeek = $route->schedules->first() ? $route->schedules->first()->days_of_week : [];
-        // Get departure time from the first departure
-        $departure = $route->schedules->first()->departures->first() ?? null;
+        // Safely get schedule and departure details
+        $firstSchedule = $route->schedules->first();
+        $selectedDaysOfWeek = $firstSchedule ? $firstSchedule->days_of_week : [];
+        
+        $departure = $firstSchedule ? $firstSchedule->departures->first() : null;
         $departureTime = $departure ? date('H:i', strtotime($departure->departure_time)) : '08:00';
         
-        // Get vehicle id from the first departure
+        // Get vehicle id and price from the first departure if available
         $departureVehicleId = $departure ? $departure->vehicle_id : null;
         $travel_time = $route->travel_time ?? 120;
-        $price = $route->schedules->first()->departures->first()->price ?? 0;
+        $price = $departure ? $departure->price : 0;
         
         return view('admin.intercity.edit', compact(
             'route', 'carriers', 'cities', 'originStop', 'destinationStop',

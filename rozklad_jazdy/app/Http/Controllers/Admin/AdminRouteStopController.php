@@ -7,6 +7,7 @@ use App\Models\Route;
 use App\Models\RouteStop;
 use App\Models\Stop;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminRouteStopController extends Controller
 {
@@ -39,15 +40,18 @@ class AdminRouteStopController extends Controller
         }
 
         // Jeśli chcemy wstawić przystanek w środku kolejności, przesuwamy numery kolejnych przystanków
-        $existingStops = RouteStop::where('route_id', $request->route_id)
-            ->where('stop_number', '>=', $request->stop_number)
-            ->get();
+        DB::transaction(function () use ($request) {
+            $existingStops = RouteStop::where('route_id', $request->route_id)
+                ->where('stop_number', '>=', $request->stop_number)
+                ->lockForUpdate()
+                ->get();
 
-        foreach ($existingStops as $stop) {
-            $stop->update(['stop_number' => $stop->stop_number + 1]);
-        }
+            foreach ($existingStops as $stop) {
+                $stop->update(['stop_number' => $stop->stop_number + 1]);
+            }
 
-        RouteStop::create($request->all());
+            RouteStop::create($request->all());
+        });
 
         return redirect()->back()
             ->with('success', 'Przystanek został dodany do trasy.');
@@ -70,23 +74,25 @@ class AdminRouteStopController extends Controller
         }
 
         // Jeśli zmieniamy kolejność, musimy zaktualizować pozostałe przystanki
-        if ($request->stop_number != $routeStop->stop_number) {
-            if ($request->stop_number > $routeStop->stop_number) {
-                // Przesuwamy w dół
-                RouteStop::where('route_id', $routeStop->route_id)
-                    ->where('stop_number', '>', $routeStop->stop_number)
-                    ->where('stop_number', '<=', $request->stop_number)
-                    ->decrement('stop_number');
-            } else {
-                // Przesuwamy w górę
-                RouteStop::where('route_id', $routeStop->route_id)
-                    ->where('stop_number', '<', $routeStop->stop_number)
-                    ->where('stop_number', '>=', $request->stop_number)
-                    ->increment('stop_number');
+        DB::transaction(function () use ($request, $routeStop) {
+            if ($request->stop_number != $routeStop->stop_number) {
+                if ($request->stop_number > $routeStop->stop_number) {
+                    // Przesuwamy w dół
+                    RouteStop::where('route_id', $routeStop->route_id)
+                        ->where('stop_number', '>', $routeStop->stop_number)
+                        ->where('stop_number', '<=', $request->stop_number)
+                        ->decrement('stop_number');
+                } else {
+                    // Przesuwamy w górę
+                    RouteStop::where('route_id', $routeStop->route_id)
+                        ->where('stop_number', '<', $routeStop->stop_number)
+                        ->where('stop_number', '>=', $request->stop_number)
+                        ->increment('stop_number');
+                }
             }
-        }
 
-        $routeStop->update($request->all());
+            $routeStop->update($request->all());
+        });
 
         return redirect()->back()
             ->with('success', 'Przystanek został zaktualizowany.');

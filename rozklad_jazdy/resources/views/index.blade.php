@@ -68,6 +68,7 @@
                             <form action="{{ route('routes.search.results') }}" method="POST" class="route-search-form">
                                 @csrf
                                 <input type="hidden" name="active_tab" value="miedzymiastowe">
+                                <input type="hidden" name="type" value="intercity">
                                 <!-- Dropdowns at the top -->
                                 <div class="dropdowns-container">
                                     <select name="from_city" id="from_city" required>
@@ -108,6 +109,7 @@
                             <form action="{{ route('routes.search.city') }}" method="POST" class="city-route-search-form">
                                 @csrf
                                 <input type="hidden" name="active_tab" value="miejskie">
+                                <input type="hidden" name="type" value="city">
                                 <!-- Dropdowns at the top -->
                                 <div class="dropdowns-container">
                                     <select name="city_id" id="city_id" required>

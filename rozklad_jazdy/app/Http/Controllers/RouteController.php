@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use App\Http\Middleware\CheckRole;
 
 class RouteController extends Controller
 {
@@ -22,7 +23,7 @@ class RouteController extends Controller
         $this->middleware('auth')->except(['index', 'show', 'search', 'searchResults', 'searchCityResults']);
         
         // Require admin role for create, store, edit, update, destroy
-        $this->middleware('role:admin')->except(['index', 'show', 'search', 'searchResults', 'searchCityResults']);
+        $this->middleware(CheckRole::class . ':admin')->except(['index', 'show', 'search', 'searchResults', 'searchCityResults']);
     }
     
     /**
@@ -72,6 +73,7 @@ class RouteController extends Controller
         // Validate the request data
         $validated = $request->validate([
             'line_id' => 'required|exists:lines,id',
+            'type' => 'required|in:city,intercity',
             'name' => [
                 'required',
                 'string',
@@ -86,6 +88,7 @@ class RouteController extends Controller
         // Create new route
         $route = new Route();
         $route->line_id = $validated['line_id'];
+        $route->type = $validated['type'];
         $route->name = $validated['name'];
         $route->is_active = $request->has('is_active');
         $route->save();
@@ -132,6 +135,7 @@ class RouteController extends Controller
         // Validate the request data
         $validated = $request->validate([
             'line_id' => 'required|exists:lines,id',
+            'type' => 'required|in:city,intercity',
             'name' => [
                 'required',
                 'string',
@@ -145,6 +149,7 @@ class RouteController extends Controller
         
         // Update route
         $route->line_id = $validated['line_id'];
+        $route->type = $validated['type'];
         $route->name = $validated['name'];
         $route->is_active = $request->has('is_active');
         $route->save();
@@ -227,9 +232,7 @@ class RouteController extends Controller
         
         // Find routes that contain both cities (order will be verified later)
         $routesQuery = Route::where('is_active', true)
-            ->whereHas('line', function($query) {
-                $query->whereNull('number'); // Intercity routes always have number=NULL
-            })
+            ->where('type', 'intercity')
             ->whereHas('routeStops.stop.city', function($query) use ($request) {
                 $query->whereIn('id', [$request->from_city, $request->to_city]);
             })
@@ -358,11 +361,9 @@ class RouteController extends Controller
             'to_stop.different' => 'Przystanek początkowy i docelowy nie mogą być takie same. Wybierz różne przystanki.'
         ]);
         
-        // Find routes that connect the two stops (only city routes where line.number is NOT NULL and not empty string)
+        // Find routes that connect the two stops (city routes only)
         $routesQuery = Route::where('is_active', true)
-            ->whereHas('line', function($query) {
-                $query->whereNotNull('number'); // City routes always have number as a numeric value
-            })
+            ->where('type', 'city')
             ->whereHas('routeStops', function($query) use ($request) {
                 $query->where('stop_id', $request->from_stop);
             })

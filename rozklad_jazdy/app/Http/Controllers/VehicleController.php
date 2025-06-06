@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
 use App\Models\Carrier;
+use App\Http\Middleware\CheckRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,7 @@ class VehicleController extends Controller
         $this->middleware('auth');
         
         // Require admin role for create, store, edit, update, and destroy methods
-        $this->middleware('role:admin')->except(['index', 'show']);
+        $this->middleware(CheckRole::class . ':admin')->except(['index', 'show']);
     }
     
     /**

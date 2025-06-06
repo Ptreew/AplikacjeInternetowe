@@ -61,6 +61,20 @@
                         @enderror
                     </div>
                 </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="type" class="form-label">Typ trasy <span class="text-danger">*</span></label>
+                        <select class="form-select @error('type') is-invalid @enderror" id="type" name="type" required>
+                            <option value="">Wybierz typ</option>
+                            <option value="city" {{ old('type') == 'city' ? 'selected' : '' }}>Miejska</option>
+                            <option value="intercity" {{ old('type') == 'intercity' ? 'selected' : '' }}>Międzymiastowa</option>
+                        </select>
+                        @error('type')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
 
                 <div class="row mb-3">
                     <div class="col-md-6">

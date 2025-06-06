@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\CheckRole;
 use App\Models\Departure;
 use App\Models\Schedule;
 use App\Models\Vehicle;
@@ -22,7 +23,7 @@ class DepartureController extends Controller
         $this->middleware('auth');
         
         // Require admin role for all methods
-        $this->middleware('role:admin');
+        $this->middleware(CheckRole::class . ':admin');
     }
     
     /**
@@ -51,9 +52,9 @@ class DepartureController extends Controller
         
         // Get schedules and vehicles for filter dropdowns
         $schedules = Schedule::with(['route.line'])->orderBy('route_id')->get();
-        $vehicles = Vehicle::with('carrier')->orderBy('number')->get();
+        $vehicles = Vehicle::with(['line', 'line.carrier'])->orderBy('vehicle_number')->get();
         
-        return view('departures.index', compact('departures', 'schedules', 'vehicles'));
+        return view('admin.departures.index', compact('departures', 'schedules', 'vehicles'));
     }
 
     /**
@@ -69,10 +70,10 @@ class DepartureController extends Controller
             $schedule = Schedule::with(['route.routeStops.stop.city'])->find($selectedScheduleId);
         }
         
-        $schedules = Schedule::with(['route.line'])->where('is_active', true)->get();
-        $vehicles = Vehicle::with('carrier')->where('is_active', true)->orderBy('number')->get();
+        $schedules = Schedule::with(['route.line'])->get();
+        $vehicles = Vehicle::with('carrier')->where('is_active', true)->orderBy('vehicle_number')->get();
         
-        return view('departures.create', compact('schedules', 'vehicles', 'selectedScheduleId', 'schedule'));
+        return view('admin.departures.create', compact('schedules', 'vehicles', 'selectedScheduleId', 'schedule'));
     }
 
     /**
@@ -104,7 +105,7 @@ class DepartureController extends Controller
             
             DB::commit();
             
-            return redirect()->route('schedules.show', $departure->schedule_id)
+            return redirect()->route('admin.schedules.show', $departure->schedule_id)
                 ->with('success', 'Departure added to schedule successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -139,7 +140,7 @@ class DepartureController extends Controller
             6 => 'Saturday',
         ];
         
-        return view('departures.show', compact('departure', 'daysOfWeek'));
+        return view('admin.departures.show', compact('departure', 'daysOfWeek'));
     }
 
     /**
@@ -149,13 +150,13 @@ class DepartureController extends Controller
     {
         $departure->load('schedule.route');
         
-        $schedules = Schedule::with(['route.line'])->where('is_active', true)->get();
-        $vehicles = Vehicle::with('carrier')->where('is_active', true)->orderBy('number')->get();
+        $schedules = Schedule::with(['route.line'])->get();
+        $vehicles = Vehicle::with('carrier')->where('is_active', true)->orderBy('vehicle_number')->get();
         
         // Format departure time for the form
         $departureTime = Carbon::parse($departure->departure_time)->format('H:i');
         
-        return view('departures.edit', compact('departure', 'schedules', 'vehicles', 'departureTime'));
+        return view('admin.departures.edit', compact('departure', 'schedules', 'vehicles', 'departureTime'));
     }
 
     /**
@@ -186,7 +187,7 @@ class DepartureController extends Controller
             
             DB::commit();
             
-            return redirect()->route('schedules.show', $departure->schedule_id)
+            return redirect()->route('admin.schedules.show', $departure->schedule_id)
                 ->with('success', 'Departure updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -206,7 +207,7 @@ class DepartureController extends Controller
         
         // Check if the departure has any tickets
         if ($departure->tickets()->exists()) {
-            return redirect()->route('departures.show', $departure)
+            return redirect()->route('admin.departures.show', $departure)
                 ->with('error', 'Cannot delete departure with associated tickets. Please cancel or delete the tickets first.');
         }
         
@@ -218,12 +219,12 @@ class DepartureController extends Controller
             
             DB::commit();
             
-            return redirect()->route('schedules.show', $scheduleId)
+            return redirect()->route('admin.schedules.show', $scheduleId)
                 ->with('success', 'Departure deleted successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
             
-            return redirect()->route('departures.show', $departure)
+            return redirect()->route('admin.departures.show', $departure)
                 ->with('error', 'Failed to delete departure: ' . $e->getMessage());
         }
     }

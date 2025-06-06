@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use App\Http\Middleware\CheckRole;
 
 class ScheduleController extends Controller
 {
@@ -20,7 +21,7 @@ class ScheduleController extends Controller
         $this->middleware('auth');
         
         // Require admin role for all methods
-        $this->middleware('role:admin');
+        $this->middleware(CheckRole::class . ':admin');
     }
     
     /**
@@ -65,7 +66,7 @@ class ScheduleController extends Controller
             '0' => 'Niedziela'
         ];
         
-        return view('schedules.index', compact('schedules', 'routes', 'dayTypes'));
+        return view('admin.schedules.index', compact('schedules', 'routes', 'dayTypes'));
     }
 
     /**
@@ -83,7 +84,7 @@ class ScheduleController extends Controller
             'holiday' => 'Święto'
         ];
         
-        return view('schedules.create', compact('routes', 'dayTypes'));
+        return view('admin.schedules.create', compact('routes', 'dayTypes'));
     }
 
     /**
@@ -108,7 +109,7 @@ class ScheduleController extends Controller
         $schedule->valid_to = $validated['valid_to'];
         $schedule->save();
         
-        return redirect()->route('schedules.show', $schedule)
+        return redirect()->route('admin.schedules.show', $schedule)
             ->with('success', 'Schedule created successfully. Now you can add departures to this schedule.');
     }
 
@@ -135,7 +136,7 @@ class ScheduleController extends Controller
             'holiday' => 'Święto'
         ];
         
-        return view('schedules.show', compact('schedule', 'dayTypes'));
+        return view('admin.schedules.show', compact('schedule', 'dayTypes'));
     }
 
     /**
@@ -153,7 +154,7 @@ class ScheduleController extends Controller
             'holiday' => 'Święto'
         ];
         
-        return view('schedules.edit', compact('schedule', 'routes', 'dayTypes'));
+        return view('admin.schedules.edit', compact('schedule', 'routes', 'dayTypes'));
     }
 
     /**
@@ -177,7 +178,7 @@ class ScheduleController extends Controller
         $schedule->valid_to = $validated['valid_to'];
         $schedule->save();
         
-        return redirect()->route('schedules.show', $schedule)
+        return redirect()->route('admin.schedules.show', $schedule)
             ->with('success', 'Schedule updated successfully.');
     }
 
@@ -188,7 +189,7 @@ class ScheduleController extends Controller
     {
         // Check if the schedule has any departures
         if ($schedule->departures()->exists()) {
-            return redirect()->route('schedules.show', $schedule)
+            return redirect()->route('admin.schedules.show', $schedule)
                 ->with('error', 'Cannot delete schedule with associated departures. Please delete the departures first.');
         }
         
@@ -200,12 +201,12 @@ class ScheduleController extends Controller
             
             DB::commit();
             
-            return redirect()->route('schedules.index')
+            return redirect()->route('admin.schedules.index')
                 ->with('success', 'Schedule deleted successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
             
-            return redirect()->route('schedules.show', $schedule)
+            return redirect()->route('admin.schedules.show', $schedule)
                 ->with('error', 'Failed to delete schedule: ' . $e->getMessage());
         }
     }

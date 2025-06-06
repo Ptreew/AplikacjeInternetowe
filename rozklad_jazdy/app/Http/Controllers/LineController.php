@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use App\Http\Middleware\CheckRole;
 
 class LineController extends Controller
 {
@@ -20,7 +21,7 @@ class LineController extends Controller
         $this->middleware('auth')->except(['index', 'show']);
         
         // Require admin role for create, store, edit, update, destroy
-        $this->middleware('role:admin')->except(['index', 'show']);
+        $this->middleware(CheckRole::class . ':admin')->except(['index', 'show']);
     }
     
     /**

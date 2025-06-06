@@ -80,9 +80,11 @@
                                                     
                                                     $allDays = [];
                                                     foreach($route->schedules as $schedule) {
-                                                        foreach($schedule->days_of_week as $day) {
-                                                            if (!in_array($day, array_keys($allDays))) {
-                                                                $allDays[$day] = $dayNames[$day];
+                                                        if (!is_null($schedule->days_of_week) && is_array($schedule->days_of_week)) {
+                                                            foreach($schedule->days_of_week as $day) {
+                                                                if (!in_array($day, array_keys($allDays))) {
+                                                                    $allDays[$day] = $dayNames[$day];
+                                                                }
                                                             }
                                                         }
                                                     }

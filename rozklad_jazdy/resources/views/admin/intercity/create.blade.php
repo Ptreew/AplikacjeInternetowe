@@ -5,7 +5,13 @@
 @section('header', 'Dodaj Kurs Międzymiastowy')
 
 @section('content')
-    <div class="container mt-4">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-12">
+                <a href="{{ url('/admin?tab=miedzymiastowe') }}" class="btn btn-primary">Powrót do panelu</a>
+            </div>
+        </div>
+        
         <div class="card">
             <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">Nowy Kurs Międzymiastowy</h5>
