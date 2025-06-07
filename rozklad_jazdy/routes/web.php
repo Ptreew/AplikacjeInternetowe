@@ -88,6 +88,7 @@ Route::middleware(['auth'])->group(function () {
     
     // Additional custom routes for ticket management
     Route::post('/tickets/{ticket}/pay', [TicketController::class, 'pay'])->name('tickets.pay');
+    Route::post('/tickets/{ticket}/cancel', [TicketController::class, 'cancel'])->name('tickets.cancel');
     Route::post('/tickets/{ticket}/mark-used', [TicketController::class, 'markAsUsed'])->name('tickets.mark-used');
     Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy');
 });
@@ -140,6 +141,9 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\CheckRole::clas
         
         return view('admin.index', compact('cities', 'stops'));
     })->name('admin');
+    
+    // API route to get stops for a schedule
+    Route::get('/api/schedules/{schedule}/stops', [ScheduleController::class, 'getStops'])->name('admin.api.schedules.stops');
     
     // Admin resource routes
     Route::resource('carriers', CarrierController::class)

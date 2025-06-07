@@ -93,7 +93,7 @@ class TicketController extends Controller
             'travel_date'  => 'required|date|after_or_equal:today',
             'passenger_name' => 'required|string|max:255',
             'passenger_email' => 'required|email|max:255',
-            'passenger_phone' => 'nullable|string|max:20',
+            'passenger_phone' => 'nullable|string|max:20|regex:/^[+]?[0-9]+$/',
             'notes' => 'nullable|string|max:1000',
         ]);
         
@@ -242,7 +242,7 @@ class TicketController extends Controller
         $request->validate([
             'passenger_name' => 'required|string|max:255',
             'passenger_email' => 'required|email|max:255',
-            'passenger_phone' => 'nullable|string|max:20',
+            'passenger_phone' => 'nullable|string|max:20|regex:/^[0-9]+$/',
             'notes' => 'nullable|string|max:1000',
             'status' => 'sometimes|in:reserved,paid,used,cancelled',
         ]);
@@ -377,6 +377,42 @@ class TicketController extends Controller
         ]);
     }
     
+    /**
+     * Cancel a ticket
+     */
+    public function cancel(Ticket $ticket)
+    {
+        // Only ticket owner can cancel their ticket
+        if (Auth::id() !== $ticket->user_id && Auth::user()->role !== 'admin') {
+            return redirect()->route('tickets.index')
+                ->with('error', 'Nie masz uprawnień do anulowania tego biletu.');
+        }
+        
+        // Check if ticket can be cancelled
+        if ($ticket->status === 'cancelled') {
+            return redirect()->route('tickets.show', $ticket)
+                ->with('error', 'Ten bilet został już wcześniej anulowany.');
+        }
+        
+        if ($ticket->status === 'used') {
+            return redirect()->route('tickets.show', $ticket)
+                ->with('error', 'Nie można anulować już wykorzystanego biletu.');
+        }
+        
+        if ($ticket->status === 'paid') {
+            return redirect()->route('tickets.show', $ticket)
+                ->with('error', 'Nie można anulować opłaconego biletu. Skontaktuj się z obsługą klienta.');
+        }
+        
+        // Update ticket status to cancelled
+        $ticket->status = 'cancelled';
+        $ticket->is_active = false;
+        $ticket->save();
+        
+        return redirect()->route('tickets.show', $ticket)
+            ->with('success', 'Bilet został pomyślnie anulowany.');
+    }
+
     /**
      * Process payment for a reserved ticket
      */

@@ -110,6 +110,12 @@ class AdminCityController extends Controller
      */
     public function destroy(City $city)
     {
+        // Check if the city has any stops assigned to it
+        if ($city->stops()->exists()) {
+            return redirect()->route('admin.cities.index')
+                ->with('error', 'Nie można usunąć miasta, które ma przypisane przystanki. Najpierw usuń wszystkie przystanki w tym mieście.');
+        }
+        
         $city->delete();
         return redirect()->route('admin.cities.index')->with('success', 'Miasto zostało usunięte.');
     }

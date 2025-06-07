@@ -14,39 +14,39 @@
     @endif
 
     <div class="card">
-        <div class="card-header bg-primary text-white">
-            <ul class="nav nav-tabs card-header-tabs" id="accountTabs" role="tablist">
+        <div class="card-header p-0 border-bottom-0">
+            <ul class="nav nav-pills nav-justified" id="accountTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link {{ session('activeTab') == 'profile' || !session('activeTab') ? 'active' : 'text-white' }}" 
+                    <a class="nav-link rounded-0 py-3 {{ session('activeTab') == 'profile' || !session('activeTab') ? 'active bg-primary text-white' : '' }}" 
                        id="profile-tab" 
                        data-bs-toggle="tab" 
                        href="#profile" 
                        role="tab" 
                        aria-controls="profile" 
                        aria-selected="{{ session('activeTab') == 'profile' || !session('activeTab') ? 'true' : 'false' }}">
-                        <i class="fas fa-user me-2"></i>Profil
+                        <i class="fas fa-user me-2"></i><strong>Profil</strong>
                     </a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link {{ session('activeTab') == 'password' ? 'active' : 'text-white' }}" 
+                    <a class="nav-link rounded-0 py-3 {{ session('activeTab') == 'password' ? 'active bg-primary text-white' : '' }}" 
                        id="password-tab" 
                        data-bs-toggle="tab" 
                        href="#password" 
                        role="tab" 
                        aria-controls="password" 
                        aria-selected="{{ session('activeTab') == 'password' ? 'true' : 'false' }}">
-                        <i class="fas fa-key me-2"></i>Hasło
+                        <i class="fas fa-key me-2"></i><strong>Hasło</strong>
                     </a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link {{ session('activeTab') == 'delete' ? 'active' : 'text-white' }}" 
+                    <a class="nav-link rounded-0 py-3 {{ session('activeTab') == 'delete' ? 'active bg-danger text-white' : '' }}" 
                        id="delete-tab" 
                        data-bs-toggle="tab" 
                        href="#delete" 
                        role="tab" 
                        aria-controls="delete" 
                        aria-selected="{{ session('activeTab') == 'delete' ? 'true' : 'false' }}">
-                        <i class="fas fa-trash me-2"></i>Usuń konto
+                        <i class="fas fa-trash me-2"></i><strong>Usuń konto</strong>
                     </a>
                 </li>
             </ul>
@@ -87,7 +87,7 @@
                             @enderror
                         </div>
                         
-                        <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Zapisz zmiany</button>
                     </form>
                 </div>
                 
@@ -131,7 +131,7 @@
                                    name="new_password_confirmation">
                         </div>
                         
-                        <button type="submit" class="btn btn-primary">Zmień hasło</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-key me-2"></i>Zmień hasło</button>
                     </form>
                 </div>
                 
@@ -175,7 +175,7 @@
                         </div>
                         
                         <button type="submit" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć swoje konto? Ta operacja jest nieodwracalna!')">
-                            Usuń konto
+                            <i class="fas fa-trash-alt me-2"></i>Usuń konto
                         </button>
                     </form>
                 </div>
@@ -202,15 +202,25 @@
         const tabs = document.querySelectorAll('#accountTabs .nav-link');
         tabs.forEach(tab => {
             tab.addEventListener('click', function() {
-                // Remove active and add text-white to all tabs
+                // Reset all tabs
                 tabs.forEach(t => {
                     t.classList.remove('active');
-                    t.classList.add('text-white');
+                    t.classList.remove('bg-primary');
+                    t.classList.remove('bg-danger');
+                    t.classList.remove('text-white');
                 });
                 
-                // Add active and remove text-white from clicked tab
+                // Style clicked tab
                 this.classList.add('active');
-                this.classList.remove('text-white');
+                
+                // Apply different styling based on tab type
+                if (this.id === 'delete-tab') {
+                    this.classList.add('bg-danger');
+                } else {
+                    this.classList.add('bg-primary');
+                }
+                
+                this.classList.add('text-white');
             });
         });
     });

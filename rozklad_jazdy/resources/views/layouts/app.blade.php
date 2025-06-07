@@ -176,21 +176,21 @@
                         <div class="collapse navbar-collapse" id="navbarMain">
                             <ul class="navbar-nav mx-auto mb-0">
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="{{ route('home') }}">Strona główna</a>
+                                    <a class="nav-link active" href="{{ route('home') }}"><i class="fas fa-home me-2"></i>Strona główna</a>
                                 </li>
                                 
                                 @auth
                                     {{-- Show admin panel link only to admin users --}}
                                     @if(Auth::user()->role === 'admin')
                                         <li class="nav-item">
-                                            <a class="nav-link" href="{{ route('admin') }}">Panel administratora</a>
+                                            <a class="nav-link" href="{{ route('admin') }}"><i class="fas fa-user-shield me-2"></i>Panel administratora</a>
                                         </li>
                                     @endif
                                     
                                     {{-- User account dropdown --}}
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            {{ Auth::user()->name }}
+                                            <i class="fas fa-user-circle me-2"></i>{{ Auth::user()->name }}
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                             <li>
@@ -226,10 +226,10 @@
                                 @else
                                     {{-- Show login/register links only for guests --}}
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('login') }}">Logowanie</a>
+                                        <a class="nav-link" href="{{ route('login') }}"><i class="fas fa-sign-in-alt me-2"></i>Logowanie</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('register') }}">Rejestracja</a>
+                                        <a class="nav-link" href="{{ route('register') }}"><i class="fas fa-user-plus me-2"></i>Rejestracja</a>
                                     </li>
                                 @endauth
                             </ul>

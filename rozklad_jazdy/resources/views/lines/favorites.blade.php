@@ -6,6 +6,9 @@
 <div class="container my-4">
     <div class="row">
         <div class="col-12">
+            <a href="{{ route('home') }}" class="btn btn-primary mb-3">
+                <i class="fas fa-arrow-left"></i> Powrót do strony głównej
+            </a>
             <h1><i class="fas fa-star text-warning me-2"></i>Moje ulubione linie</h1>
             
             @if (session('success'))
@@ -52,42 +55,42 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($lines as $favorite)
-                                @php
-                                    $line = $favorite->line;
-                                @endphp
+                            @foreach($lines as $line)
                                 <tr>
                                     <td>
-                                        <span class="badge rounded-pill" style="background-color: {{ $line->color ?? '#6c757d' }}">
-                                            {{ $line->number }}
-                                        </span>
+                                        @if($line->number === null)
+                                            <span class="badge rounded-pill bg-secondary">
+                                                <i class="fas fa-route"></i> IC
+                                            </span>
+                                        @else
+                                            <span class="badge rounded-pill" style="background-color: {{ $line->color ?? '#6c757d' }}">
+                                                {{ $line->number }}
+                                            </span>
+                                        @endif
                                     </td>
                                     <td>{{ $line->name }}</td>
                                     <td>{{ $line->carrier->name }}</td>
                                     <td>
                                         @php
-                                            $typeLabels = [
-                                                'train' => ['Pociąg', 'info'],
-                                                'bus' => ['Autobus', 'success'],
-                                                'tram' => ['Tramwaj', 'primary'],
-                                                'metro' => ['Metro', 'dark'],
-                                                'ferry' => ['Prom', 'warning']
-                                            ];
-                                            
-                                            $typeInfo = $typeLabels[$line->type] ?? ['Inny', 'secondary'];
+                                            $routes = $line->routes;
+                                            $routeType = $routes->isNotEmpty() ? $routes->first()->type : 'intercity';
                                         @endphp
-                                        <span class="badge bg-{{ $typeInfo[1] }}">{{ $typeInfo[0] }}</span>
+                                        @if($routeType == 'city')
+                                            <span class="badge bg-success">Miejska</span>
+                                        @else
+                                            <span class="badge bg-primary">Międzymiastowa</span>
+                                        @endif
                                     </td>
                                     <td>
-                                        <div class="d-flex gap-2">
+                                        <div class="d-flex justify-content-center gap-2">
                                             <a href="{{ route('lines.show', $line) }}" class="btn btn-sm btn-primary">
-                                                <i class="fas fa-eye me-1"></i> Szczegóły
+                                                <i class="fas fa-eye"></i> Szczegóły
                                             </a>
                                             
-                                            <form action="{{ route('lines.toggle-favorite', $line) }}" method="POST">
+                                            <form action="{{ route('lines.toggle-favorite', $line) }}" method="POST" style="display: inline;">
                                                 @csrf
-                                                <button type="submit" class="btn btn-sm btn-warning">
-                                                    <i class="fas fa-star me-1"></i> Usuń z ulubionych
+                                                <button type="submit" class="btn btn-link p-0 ms-2" title="Usuń z ulubionych">
+                                                    <i class="fas fa-star fa-lg text-warning"></i>
                                                 </button>
                                             </form>
                                         </div>

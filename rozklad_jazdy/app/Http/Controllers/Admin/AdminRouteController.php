@@ -14,7 +14,9 @@ class AdminRouteController extends Controller
      */
     public function index()
     {
-        $routes = Route::with(['line', 'line.carrier'])->paginate(10);
+        $routes = Route::with(['line', 'line.carrier'])
+                  ->where('type', 'intercity')
+                  ->paginate(10);
         return view('admin.routes.index', compact('routes'));
     }
 
@@ -44,6 +46,9 @@ class AdminRouteController extends Controller
         if (!isset($data['is_active'])) {
             $data['is_active'] = false;
         }
+
+        // Dodanie typu trasy
+        $data['type'] = 'intercity';
 
         Route::create($data);
 

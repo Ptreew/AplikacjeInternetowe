@@ -3,11 +3,11 @@
 @section('title', 'Zarządzanie przewoźnikami')
 
 @section('content')
-    <div class="container">
+    <div class="container-fluid">
         <div class="row mb-4">
             <div class="col-12">
-                <a href="{{ url('/admin?tab=przewoznicy') }}" class="btn btn-primary">Powrót do panelu</a>
-                <a href="{{ route('admin.carriers.create') }}" class="btn btn-success">Dodaj nowego przewoźnika</a>
+                <a href="{{ url('/admin?tab=przewoznicy') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-1"></i>Powrót do panelu</a>
+                <a href="{{ route('admin.carriers.create') }}" class="btn btn-success"><i class="fas fa-plus me-1"></i>Dodaj nowego przewoźnika</a>
             </div>
         </div>
 
@@ -32,11 +32,11 @@
                     <table class="table table-striped table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th>ID</th>
-                                <th>Nazwa</th>
-                                <th>Email</th>
-                                <th>Strona internetowa</th>
-                                <th>Akcje</th>
+                                <th style="width: 5%">ID</th>
+                                <th style="width: 20%">Nazwa</th>
+                                <th style="width: 20%">Email</th>
+                                <th style="width: 25%">Strona internetowa</th>
+                                <th style="width: 20%">Akcje</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -49,18 +49,18 @@
                                         <a href="{{ $carrier->website }}" target="_blank">{{ $carrier->website }}</a>
                                     </td>
                                     <td>
-                                        <div class="d-inline-flex">
+                                        <div class="d-flex flex-nowrap">
                                             <a href="{{ route('admin.carriers.edit', $carrier) }}" class="btn btn-sm btn-primary me-1">
-                                                Edytuj
+                                                <i class="fas fa-edit me-1"></i>Edytuj
                                             </a>
                                             <a href="{{ route('admin.carriers.show', $carrier) }}" class="btn btn-sm btn-success me-1">
-                                                Pokaż
+                                                <i class="fas fa-eye me-1"></i>Pokaż
                                             </a>
-                                            <form action="{{ route('admin.carriers.destroy', $carrier) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('admin.carriers.destroy', $carrier) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć tego przewoźnika?')">
-                                                    Usuń
+                                                    <i class="fas fa-trash-alt me-1"></i>Usuń
                                                 </button>
                                             </form>
                                         </div>

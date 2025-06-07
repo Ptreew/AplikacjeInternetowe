@@ -87,8 +87,40 @@
                     <div class="col-md-6">
                         <label for="departure_time" class="form-label">Godzina odjazdu <span class="text-danger">*</span></label>
                         <input type="time" class="form-control @error('departure_time') is-invalid @enderror" 
-                               id="departure_time" name="departure_time" value="{{ old('departure_time') }}" required>
+                               id="departure_time" name="departure_time" value="{{ old('departure_time', now()->format('H:i')) }}" required>
                         @error('departure_time')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="price" class="form-label">Cena biletu <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="number" class="form-control @error('price') is-invalid @enderror" 
+                                   id="price" name="price" value="{{ old('price', 0) }}" 
+                                   step="0.01" min="0" required>
+                            <span class="input-group-text">PLN</span>
+                        </div>
+                        @error('price')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="stop_id" class="form-label">Przystanek odjazdu <span class="text-danger">*</span></label>
+                        <select class="form-select @error('stop_id') is-invalid @enderror" id="stop_id" name="stop_id" required>
+                            <option value="">Wybierz przystanek</option>
+                            @foreach($stops as $stop)
+                                <option value="{{ $stop->id }}" {{ old('stop_id') == $stop->id ? 'selected' : '' }}>
+                                    {{ $stop->name }}, {{ $stop->city->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('stop_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -136,4 +168,61 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const scheduleSelect = document.getElementById('schedule_id');
+        const stopSelect = document.getElementById('stop_id');
+        
+        // Function to load stops for a selected schedule
+        function loadStopsForSchedule(scheduleId) {
+            if (!scheduleId) {
+                // Clear stops dropdown if no schedule selected
+                stopSelect.innerHTML = '<option value="">Wybierz przystanek</option>';
+                return;
+            }
+            
+            // Show loading indicator
+            stopSelect.innerHTML = '<option value="">Ładowanie przystanków...</option>';
+            
+            // Fetch stops for the selected schedule
+            fetch(`/admin/api/schedules/${scheduleId}/stops`)
+                .then(response => response.json())
+                .then(data => {
+                    // Clear dropdown
+                    stopSelect.innerHTML = '<option value="">Wybierz przystanek</option>';
+                    
+                    // Add stops to dropdown
+                    data.stops.forEach((stop, index) => {
+                        const option = document.createElement('option');
+                        option.value = stop.id;
+                        option.textContent = `${stop.name}, ${stop.city.name}`;
+                        
+                        // Select the first stop by default
+                        if (index === 0) {
+                            option.selected = true;
+                        }
+                        
+                        stopSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Błąd podczas pobierania przystanków:', error);
+                    stopSelect.innerHTML = '<option value="">Błąd pobierania przystanków</option>';
+                });
+        }
+        
+        // Initialize stops dropdown based on selected schedule
+        if (scheduleSelect.value) {
+            loadStopsForSchedule(scheduleSelect.value);
+        }
+        
+        // Update stops when schedule changes
+        scheduleSelect.addEventListener('change', function() {
+            loadStopsForSchedule(this.value);
+        });
+    });
+</script>
 @endsection

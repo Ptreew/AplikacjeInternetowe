@@ -3,11 +3,11 @@
 @section('title', 'Zarządzanie rozkładami jazdy')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <div class="row mb-4">
-        <div class="col-12 d-flex justify-content-between">
-            <a href="{{ route('admin') }}" class="btn btn-primary">Powrót do panelu</a>
-            <a href="{{ route('admin.schedules.create') }}" class="btn btn-success">Dodaj rozkład</a>
+        <div class="col-12">
+            <a href="{{ url('/admin?tab=schedules') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-1"></i>Powrót do panelu</a>
+            <a href="{{ route('admin.schedules.create') }}" class="btn btn-success ms-2"><i class="fas fa-plus me-1"></i>Dodaj rozkład</a>
         </div>
     </div>
 
@@ -35,17 +35,46 @@
                     @forelse($schedules as $schedule)
                         <tr>
                             <td>{{ $schedule->id }}</td>
-                            <td>{{ $schedule->route->name }} ({{ $schedule->route->line->name }})</td>
-                            <td>{{ $schedule->valid_from }} — {{ $schedule->valid_to }}</td>
-                            <td>{{ implode(',', $schedule->days_of_week) }}</td>
                             <td>
-                                <a href="{{ route('admin.schedules.show', $schedule) }}" class="btn btn-sm btn-success me-1">Pokaż</a>
-                                <a href="{{ route('admin.schedules.edit', $schedule) }}" class="btn btn-sm btn-primary me-1">Edytuj</a>
-                                <form action="{{ route('admin.schedules.destroy', $schedule) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno usunąć rozkład?')">Usuń</button>
-                                </form>
+                                {{ $schedule->route->name }}
+                                <span class="badge bg-secondary">{{ $schedule->route->line->name }}</span>
+                            </td>
+                            <td>{{ $schedule->valid_from }} — {{ $schedule->valid_to }}</td>
+                            <td>
+                                @php
+                                    $dayNames = [
+                                        0 => 'Nd',
+                                        1 => 'Pn',
+                                        2 => 'Wt',
+                                        3 => 'Śr',
+                                        4 => 'Cz',
+                                        5 => 'Pt',
+                                        6 => 'Sb'
+                                    ];
+                                    
+                                    $daysText = [];
+                                    foreach ($schedule->days_of_week as $day) {
+                                        $daysText[] = $dayNames[$day];
+                                    }
+                                    echo implode(', ', $daysText);
+                                @endphp
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex flex-nowrap justify-content-center">
+                                    <a href="{{ route('admin.schedules.show', $schedule) }}" class="btn btn-sm btn-success me-1">
+                                        <i class="fas fa-eye me-1"></i>Pokaż
+                                    </a>
+                                    <a href="{{ route('admin.schedules.edit', $schedule) }}" class="btn btn-sm btn-primary me-1">
+                                        <i class="fas fa-edit me-1"></i>Edytuj
+                                    </a>
+                                    <form action="{{ route('admin.schedules.destroy', $schedule) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno usunąć rozkład?')">
+                                            <i class="fas fa-trash-alt me-1"></i>Usuń
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty

@@ -54,8 +54,8 @@
                             }
                         @endphp
                         
-                        <button class="tab-button {{ $finalActiveTab == 'miedzymiastowe' ? 'active btn btn-primary' : 'btn btn-outline-secondary' }}" data-tab="miedzymiastowe">Międzymiastowe</button>
-                        <button class="tab-button {{ $finalActiveTab == 'miejskie' ? 'active btn btn-primary' : 'btn btn-outline-secondary' }}" data-tab="miejskie">Miejskie</button>
+                        <button class="tab-button {{ $finalActiveTab == 'miedzymiastowe' ? 'active btn btn-primary' : 'btn btn-outline-secondary' }}" data-tab="miedzymiastowe"><i class="fas fa-bus"></i> Międzymiastowe</button>
+                        <button class="tab-button {{ $finalActiveTab == 'miejskie' ? 'active btn btn-primary' : 'btn btn-outline-secondary' }}" data-tab="miejskie"><i class="fas fa-tram"></i> Miejskie</button>
                     </div>
                 </div>
                 
@@ -98,7 +98,7 @@
                                     <input type="date" id="date" name="date" placeholder="Data">
                                     <input type="time" id="time_from" name="time_from" pattern="[0-9]{2}:[0-9]{2}" step="60" placeholder="Od godziny">
                                     <input type="time" id="time_to" name="time_to" pattern="[0-9]{2}:[0-9]{2}" step="60" placeholder="Do godziny">
-                                    <button type="submit">Szukaj połączeń</button>
+                                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Szukaj połączeń</button>
                                 </div>
                             </form>
                         </section>
@@ -152,7 +152,7 @@
                                     <input type="date" id="city_date" name="date" placeholder="Data">
                                     <input type="time" id="city_time_from" name="time_from" pattern="[0-9]{2}:[0-9]{2}" step="60" placeholder="Od godziny">
                                     <input type="time" id="city_time_to" name="time_to" pattern="[0-9]{2}:[0-9]{2}" step="60" placeholder="Do godziny">
-                                    <button type="submit">Szukaj połączeń</button>
+                                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Szukaj połączeń</button>
                                 </div>
                             </form>
                         </section>

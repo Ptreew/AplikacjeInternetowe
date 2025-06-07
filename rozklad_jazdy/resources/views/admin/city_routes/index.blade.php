@@ -29,41 +29,6 @@
                         </div>
                     @endif
                     
-                    <div class="alert alert-info" role="alert">
-                        <h5><i class="fas fa-info-circle"></i> Informacje diagnostyczne:</h5>
-                        <ul>
-                            <li><strong>Wszystkich tras w systemie</strong>: {{ $totalRoutes }}</li>
-                            <li><strong>Wszystkich linii w systemie</strong>: {{ $allLines->count() }}</li>
-                            <li><strong>Linie z numerem</strong>: {{ $linesWithNumber->count() }}</li>
-                            <li><strong>Linie bez numeru</strong>: {{ $linesWithEmptyNumber->count() }}</li>
-                        </ul>
-                        
-                        @if($allLines->count() > 0)
-                            <h6>Lista wszystkich linii:</h6>
-                            <div style="max-height: 200px; overflow-y: auto; font-size: 0.9em;">
-                                <table class="table table-sm table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Numer</th>
-                                            <th>Nazwa</th>
-                                            <th>Przewoźnik</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($allLines as $line)
-                                            <tr>
-                                                <td>{{ $line->id }}</td>
-                                                <td><code>{{ $line->number ?? 'NULL' }}</code></td>
-                                                <td>{{ $line->name }}</td>
-                                                <td>{{ $line->carrier->name ?? 'Brak' }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        @endif
-                    </div>
 
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">

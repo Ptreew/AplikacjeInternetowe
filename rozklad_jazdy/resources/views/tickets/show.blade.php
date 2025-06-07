@@ -12,7 +12,7 @@
                     <span class="badge bg-{{ 
                         $ticket->status === 'paid' ? 'success' : 
                         ($ticket->status === 'reserved' ? 'warning' : 
-                        ($ticket->status === 'used' ? 'info' : 'secondary')) 
+                        ($ticket->status === 'used' ? 'success' : 'danger')) 
                     }}">
                         {{ 
                             $ticket->status === 'paid' ? 'Opłacony' : 
@@ -47,7 +47,7 @@
                                             <span class="badge bg-{{ 
                                                 $ticket->status === 'paid' ? 'success' : 
                                                 ($ticket->status === 'reserved' ? 'warning' : 
-                                                ($ticket->status === 'used' ? 'info' : 'secondary')) 
+                                                ($ticket->status === 'used' ? 'success' : 'danger')) 
                                             }}">
                                                 {{ 
                                                     $ticket->status === 'paid' ? 'Opłacony' : 
@@ -55,6 +55,9 @@
                                                     ($ticket->status === 'used' ? 'Wykorzystany' : 'Anulowany')) 
                                                 }}
                                             </span>
+                                            @if(!$ticket->is_active)
+                                                <span class="badge bg-secondary ms-1">Nieaktywny</span>
+                                            @endif
                                         </td>
                                     </tr>
                                 </tbody>
@@ -155,10 +158,8 @@
                                     </form>
                                 @endif
                                 
-                                <form action="{{ route('tickets.update', $ticket) }}" method="POST" class="me-2">
+                                <form action="{{ route('tickets.cancel', $ticket) }}" method="POST" class="me-2">
                                     @csrf
-                                    @method('PUT')
-                                    <input type="hidden" name="status" value="cancelled">
                                     <button type="submit" class="btn btn-danger" 
                                             onclick="return confirm('Czy na pewno chcesz anulować ten bilet?')">
                                         <i class="fas fa-times me-1"></i> Anuluj bilet
@@ -169,7 +170,7 @@
                             @if(auth()->user()->role === 'admin' && $ticket->status === 'paid')
                                 <form action="{{ route('tickets.mark-used', $ticket) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="btn btn-info text-white">
+                                    <button type="submit" class="btn btn-success">
                                         <i class="fas fa-check me-1"></i> Oznacz jako wykorzystany
                                     </button>
                                 </form>

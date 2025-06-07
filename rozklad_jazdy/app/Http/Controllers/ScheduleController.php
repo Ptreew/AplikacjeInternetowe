@@ -187,27 +187,56 @@ class ScheduleController extends Controller
      */
     public function destroy(Schedule $schedule)
     {
-        // Check if the schedule has any departures
+        // Sprawdź czy rozkład ma powiązane odjazdy
         if ($schedule->departures()->exists()) {
             return redirect()->route('admin.schedules.show', $schedule)
-                ->with('error', 'Cannot delete schedule with associated departures. Please delete the departures first.');
+                ->with('error', 'Nie można usunąć rozkładu jazdy z przypisanymi odjazdami. Najpierw usuń wszystkie odjazdy.');
         }
         
         try {
             DB::beginTransaction();
             
-            // Delete the schedule
+            // Usuń rozkład jazdy
             $schedule->delete();
             
             DB::commit();
             
             return redirect()->route('admin.schedules.index')
-                ->with('success', 'Schedule deleted successfully.');
+                ->with('success', 'Rozkład jazdy został pomyślnie usunięty.');
         } catch (\Exception $e) {
             DB::rollBack();
             
             return redirect()->route('admin.schedules.show', $schedule)
-                ->with('error', 'Failed to delete schedule: ' . $e->getMessage());
+                ->with('error', 'Błąd podczas usuwania rozkładu jazdy: ' . $e->getMessage());
         }
+    }
+    
+    /**
+     * API method to get stops for a specific schedule
+     */
+    public function getStops(Schedule $schedule)
+    {
+        // Load stops for the selected schedule's route
+        $stops = [];
+        
+        if ($schedule && $schedule->route) {
+            $routeStops = $schedule->route->routeStops()
+                ->with('stop.city')
+                ->orderBy('stop_number', 'asc')
+                ->get();
+                
+            $stops = $routeStops->map(function($routeStop) {
+                return [
+                    'id' => $routeStop->stop->id,
+                    'name' => $routeStop->stop->name,
+                    'city' => [
+                        'id' => $routeStop->stop->city->id,
+                        'name' => $routeStop->stop->city->name
+                    ]
+                ];
+            });
+        }
+        
+        return response()->json(['stops' => $stops]);
     }
 }

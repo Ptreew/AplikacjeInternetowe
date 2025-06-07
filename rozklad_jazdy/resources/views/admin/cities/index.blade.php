@@ -8,8 +8,8 @@
     <div class="container-fluid">
         <div class="row mb-4">
             <div class="col-12">
-                <a href="{{ url('/admin?tab=cities') }}" class="btn btn-primary">Powrót do panelu</a>
-                <a href="{{ route('admin.cities.create') }}" class="btn btn-success">Dodaj Nowe Miasto</a>
+                <a href="{{ url('/admin?tab=cities') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-1"></i>Powrót do panelu</a>
+                <a href="{{ route('admin.cities.create') }}" class="btn btn-success"><i class="fas fa-plus me-1"></i>Dodaj Nowe Miasto</a>
             </div>
         </div>
 
@@ -42,19 +42,19 @@
                                     <td>{{ $city->name }}</td>
                                     <td>{{ $city->voivodeship }}</td>
                                     <td>{{ $city->stops->count() }}</td>
-                                    <td>
-                                        <div class="d-inline-flex">
+                                    <td class="text-center">
+                                        <div class="d-flex flex-nowrap justify-content-center">
                                             <a href="{{ route('admin.cities.edit', $city) }}" class="btn btn-sm btn-primary me-1">
-                                                Edytuj
+                                                <i class="fas fa-edit me-1"></i>Edytuj
                                             </a>
                                             <a href="{{ route('admin.cities.show', $city) }}" class="btn btn-sm btn-success me-1">
-                                                Pokaż
+                                                <i class="fas fa-eye me-1"></i>Pokaż
                                             </a>
                                             <form action="{{ route('admin.cities.destroy', $city) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć to miasto?')">
-                                                    Usuń
+                                                    <i class="fas fa-trash-alt me-1"></i>Usuń
                                                 </button>
                                             </form>
                                         </div>

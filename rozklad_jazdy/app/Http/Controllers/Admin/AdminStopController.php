@@ -111,6 +111,18 @@ class AdminStopController extends Controller
      */
     public function destroy(Stop $stop)
     {
+        // Check if the stop is used in routes (route_stops)
+        if ($stop->routeStops()->exists()) {
+            return redirect()->route('admin.stops.index')
+                ->with('error', 'Nie można usunąć przystanku, ponieważ jest używany w trasach. Najpierw usuń wszystkie trasy używające tego przystanku.');
+        }
+        
+        // Check if the stop is used as a departure point
+        if ($stop->departures()->exists()) {
+            return redirect()->route('admin.stops.index')
+                ->with('error', 'Nie można usunąć przystanku, ponieważ jest używany jako punkt odjazdu. Najpierw usuń wszystkie odjazdy używające tego przystanku.');
+        }
+        
         $stop->delete();
         return redirect()->route('admin.stops.index')->with('success', 'Przystanek został usunięty.');
     }

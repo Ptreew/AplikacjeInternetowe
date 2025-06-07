@@ -8,8 +8,8 @@
     <div class="container-fluid">
         <div class="row mb-4">
             <div class="col-12">
-                <a href="{{ url('/admin?tab=stops') }}" class="btn btn-primary">Powrót do panelu</a>
-                <a href="{{ route('admin.stops.create') }}" class="btn btn-success">Dodaj Nowy Przystanek</a>
+                <a href="{{ url('/admin?tab=stops') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-1"></i>Powrót do panelu</a>
+                <a href="{{ route('admin.stops.create') }}" class="btn btn-success"><i class="fas fa-plus me-1"></i>Dodaj Nowy Przystanek</a>
             </div>
         </div>
 
@@ -43,18 +43,26 @@
                                     <td>{{ $stop->name }}</td>
                                     <td>{{ $stop->code }}</td>
                                     <td>{{ $stop->city->name }} ({{ $stop->city->voivodeship }})</td>
-                                    <td>{{ $stop->is_active ? 'Aktywny' : 'Nieaktywny' }}</td>
-                                    <td>
-                                        <a href="{{ route('admin.stops.edit', $stop) }}" class="btn btn-sm btn-primary me-1">
-                                            Edytuj
-                                        </a>
-                                        <form action="{{ route('admin.stops.destroy', $stop) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten przystanek?')">
-                                                Usuń
-                                            </button>
-                                        </form>
+                                    <td class="text-center">
+                                        @if($stop->is_active)
+                                            <span class="badge bg-success">Aktywny</span>
+                                        @else
+                                            <span class="badge bg-danger">Nieaktywny</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex flex-nowrap justify-content-center">
+                                            <a href="{{ route('admin.stops.edit', $stop) }}" class="btn btn-sm btn-primary me-1">
+                                                <i class="fas fa-edit me-1"></i>Edytuj
+                                            </a>
+                                            <form action="{{ route('admin.stops.destroy', $stop) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten przystanek?')">
+                                                    <i class="fas fa-trash-alt me-1"></i>Usuń
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

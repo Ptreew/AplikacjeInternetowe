@@ -24,31 +24,11 @@ class AdminCityRouteController extends Controller
     public function index()
     {
         $routes = Route::with(['line.carrier', 'routeStops.stop.city'])
+                  ->where('type', 'city')
                   ->orderBy('id', 'desc')
                   ->paginate(10);
-        
-        // Dane diagnostyczne
-        $totalRoutes = Route::count();
-        $allLines = \App\Models\Line::all();
-        $linesWithNumber = \App\Models\Line::whereNotNull('number')->where('number', '!=', '')->get();
-        $linesWithEmptyNumber = \App\Models\Line::where(function($q) {
-            $q->whereNull('number')->orWhere('number', '');
-        })->get();
-
-        // Zapisz każdą linię do logów
-        $lineLog = 'Available lines:\n';
-        foreach ($allLines as $line) {
-            $lineLog .= "ID: {$line->id}, Number: '{$line->number}', Name: {$line->name}\n";
-        }
-        \Illuminate\Support\Facades\Log::info($lineLog);
-
-        return view('admin.city_routes.index', compact(
-            'routes',
-            'totalRoutes',
-            'allLines',
-            'linesWithNumber',
-            'linesWithEmptyNumber'
-        ));
+                  
+        return view('admin.city_routes.index', compact('routes'));
     }
 
     /**
@@ -131,6 +111,7 @@ class AdminCityRouteController extends Controller
             // Create new route
             $route = Route::create([
                 'line_id' => $line->id,
+                'type' => 'city',
                 'name' => $validatedData['name'],
                 'travel_time' => $validatedData['travel_time'],
                 'is_active' => isset($validatedData['is_active']) ? $validatedData['is_active'] : true
@@ -331,24 +312,24 @@ class AdminCityRouteController extends Controller
         try {
             $route = Route::findOrFail($id);
             
-            DB::beginTransaction();
+            // Check if the route has any schedule or route stops associated with it
+            if ($route->schedules()->count() > 0) {
+                return redirect()->route('admin.city_routes.index')
+                    ->with('error', 'Nie można usunąć trasy miejskiej, która ma przypisane rozkłady jazdy.');
+            }
             
-            // Delete all related records
-            $route->routeStops()->delete();
-            $route->schedules->each(function ($schedule) {
-                $schedule->departures()->delete();
-            });
-            $route->schedules()->delete();
+            // Check if the route has any route stops associated with it
+            if ($route->routeStops()->count() > 0) {
+                return redirect()->route('admin.city_routes.index')
+                    ->with('error', 'Nie można usunąć trasy miejskiej, która ma przypisane przystanki.');
+            }
             
-            // Delete the route
+            // Remove the route if it has no schedules or route stops
             $route->delete();
-            
-            DB::commit();
             
             return redirect()->route('admin.city_routes.index')
                 ->with('success', 'Kurs miejski został usunięty pomyślnie');
         } catch (\Exception $e) {
-            DB::rollBack();
             Log::error('Failed to delete city route: ' . $e->getMessage());
             
             return back()->withErrors(['general' => 'Błąd podczas usuwania kursu miejskiego: ' . $e->getMessage()]);

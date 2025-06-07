@@ -1,15 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-4">
-    <h2>Edytuj bilet</h2>
+<div class="container-fluid py-4">
     <div class="row mb-4">
-        <div class="col-12">
-            <a href="{{ route('admin.tickets.index') }}" class="btn btn-primary">Powrót do listy biletów</a>
+        <div class="col-12 d-flex align-items-center">
+            <a href="{{ route('admin.tickets.index') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-1"></i>Powrót do listy biletów</a>
         </div>
     </div>
-
-    <div class="card">
+    
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Edytuj bilet</h5>
+        </div>
         <div class="card-body">
             <form action="{{ route('admin.tickets.update', $ticket) }}" method="POST">
                 @csrf
@@ -117,8 +119,8 @@
                     <label for="is_active" class="form-check-label">Bilet aktywny</label>
                 </div>
 
-                <div class="text-end">
-                    <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save me-1"></i>Zapisz zmiany</button>
                 </div>
             </form>
         </div>

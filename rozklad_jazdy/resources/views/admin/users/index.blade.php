@@ -8,7 +8,7 @@
     <div class="container">
         <div class="row mb-4">
             <div class="col-12">
-                <a href="{{ url('/admin?tab=uzytkownicy') }}" class="btn btn-primary">Powrót do panelu</a>
+                <a href="{{ url('/admin?tab=uzytkownicy') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-1"></i>Powrót do panelu</a>
             </div>
         </div>
         <div class="card mb-4">
@@ -52,17 +52,21 @@
                                     </td>
                                     <td>
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-sm btn-primary me-1" data-bs-toggle="{{ $user->id == auth()->id() ? 'tooltip' : 'modal' }}" data-bs-target="{{ $user->id == auth()->id() ? '' : '#changeRoleModal'.$user->id }}" {{ $user->id == auth()->id() ? 'disabled' : '' }} title="{{ $user->id == auth()->id() ? 'Aktualny użytkownik' : '' }}">
-                                                Zmień rolę
-                                            </button>
-                                            
-                                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć tego użytkownika?')" {{ $user->id == auth()->id() ? 'disabled' : '' }} data-bs-toggle="{{ $user->id == auth()->id() ? 'tooltip' : '' }}" title="{{ $user->id == auth()->id() ? 'Aktualny użytkownik' : '' }}">
-                                                    Usuń
+                                            @if($user->id != auth()->id())
+                                                <button type="button" class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#changeRoleModal{{ $user->id }}">
+                                                    <i class="fas fa-user-edit me-1"></i>Zmień rolę
                                                 </button>
-                                            </form>
+                                                
+                                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć tego użytkownika?')">
+                                                        <i class="fas fa-trash-alt me-1"></i>Usuń
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <span class="badge bg-secondary">Aktualnie zalogowany</span>
+                                            @endif
                                         </div>
                                         
                                         <!-- Modal do zmiany roli -->
@@ -86,8 +90,8 @@
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-                                                            <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-1"></i>Anuluj</button>
+                                                            <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>Zapisz zmiany</button>
                                                         </div>
                                                     </form>
                                                 </div>

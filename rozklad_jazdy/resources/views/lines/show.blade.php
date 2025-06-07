@@ -6,14 +6,22 @@
 <div class="container my-4">
     <div class="row">
         <div class="col-12">
+            <a href="{{ route('lines.index') }}" class="btn btn-primary mb-3">
+                <i class="fas fa-arrow-left"></i> Powrót do listy linii
+            </a>
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h1>Linia: <span class="badge rounded-pill" style="background-color: {{ $line->color ?? '#6c757d' }}">
-                    {{ $line->number }}
-                </span> {{ $line->name }}</h1>
+                <h1>Linia: 
+                @if($line->number === null)
+                    <span class="badge rounded-pill bg-secondary">
+                        <i class="fas fa-route"></i> IC
+                    </span>
+                @else
+                    <span class="badge rounded-pill" style="background-color: {{ $line->color ?? '#6c757d' }}">
+                        {{ $line->number }}
+                    </span>
+                @endif
+                {{ $line->name }}</h1>
                 <div>
-                    <a href="{{ route('lines.index') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Powrót do listy
-                    </a>
                     @auth
                         <form action="{{ route('lines.toggle-favorite', $line) }}" method="POST" class="d-inline">
                             @csrf
@@ -45,26 +53,20 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6">
-                            <p><strong>Numer linii:</strong> {{ $line->number }}</p>
-                            <p><strong>Nazwa:</strong> {{ $line->name }}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <p><strong>Przewoźnik:</strong> {{ $line->carrier->name }}</p>
-                            <p><strong>Typ transportu:</strong> 
-                                @php
-                                    $typeLabels = [
-                                        'train' => ['Pociąg', 'info'],
-                                        'bus' => ['Autobus', 'success'],
-                                        'tram' => ['Tramwaj', 'primary'],
-                                        'metro' => ['Metro', 'dark'],
-                                        'ferry' => ['Prom', 'warning']
-                                    ];
-                                    
-                                    $typeInfo = $typeLabels[$line->type] ?? ['Inny', 'secondary'];
-                                @endphp
-                                <span class="badge bg-{{ $typeInfo[1] }}">{{ $typeInfo[0] }}</span>
+                        <div class="col-md-4">
+                            <p class="mb-0"><strong>Numer linii:</strong> 
+                                @if($line->number === null)
+                                    <span class="badge bg-y">Międzymiastowa</span>
+                                @else
+                                    {{ $line->number }}
+                                @endif
                             </p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="mb-0"><strong>Nazwa:</strong> {{ $line->name }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="mb-0"><strong>Przewoźnik:</strong> {{ $line->carrier->name }}</p>
                         </div>
                     </div>
                 </div>
@@ -96,7 +98,7 @@
                                                 @if($route->type == 'city')
                                                     <span class="badge bg-success">Miejska</span>
                                                 @else
-                                                    <span class="badge bg-info">Międzymiastowa</span>
+                                                    <span class="badge bg-primary">Międzymiastowa</span>
                                                 @endif
                                             </td>
                                             <td>

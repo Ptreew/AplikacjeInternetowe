@@ -78,6 +78,10 @@
                             </td>
                         </tr>
                         <tr>
+                            <th class="bg-light">Cena</th>
+                            <td>{{ number_format($departure->price, 2, ',', ' ') }} PLN</td>
+                        </tr>
+                        <tr>
                             <th class="bg-light">Status</th>
                             <td>
                                 @if($departure->is_active)
@@ -113,7 +117,7 @@
                         </tr>
                         <tr>
                             <th class="bg-light">Liczba miejsc</th>
-                            <td>{{ $departure->vehicle->seats }}</td>
+                            <td>{{ $departure->vehicle->capacity }}</td>
                         </tr>
                         <tr>
                             <th class="bg-light">Status pojazdu</th>
@@ -199,19 +203,33 @@
                                 <td>{{ $ticket->id }}</td>
                                 <td>{{ $ticket->user->name }}</td>
                                 <td>
-                                    @if($ticket->status == 'reserved')
-                                        <span class="badge bg-warning">Zarezerwowany</span>
-                                    @elseif($ticket->status == 'purchased')
-                                        <span class="badge bg-success">Zakupiony</span>
-                                    @elseif($ticket->status == 'canceled')
-                                        <span class="badge bg-danger">Anulowany</span>
-                                    @else
-                                        <span class="badge bg-secondary">{{ $ticket->status }}</span>
+                                    @php
+                                        $statusClass = [
+                                            'reserved' => 'warning',
+                                            'paid' => 'success',
+                                            'used' => 'success',
+                                            'cancelled' => 'danger',
+                                            'purchased' => 'success',
+                                            'canceled' => 'danger'
+                                        ][$ticket->status] ?? 'secondary';
+                                        
+                                        $statusLabel = [
+                                            'reserved' => 'Zarezerwowany',
+                                            'paid' => 'Opłacony',
+                                            'used' => 'Wykorzystany',
+                                            'cancelled' => 'Anulowany',
+                                            'purchased' => 'Zakupiony',
+                                            'canceled' => 'Anulowany'
+                                        ][$ticket->status] ?? ucfirst($ticket->status);
+                                    @endphp
+                                    <span class="badge bg-{{ $statusClass }}">{{ $statusLabel }}</span>
+                                    @if(!$ticket->is_active)
+                                        <span class="badge bg-secondary">Nieaktywny</span>
                                     @endif
                                 </td>
                                 <td>{{ \Carbon\Carbon::parse($ticket->created_at)->format('d.m.Y H:i') }}</td>
                                 <td>
-                                    <a href="{{ route('admin.tickets.show', $ticket) }}" class="btn btn-sm btn-info">
+                                    <a href="{{ route('admin.tickets.show', $ticket) }}" class="btn btn-sm btn-success">
                                         <i class="fas fa-eye"></i> Szczegóły
                                     </a>
                                 </td>

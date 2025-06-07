@@ -7,10 +7,10 @@
     <div class="row mb-4">
         <div class="col-12">
             <a href="{{ route('admin') }}?tab=routes" class="btn btn-primary">
-                <i class="fas fa-arrow-left"></i> Powrót do panelu
+                <i class="fas fa-arrow-left me-1"></i>Powrót do panelu
             </a>
             <a href="{{ route('admin.routes.builder.step1') }}" class="btn btn-success">
-                <i class="fas fa-plus"></i> Dodaj nową trasę (Builder)
+                <i class="fas fa-plus me-1"></i>Dodaj nową trasę (Builder)
             </a>
         </div>
     </div>
@@ -55,16 +55,16 @@
                                 <td>{{ $route->name }}</td>
                                 <td>
                                     @if($route->type == 'city')
-                                        <span class="badge bg-info">Miejska</span>
+                                        <span class="badge bg-success">Miejska</span>
                                     @else
-                                        <span class="badge bg-warning">Międzymiastowa</span>
+                                        <span class="badge bg-primary">Międzymiastowa</span>
                                     @endif
                                 </td>
                                 <td>
                                     @if($route->line->number)
-                                        {{ $route->line->number }}
+                                        <span class="badge" style="background-color: {{ $route->line->color ?? '#6c757d' }}; color: #fff;">{{ $route->line->number }}</span>
                                     @else
-                                        <span class="fst-italic text-muted">Kurs międzymiastowy</span>
+                                        <span class="badge bg-secondary text-white"><i class="fas fa-route"></i> <span style="font-weight: bold;">IC</span></span>
                                     @endif
                                 </td>
                                 <td>{{ $route->line->carrier->name ?? 'Brak przewoźnika' }}</td>
@@ -82,19 +82,19 @@
                                         <span class="badge bg-danger">Nieaktywna</span>
                                     @endif
                                 </td>
-                                <td>
-                                    <div class="d-inline-flex">
+                                <td class="text-center">
+                                    <div class="d-flex flex-nowrap justify-content-center">
                                         <a href="{{ route('admin.routes.edit', $route) }}" class="btn btn-sm btn-primary me-1">
-                                            Edytuj
+                                            <i class="fas fa-edit me-1"></i>Edytuj
                                         </a>
                                         <a href="{{ route('admin.routes.show', $route) }}" class="btn btn-sm btn-success me-1">
-                                            Pokaż
+                                            <i class="fas fa-eye me-1"></i>Pokaż
                                         </a>
-                                        <form action="{{ route('admin.routes.destroy', $route) }}" method="POST" class="d-inline">
+                                        <form action="{{ route('admin.routes.destroy', $route) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć tę trasę?')">
-                                                Usuń
+                                                <i class="fas fa-trash-alt me-1"></i>Usuń
                                             </button>
                                         </form>
                                     </div>

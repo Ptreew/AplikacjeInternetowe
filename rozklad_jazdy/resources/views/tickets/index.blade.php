@@ -9,7 +9,7 @@
             <div class="card shadow">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Moje bilety</h4>
-                    <a href="{{ route('routes.search') }}" class="btn btn-light">
+                    <a href="{{ route('routes.search') }}" class="btn btn-success">
                         <i class="fas fa-search me-1"></i> Znajdź połączenie
                     </a>
                 </div>
@@ -25,7 +25,7 @@
                             <i class="fas fa-ticket-alt fa-4x text-muted mb-3"></i>
                             <h5>Nie masz jeszcze żadnych biletów</h5>
                             <p class="text-muted">Skorzystaj z wyszukiwarki, aby znaleźć i zarezerwować bilet.</p>
-                            <a href="{{ route('routes.search') }}" class="btn btn-primary mt-3">
+                            <a href="{{ route('routes.search') }}" class="btn btn-success mt-3">
                                 <i class="fas fa-search me-1"></i> Znajdź połączenie
                             </a>
                         </div>
@@ -76,7 +76,7 @@
                                                 <span class="badge bg-{{ 
                                                     $ticket->status === 'paid' ? 'success' : 
                                                     ($ticket->status === 'reserved' ? 'warning' : 
-                                                    ($ticket->status === 'used' ? 'info' : 'secondary')) 
+                                                    ($ticket->status === 'used' ? 'success' : 'danger')) 
                                                 }}">
                                                     {{ 
                                                         $ticket->status === 'paid' ? 'Opłacony' : 
@@ -84,14 +84,17 @@
                                                         ($ticket->status === 'used' ? 'Wykorzystany' : 'Anulowany')) 
                                                     }}
                                                 </span>
+                                                @if(!$ticket->is_active)
+                                                    <span class="badge bg-secondary ms-1">Nieaktywny</span>
+                                                @endif
                                             </td>
                                             <td class="text-end fw-bold text-nowrap">
                                                 {{ number_format($departure->price, 2) }} zł
                                             </td>
                                             <td class="text-end">
                                                 <div class="btn-group">
-                                                    <a href="{{ route('tickets.show', $ticket) }}" class="btn btn-sm btn-outline-primary">
-                                                        <i class="fas fa-eye"></i>
+                                                    <a href="{{ route('tickets.show', $ticket) }}" class="btn btn-sm btn-success">
+                                                        <i class="fas fa-eye"></i> Szczegóły
                                                     </a>
                                                 </div>
                                             </td>

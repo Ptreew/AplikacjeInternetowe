@@ -48,7 +48,7 @@ class DepartureController extends Controller
         
         
         // Paginate the results
-        $departures = $query->orderBy('departure_time')->paginate(15);
+        $departures = $query->orderBy('departure_time')->paginate(10);
         
         // Get schedules and vehicles for filter dropdowns
         $schedules = Schedule::with(['route.line'])->orderBy('route_id')->get();
@@ -65,15 +65,27 @@ class DepartureController extends Controller
         // Pre-select schedule if provided
         $selectedScheduleId = $request->schedule_id;
         $schedule = null;
+        $stops = collect();
         
         if ($selectedScheduleId) {
             $schedule = Schedule::with(['route.routeStops.stop.city'])->find($selectedScheduleId);
+            
+            // Get stops for this schedule's route
+            if ($schedule && $schedule->route) {
+                $stops = $schedule->route->routeStops()
+                    ->with('stop.city')
+                    ->orderBy('stop_number', 'asc')
+                    ->get()
+                    ->map(function($routeStop) {
+                        return $routeStop->stop;
+                    });
+            }
         }
         
         $schedules = Schedule::with(['route.line'])->get();
-        $vehicles = Vehicle::with('carrier')->where('is_active', true)->orderBy('vehicle_number')->get();
+        $vehicles = Vehicle::with('line.carrier')->where('is_active', true)->orderBy('vehicle_number')->get();
         
-        return view('admin.departures.create', compact('schedules', 'vehicles', 'selectedScheduleId', 'schedule'));
+        return view('admin.departures.create', compact('schedules', 'vehicles', 'selectedScheduleId', 'schedule', 'stops'));
     }
 
     /**
@@ -85,7 +97,9 @@ class DepartureController extends Controller
         $validated = $request->validate([
             'schedule_id' => 'required|exists:schedules,id',
             'vehicle_id' => 'required|exists:vehicles,id',
+            'stop_id' => 'required|exists:stops,id',
             'departure_time' => 'required|date_format:H:i',
+            'price' => 'required|numeric|min:0',
             'is_active' => 'boolean',
         ]);
         
@@ -99,19 +113,21 @@ class DepartureController extends Controller
             $departure = new Departure();
             $departure->schedule_id = $validated['schedule_id'];
             $departure->vehicle_id = $validated['vehicle_id'];
+            $departure->stop_id = $validated['stop_id'];
             $departure->departure_time = $departureTime;
+            $departure->price = $validated['price'];
             $departure->is_active = $request->has('is_active');
             $departure->save();
             
             DB::commit();
             
             return redirect()->route('admin.schedules.show', $departure->schedule_id)
-                ->with('success', 'Departure added to schedule successfully.');
+                ->with('success', 'Odjazd został pomyślnie dodany.');
         } catch (\Exception $e) {
             DB::rollBack();
             
             return redirect()->back()
-                ->with('error', 'Failed to add departure: ' . $e->getMessage())
+                ->with('error', 'Błąd podczas dodawania odjazdu: ' . $e->getMessage())
                 ->withInput();
         }
     }
@@ -151,12 +167,24 @@ class DepartureController extends Controller
         $departure->load('schedule.route');
         
         $schedules = Schedule::with(['route.line'])->get();
-        $vehicles = Vehicle::with('carrier')->where('is_active', true)->orderBy('vehicle_number')->get();
+        $vehicles = Vehicle::with('line.carrier')->where('is_active', true)->orderBy('vehicle_number')->get();
+        
+        // Get stops for the current schedule's route
+        $stops = collect();
+        if ($departure->schedule && $departure->schedule->route) {
+            $stops = $departure->schedule->route->routeStops()
+                ->with('stop.city')
+                ->orderBy('stop_number', 'asc')
+                ->get()
+                ->map(function($routeStop) {
+                    return $routeStop->stop;
+                });
+        }
         
         // Format departure time for the form
         $departureTime = Carbon::parse($departure->departure_time)->format('H:i');
         
-        return view('admin.departures.edit', compact('departure', 'schedules', 'vehicles', 'departureTime'));
+        return view('admin.departures.edit', compact('departure', 'schedules', 'vehicles', 'departureTime', 'stops'));
     }
 
     /**
@@ -168,6 +196,8 @@ class DepartureController extends Controller
         $validated = $request->validate([
             'schedule_id' => 'required|exists:schedules,id',
             'vehicle_id' => 'required|exists:vehicles,id',
+            'stop_id' => 'required|exists:stops,id',
+            'price' => 'required|numeric|min:0',
             'departure_time' => 'required|date_format:H:i',
             'is_active' => 'boolean',
         ]);
@@ -181,6 +211,8 @@ class DepartureController extends Controller
             // Update departure
             $departure->schedule_id = $validated['schedule_id'];
             $departure->vehicle_id = $validated['vehicle_id'];
+            $departure->stop_id = $validated['stop_id'];
+            $departure->price = $validated['price'];
             $departure->departure_time = $departureTime;
             $departure->is_active = $request->has('is_active');
             $departure->save();
@@ -188,16 +220,16 @@ class DepartureController extends Controller
             DB::commit();
             
             return redirect()->route('admin.schedules.show', $departure->schedule_id)
-                ->with('success', 'Departure updated successfully.');
+                ->with('success', 'Odjazd został pomyślnie zaktualizowany.');
         } catch (\Exception $e) {
             DB::rollBack();
             
             return redirect()->back()
-                ->with('error', 'Failed to update departure: ' . $e->getMessage())
+                ->with('error', 'Błąd podczas aktualizacji odjazdu: ' . $e->getMessage())
                 ->withInput();
         }
     }
-
+    
     /**
      * Remove the specified resource from storage.
      */
@@ -205,14 +237,18 @@ class DepartureController extends Controller
     {
         $scheduleId = $departure->schedule_id;
         
-        // Check if the departure has any tickets
-        if ($departure->tickets()->exists()) {
+        // Check if there are any tickets with status other than cancelled or used
+        // (i.e., tickets that are reserved or paid)
+        if ($departure->tickets()->whereNotIn('status', ['cancelled', 'used'])->exists()) {
             return redirect()->route('admin.departures.show', $departure)
-                ->with('error', 'Cannot delete departure with associated tickets. Please cancel or delete the tickets first.');
+                ->with('error', 'Nie można usunąć odjazdu, ponieważ są do niego przypisane aktywne bilety (zarezerwowane lub opłacone). Najpierw anuluj lub oznacz jako wykorzystane wszystkie bilety.');
         }
         
         try {
             DB::beginTransaction();
+            
+            // Remove all cancelled or used tickets, if any
+            $departure->tickets()->whereIn('status', ['cancelled', 'used'])->delete();
             
             // Delete the departure
             $departure->delete();
@@ -220,12 +256,12 @@ class DepartureController extends Controller
             DB::commit();
             
             return redirect()->route('admin.schedules.show', $scheduleId)
-                ->with('success', 'Departure deleted successfully.');
+                ->with('success', 'Odjazd został pomyślnie usunięty.');
         } catch (\Exception $e) {
             DB::rollBack();
             
             return redirect()->route('admin.departures.show', $departure)
-                ->with('error', 'Failed to delete departure: ' . $e->getMessage());
+                ->with('error', 'Błąd podczas usuwania odjazdu: ' . $e->getMessage());
         }
     }
 }

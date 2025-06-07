@@ -9,10 +9,10 @@
     <div class="row mb-4">
         <div class="col-12">
             <a href="{{ route('admin') }}?tab=lines" class="btn btn-primary">
-                <i class="fas fa-arrow-left"></i> Powrót do panelu
+                <i class="fas fa-arrow-left me-1"></i>Powrót do panelu
             </a>
             <a href="{{ route('admin.lines.create') }}" class="btn btn-success">
-                <i class="fas fa-plus"></i> Dodaj nową linię
+                <i class="fas fa-plus me-1"></i>Dodaj nową linię
             </a>
         </div>
     </div>
@@ -40,13 +40,13 @@
                 <table class="table table-striped table-hover">
                     <thead class="table-light">
                         <tr>
-                            <th>ID</th>
-                            <th>Numer</th>
-                            <th>Nazwa</th>
-                            <th>Przewoźnik</th>
-                            <th>Kolor</th>
-                            <th>Status</th>
-                            <th>Akcje</th>
+                            <th style="width: 5%">ID</th>
+                            <th style="width: 10%">Numer</th>
+                            <th style="width: 15%">Nazwa</th>
+                            <th style="width: 20%">Przewoźnik</th>
+                            <th style="width: 15%">Kolor</th>
+                            <th style="width: 10%">Status</th>
+                            <th style="width: 20%">Akcje</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,9 +55,9 @@
                                 <td>{{ $line->id }}</td>
                                 <td>
                             @if($line->number)
-                                {{ $line->number }}
+                                <span class="badge" style="background-color: {{ $line->color ?? '#6c757d' }}; color: #fff;">{{ $line->number }}</span>
                             @else
-                                <span class="fst-italic text-muted">Kurs międzymiastowy</span>
+                                <span class="badge bg-secondary text-white"><i class="fas fa-route"></i> <span style="font-weight: bold;">IC</span></span>
                             @endif
                         </td>
                                 <td>{{ $line->name }}</td>
@@ -73,19 +73,19 @@
                                         <span class="badge bg-danger">Nieaktywna</span>
                                     @endif
                                 </td>
-                                <td>
-                                    <div class="d-inline-flex">
+                                <td class="text-center">
+                                    <div class="d-flex flex-nowrap justify-content-center">
                                         <a href="{{ route('admin.lines.edit', $line) }}" class="btn btn-sm btn-primary me-1">
-                                            Edytuj
+                                            <i class="fas fa-edit me-1"></i>Edytuj
                                         </a>
                                         <a href="{{ route('admin.lines.show', $line) }}" class="btn btn-sm btn-success me-1">
-                                            Pokaż
+                                            <i class="fas fa-eye me-1"></i>Pokaż
                                         </a>
-                                        <form action="{{ route('admin.lines.destroy', $line) }}" method="POST" class="d-inline">
+                                        <form action="{{ route('admin.lines.destroy', $line) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć tę linię?')">
-                                                Usuń
+                                                <i class="fas fa-trash-alt me-1"></i>Usuń
                                             </button>
                                         </form>
                                     </div>

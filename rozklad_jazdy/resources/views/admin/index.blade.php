@@ -10,46 +10,46 @@
     <div class="container-fluid">
         <div class="row mb-4">
             <div class="col-12">
-                <a href="{{ route('admin.dashboard') }}" class="btn btn-primary">Przejdź do Dashboard</a>
+                <a href="{{ route('admin.dashboard') }}" class="btn btn-primary"><i class="fas fa-tachometer-alt me-2"></i>Przejdź do Dashboard</a>
             </div>
         </div>
         
         <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="miedzymiastowe-tab" data-bs-toggle="tab" data-bs-target="#miedzymiastowe" type="button" role="tab" aria-controls="miedzymiastowe" aria-selected="true">Kursy Międzymiastowe</button>
+                <button class="nav-link active" id="miedzymiastowe-tab" data-bs-toggle="tab" data-bs-target="#miedzymiastowe" type="button" role="tab" aria-controls="miedzymiastowe" aria-selected="true"><i class="fas fa-route me-1"></i> Kursy Międzymiastowe</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="miejskie-tab" data-bs-toggle="tab" data-bs-target="#miejskie" type="button" role="tab" aria-controls="miejskie" aria-selected="false">Kursy Miejskie</button>
+                <button class="nav-link" id="miejskie-tab" data-bs-toggle="tab" data-bs-target="#miejskie" type="button" role="tab" aria-controls="miejskie" aria-selected="false"><i class="fas fa-bus me-1"></i> Kursy Miejskie</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="uzytkownicy-tab" data-bs-toggle="tab" data-bs-target="#uzytkownicy" type="button" role="tab" aria-controls="uzytkownicy" aria-selected="false">Użytkownicy</button>
+                <button class="nav-link" id="uzytkownicy-tab" data-bs-toggle="tab" data-bs-target="#uzytkownicy" type="button" role="tab" aria-controls="uzytkownicy" aria-selected="false"><i class="fas fa-users me-1"></i> Użytkownicy</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pojazdy-tab" data-bs-toggle="tab" data-bs-target="#pojazdy" type="button" role="tab" aria-controls="pojazdy" aria-selected="false">Pojazdy</button>
+                <button class="nav-link" id="pojazdy-tab" data-bs-toggle="tab" data-bs-target="#pojazdy" type="button" role="tab" aria-controls="pojazdy" aria-selected="false"><i class="fas fa-bus-alt me-1"></i> Pojazdy</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="przewoznicy-tab" data-bs-toggle="tab" data-bs-target="#przewoznicy" type="button" role="tab" aria-controls="przewoznicy" aria-selected="false">Przewoźnicy</button>
+                <button class="nav-link" id="przewoznicy-tab" data-bs-toggle="tab" data-bs-target="#przewoznicy" type="button" role="tab" aria-controls="przewoznicy" aria-selected="false"><i class="fas fa-building me-1"></i> Przewoźnicy</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="lines-tab" data-bs-toggle="tab" data-bs-target="#lines" type="button" role="tab" aria-controls="lines" aria-selected="false">Linie</button>
+                <button class="nav-link" id="lines-tab" data-bs-toggle="tab" data-bs-target="#lines" type="button" role="tab" aria-controls="lines" aria-selected="false"><i class="fas fa-project-diagram me-1"></i> Linie</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="routes-tab" data-bs-toggle="tab" data-bs-target="#routes" type="button" role="tab" aria-controls="routes" aria-selected="false">Trasy</button>
+                <button class="nav-link" id="routes-tab" data-bs-toggle="tab" data-bs-target="#routes" type="button" role="tab" aria-controls="routes" aria-selected="false"><i class="fas fa-map-marked-alt me-1"></i> Trasy</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="cities-tab" data-bs-toggle="tab" data-bs-target="#cities" type="button" role="tab" aria-controls="cities" aria-selected="false">Miasta</button>
+                <button class="nav-link" id="cities-tab" data-bs-toggle="tab" data-bs-target="#cities" type="button" role="tab" aria-controls="cities" aria-selected="false"><i class="fas fa-city me-1"></i> Miasta</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="stops-tab" data-bs-toggle="tab" data-bs-target="#stops" type="button" role="tab" aria-controls="stops" aria-selected="false">Przystanki</button>
+                <button class="nav-link" id="stops-tab" data-bs-toggle="tab" data-bs-target="#stops" type="button" role="tab" aria-controls="stops" aria-selected="false"><i class="fas fa-map-pin me-1"></i> Przystanki</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="schedules-tab" data-bs-toggle="tab" data-bs-target="#schedules" type="button" role="tab" aria-controls="schedules" aria-selected="false">Rozkłady</button>
+                <button class="nav-link" id="schedules-tab" data-bs-toggle="tab" data-bs-target="#schedules" type="button" role="tab" aria-controls="schedules" aria-selected="false"><i class="fas fa-calendar-alt me-1"></i> Rozkłady</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="departures-tab" data-bs-toggle="tab" data-bs-target="#departures" type="button" role="tab" aria-controls="departures" aria-selected="false">Odjazdy</button>
+                <button class="nav-link" id="departures-tab" data-bs-toggle="tab" data-bs-target="#departures" type="button" role="tab" aria-controls="departures" aria-selected="false"><i class="fas fa-clock me-1"></i> Odjazdy</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tickets-tab" data-bs-toggle="tab" data-bs-target="#tickets" type="button" role="tab" aria-controls="tickets" aria-selected="false">Bilety</button>
+                <button class="nav-link" id="tickets-tab" data-bs-toggle="tab" data-bs-target="#tickets" type="button" role="tab" aria-controls="tickets" aria-selected="false"><i class="fas fa-ticket-alt me-1"></i> Bilety</button>
             </li>
         </ul>
 
@@ -153,13 +153,13 @@
                                         <td>
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('admin.intercity.edit', $route->id) }}" class="btn btn-sm btn-primary me-1">
-                                                    Edytuj
+                                                    <i class="fas fa-edit me-1"></i>Edytuj
                                                 </a>
                                                 <form action="{{ route('admin.intercity.destroy', $route->id) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten kurs?')">
-                                                        Usuń
+                                                        <i class="fas fa-trash-alt me-1"></i>Usuń
                                                     </button>
                                                 </form>
                                             </div>
@@ -176,7 +176,7 @@
                     
                     <div class="mt-3 text-center">
                         <a href="{{ route('admin.intercity.index') }}" class="btn btn-primary">
-                            Zobacz wszystkie kursy międzymiastowe
+                            <i class="fas fa-list me-2"></i>Zobacz wszystkie kursy międzymiastowe
                         </a>
                     </div>
                 </div>
@@ -249,13 +249,13 @@
                                         <td>
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('admin.city_routes.edit', $route->id) }}" class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-edit"></i> Edytuj
+                                                    <i class="fas fa-edit me-1"></i>Edytuj
                                                 </a>
                                                 <form action="{{ route('admin.city_routes.destroy', $route->id) }}" method="POST" onsubmit="return confirm('Czy na pewno chcesz usunąć ten kurs?');" style="display: inline;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger">
-                                                        <i class="fas fa-trash"></i> Usuń
+                                                        <i class="fas fa-trash-alt me-1"></i>Usuń
                                                     </button>
                                                 </form>
                                             </div>
@@ -272,7 +272,7 @@
                     
                     <div class="mt-3 text-center">
                         <a href="{{ route('admin.city_routes.index') }}" class="btn btn-primary">
-                            Zobacz wszystkie kursy miejskie
+                            <i class="fas fa-list me-2"></i>Zobacz wszystkie kursy miejskie
                         </a>
                     </div>
                 </div>
@@ -329,14 +329,14 @@
                                             <div class="btn-group">
                                                 @if($user->id != auth()->id())
                                                     <button type="button" class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#changeRoleModal{{ $user->id }}">
-                                                        Zmień rolę
+                                                        <i class="fas fa-user-edit me-1"></i>Zmień rolę
                                                     </button>
                                                     
                                                     <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć tego użytkownika?')">
-                                                            Usuń
+                                                            <i class="fas fa-trash-alt me-1"></i>Usuń
                                                         </button>
                                                     </form>
                                                 @else
@@ -365,8 +365,8 @@
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-                                                                <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-1"></i>Anuluj</button>
+                                                                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>Zapisz zmiany</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -389,7 +389,7 @@
                     
                     <div class="mt-3 text-center">
                         <a href="{{ route('admin.users.index') }}" class="btn btn-primary">
-                            Zobacz wszystkich użytkowników
+                            <i class="fas fa-list me-2"></i>Zobacz wszystkich użytkowników
                         </a>
                     </div>
                 </div>
@@ -444,16 +444,16 @@
                                         <td>
                                             <div class="d-inline-flex">
                                                 <a href="{{ route('admin.vehicles.edit', $vehicle) }}" class="btn btn-sm btn-primary me-1">
-                                                    Edytuj
+                                                    <i class="fas fa-edit me-1"></i>Edytuj
                                                 </a>
                                                 <a href="{{ route('admin.vehicles.show', $vehicle) }}" class="btn btn-sm btn-success me-1">
-                                                    Pokaż
+                                                    <i class="fas fa-eye me-1"></i>Pokaż
                                                 </a>
                                                 <form action="{{ route('admin.vehicles.destroy', $vehicle) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten pojazd?')">
-                                                        Usuń
+                                                        <i class="fas fa-trash-alt me-1"></i>Usuń
                                                     </button>
                                                 </form>
                                             </div>
@@ -472,7 +472,7 @@
                     
                     <div class="d-flex justify-content-center mt-3">
                         <a href="{{ route('admin.vehicles.index') }}" class="btn btn-primary">
-                            <i class="fas fa-list"></i> Zobacz pełną listę pojazdów
+                            <i class="fas fa-list me-2"></i>Zobacz pełną listę pojazdów
                         </a>
                     </div>
                 </div>
@@ -485,7 +485,7 @@
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Zarządzanie Przewoźnikami</h5>
                     <a href="{{ route('admin.carriers.create') }}" class="btn btn-sm btn-success">
-                        <i class="fas fa-plus"></i> Dodaj Przewoźnika
+                        <i class="fas fa-plus me-1"></i>Dodaj Przewoźnika
                     </a>
                 </div>
                 <div class="card-body">
@@ -523,11 +523,11 @@
                                             <div class="d-inline-flex">
                                                 <a href="{{ route('admin.carriers.edit', $carrier) }}" 
                                                    class="btn btn-sm btn-primary me-1">
-                                                    Edytuj
+                                                    <i class="fas fa-edit me-1"></i>Edytuj
                                                 </a>
                                                 <a href="{{ route('admin.carriers.show', $carrier) }}" 
                                                    class="btn btn-sm btn-success me-1">
-                                                    Pokaż
+                                                    <i class="fas fa-eye me-1"></i>Pokaż
                                                 </a>
                                                 <form action="{{ route('admin.carriers.destroy', $carrier) }}" 
                                                       method="POST" class="d-inline">
@@ -535,7 +535,7 @@
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger" 
                                                             onclick="return confirm('Czy na pewno chcesz usunąć tego przewoźnika?')">
-                                                        Usuń
+                                                        <i class="fas fa-trash-alt me-1"></i>Usuń
                                                     </button>
                                                 </form>
                                             </div>
@@ -560,7 +560,7 @@
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Zarządzanie Liniami</h5>
                     <a href="{{ route('admin.lines.create') }}" class="btn btn-success">
-                        <i class="fas fa-plus"></i> Dodaj nową linię
+                        <i class="fas fa-plus me-1"></i>Dodaj nową linię
                     </a>
                 </div>
                 <div class="card-body">
@@ -587,9 +587,9 @@
                                         <td>{{ $line->id }}</td>
                                         <td>
                                             @if($line->number)
-                                                {{ $line->number }}
+                                                <span class="badge" style="background-color: {{ $line->color ?? '#6c757d' }}; color: #fff;">{{ $line->number }}</span>
                                             @else
-                                                <span class="fst-italic text-muted">Kurs międzymiastowy</span>
+                                                <span class="badge bg-secondary text-white"><i class="fas fa-route"></i> <span style="font-weight: bold;">IC</span></span>
                                             @endif
                                         </td>
                                         <td>{{ $line->name }}</td>
@@ -605,19 +605,19 @@
                                                 <span class="badge bg-danger">Nieaktywna</span>
                                             @endif
                                         </td>
-                                        <td>
-                                            <div class="d-inline-flex">
+                                        <td class="text-center">
+                                            <div class="d-flex flex-nowrap justify-content-center">
                                                 <a href="{{ route('admin.lines.edit', $line) }}" class="btn btn-sm btn-primary me-1">
-                                                    Edytuj
+                                                    <i class="fas fa-edit me-1"></i>Edytuj
                                                 </a>
                                                 <a href="{{ route('admin.lines.show', $line) }}" class="btn btn-sm btn-success me-1">
-                                                    Pokaż
+                                                    <i class="fas fa-eye me-1"></i>Pokaż
                                                 </a>
-                                                <form action="{{ route('admin.lines.destroy', $line) }}" method="POST" class="d-inline">
+                                                <form action="{{ route('admin.lines.destroy', $line) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć tę linię?')">
-                                                        Usuń
+                                                        <i class="fas fa-trash-alt me-1"></i>Usuń
                                                     </button>
                                                 </form>
                                             </div>
@@ -658,6 +658,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nazwa</th>
+                                    <th>Typ</th>
                                     <th>Linia</th>
                                     <th>Przewoźnik</th>
                                     <th>Czas podróży</th>
@@ -675,10 +676,17 @@
                                         <td>{{ $route->id }}</td>
                                         <td>{{ $route->name }}</td>
                                         <td>
-                                            @if($route->line->number)
-                                                {{ $route->line->number }}
+                                            @if($route->type == 'city')
+                                                <span class="badge bg-success">Miejska</span>
                                             @else
-                                                <span class="fst-italic text-muted">Kurs międzymiastowy</span>
+                                                <span class="badge bg-primary">Międzymiastowa</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($route->line->number)
+                                                <span class="badge" style="background-color: {{ $route->line->color ?? '#6c757d' }}; color: #fff;">{{ $route->line->number }}</span>
+                                            @else
+                                                <span class="badge bg-secondary text-white"><i class="fas fa-route"></i> <span style="font-weight: bold;">IC</span></span>
                                             @endif
                                         </td>
                                         <td>{{ $route->line->carrier->name ?? 'Brak przewoźnika' }}</td>
@@ -696,19 +704,19 @@
                                                 <span class="badge bg-danger">Nieaktywna</span>
                                             @endif
                                         </td>
-                                        <td>
-                                            <div class="d-inline-flex">
+                                        <td class="text-center">
+                                            <div class="d-flex flex-nowrap justify-content-center">
                                                 <a href="{{ route('admin.routes.edit', $route) }}" class="btn btn-sm btn-primary me-1">
-                                                    Edytuj
+                                                    <i class="fas fa-edit me-1"></i>Edytuj
                                                 </a>
                                                 <a href="{{ route('admin.routes.show', $route) }}" class="btn btn-sm btn-success me-1">
-                                                    Pokaż
+                                                    <i class="fas fa-eye me-1"></i>Pokaż
                                                 </a>
-                                                <form action="{{ route('admin.routes.destroy', $route) }}" method="POST" class="d-inline">
+                                                <form action="{{ route('admin.routes.destroy', $route) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć tę trasę?')">
-                                                        Usuń
+                                                        <i class="fas fa-trash-alt me-1"></i>Usuń
                                                     </button>
                                                 </form>
                                             </div>
@@ -716,7 +724,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center">Brak tras w bazie danych</td>
+                                        <td colspan="8" class="text-center">Brak tras w bazie danych</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -765,23 +773,19 @@
                                         <td>{{ $city->name }}</td>
                                         <td>{{ $city->voivodeship }}</td>
                                         <td>{{ $city->stops->count() }}</td>
-                                        <td class="align-middle">
-                                            <div class="d-inline-flex">
-                                                <a href="{{ route('admin.cities.edit', $city) }}" 
-                                                   class="btn btn-sm btn-primary me-1">
-                                                    Edytuj
+                                        <td class="text-center">
+                                            <div class="d-flex flex-nowrap justify-content-center">
+                                                <a href="{{ route('admin.cities.edit', $city) }}" class="btn btn-sm btn-primary me-1">
+                                                    <i class="fas fa-edit me-1"></i>Edytuj
                                                 </a>
-                                                <a href="{{ route('admin.cities.show', $city) }}" 
-                                                   class="btn btn-sm btn-success me-1">
-                                                    Pokaż
+                                                <a href="{{ route('admin.cities.show', $city) }}" class="btn btn-sm btn-success me-1">
+                                                    <i class="fas fa-eye me-1"></i>Pokaż
                                                 </a>
-                                                <form action="{{ route('admin.cities.destroy', $city) }}" 
-                                                      method="POST" class="d-inline">
+                                                <form action="{{ route('admin.cities.destroy', $city) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger" 
-                                                            onclick="return confirm('Czy na pewno chcesz usunąć to miasto?')">
-                                                        Usuń
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć to miasto?')">
+                                                        <i class="fas fa-trash-alt me-1"></i>Usuń
                                                     </button>
                                                 </form>
                                             </div>
@@ -828,24 +832,32 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($stops as $stop)
+                                @foreach ($stops->take(10) as $stop)
                                     <tr>
                                         <td>{{ $stop->id }}</td>
                                         <td>{{ $stop->name }}</td>
                                         <td>{{ $stop->code }}</td>
                                         <td>{{ $stop->city->name }}</td>
-                                        <td>{{ $stop->is_active ? 'Aktywny' : 'Nieaktywny' }}</td>
+                                        <td class="text-center">
+                                            @if($stop->is_active)
+                                                <span class="badge bg-success">Aktywny</span>
+                                            @else
+                                                <span class="badge bg-danger">Nieaktywny</span>
+                                            @endif
+                                        </td>
                                         <td>
-                                            <a href="{{ route('admin.stops.edit', $stop) }}" class="btn btn-sm btn-primary me-1">
-                                                Edytuj
-                                            </a>
-                                            <form action="{{ route('admin.stops.destroy', $stop) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten przystanek?')">
-                                                    Usuń
-                                                </button>
-                                            </form>
+                                            <div class="d-flex flex-nowrap justify-content-center">
+                                                <a href="{{ route('admin.stops.edit', $stop) }}" class="btn btn-sm btn-primary me-1">
+                                                    <i class="fas fa-edit me-1"></i>Edytuj
+                                                </a>
+                                                <form action="{{ route('admin.stops.destroy', $stop) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten przystanek?')">
+                                                        <i class="fas fa-trash-alt me-1"></i>Usuń
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -855,7 +867,7 @@
                     
                     <div class="d-flex justify-content-center mt-3">
                         <a href="{{ route('admin.stops.index') }}" class="btn btn-primary">
-                            Zobacz pełną listę przystanków
+                            <i class="fas fa-list me-1"></i>Zobacz pełną listę przystanków
                         </a>
                     </div>
                 </div>
@@ -875,7 +887,7 @@
                         // Pobierz najnowsze rozkłady jazdy
                         $recentSchedules = App\Models\Schedule::with(['route.line.carrier'])
                             ->orderBy('id', 'desc')
-                            ->take(5)
+                            ->take(10)
                             ->get();
                     @endphp
                     
@@ -896,7 +908,7 @@
                                         <td>{{ $schedule->id }}</td>
                                         <td>
                                             {{ $schedule->route->name }}
-                                            <span class="badge bg-info">{{ $schedule->route->line->name }}</span>
+                                            <span class="badge bg-secondary">{{ $schedule->route->line->name }}</span>
                                         </td>
                                         <td>{{ \Carbon\Carbon::parse($schedule->valid_from)->format('d.m.Y') }} - {{ \Carbon\Carbon::parse($schedule->valid_to)->format('d.m.Y') }}</td>
                                         <td>
@@ -937,9 +949,9 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-flex justify-content-end mt-3">
+                    <div class="d-flex justify-content-center mt-3">
                         <a href="{{ route('admin.schedules.index') }}" class="btn btn-primary">
-                            <i class="fas fa-list"></i> Pokaż wszystkie rozkłady
+                            <i class="fas fa-list me-1"></i>Pokaż wszystkie rozkłady
                         </a>
                     </div>
                 </div>
@@ -959,7 +971,7 @@
                         // Pobierz najnowsze odjazdy
                         $recentDepartures = App\Models\Departure::with(['schedule.route.line', 'vehicle'])
                             ->orderBy('departure_time', 'desc')
-                            ->take(5)
+                            ->take(10)
                             ->get();
                     @endphp
                     
@@ -971,7 +983,7 @@
                                     <th>Rozkład (Trasa)</th>
                                     <th>Czas odjazdu</th>
                                     <th>Pojazd</th>
-                                    <th>Status</th>
+                                    <th>Aktywny</th>
                                     <th>Akcje</th>
                                 </tr>
                             </thead>
@@ -981,16 +993,10 @@
                                         <td>{{ $departure->id }}</td>
                                         <td>
                                             {{ $departure->schedule->route->name }}
-                                            <span class="badge bg-info">{{ $departure->schedule->route->line->name }}</span>
+                                            <span class="badge bg-secondary">{{ $departure->schedule->route->line->name }}</span>
                                         </td>
                                         <td>{{ \Carbon\Carbon::parse($departure->departure_time)->format('H:i') }}</td>
-                                        <td>
-                                            @if($departure->vehicle && $departure->vehicle->carrier)
-                                                {{ $departure->vehicle->number }} ({{ $departure->vehicle->carrier->name }})
-                                            @else
-                                                Brak przypisanego pojazdu
-                                            @endif
-                                        </td>
+                                        <td>{{ $departure->vehicle?->vehicle_number }}</td>
                                         <td>
                                             @if($departure->is_active)
                                                 <span class="badge bg-success">Aktywny</span>
@@ -1017,9 +1023,9 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-flex justify-content-end mt-3">
+                    <div class="d-flex justify-content-center mt-3">
                         <a href="{{ route('admin.departures.index') }}" class="btn btn-primary">
-                            <i class="fas fa-list"></i> Pokaż wszystkie odjazdy
+                            <i class="fas fa-list me-1"></i>Pokaż wszystkie odjazdy
                         </a>
                     </div>
                 </div>
@@ -1093,6 +1099,9 @@
                                                 ][$ticket->status] ?? 'Nieznany';
                                             @endphp
                                             <span class="badge bg-{{ $statusClass }}">{{ $statusLabel }}</span>
+                                            @if(!$ticket->is_active)
+                                                <span class="badge bg-secondary ms-1">Nieaktywny</span>
+                                            @endif
                                         </td>
                                         <td>
                                             @if($ticket->purchase_date instanceof \Carbon\Carbon)
@@ -1104,18 +1113,18 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <div class="d-inline-flex">
+                                            <div class="d-flex flex-nowrap justify-content-center">
                                                 <a href="{{ route('admin.tickets.show', $ticket) }}" class="btn btn-sm btn-success me-1" title="Szczegóły">
-                                                    Szczegóły
+                                                    <i class="fas fa-eye me-1"></i>Szczegóły
                                                 </a>
                                                 <a href="{{ route('admin.tickets.edit', $ticket) }}" class="btn btn-sm btn-primary me-1" title="Edytuj">
-                                                    Edytuj
+                                                    <i class="fas fa-edit me-1"></i>Edytuj
                                                 </a>
                                                 <form action="{{ route('admin.tickets.destroy', $ticket) }}" method="POST" class="d-inline" onsubmit="return confirm('Czy na pewno chcesz usunąć ten bilet?')">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger" title="Usuń">
-                                                        Usuń
+                                                        <i class="fas fa-trash-alt me-1"></i>Usuń
                                                     </button>
                                                 </form>
                                             </div>
@@ -1130,9 +1139,9 @@
                         </table>
                     </div>
                     
-                    <div class="text-center mt-3">
+                    <div class="d-flex justify-content-center mt-3">
                         <a href="{{ route('admin.tickets.index') }}" class="btn btn-primary">
-                            Przejdź do pełnego zarządzania biletami
+                            <i class="fas fa-list me-1"></i>Przejdź do pełnego zarządzania biletami
                         </a>
                     </div>
                 </div>

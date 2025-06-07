@@ -8,7 +8,7 @@
     <div class="container-fluid">
         <div class="row mb-4">
             <div class="col-12">
-                <a href="{{ url('/admin?tab=miedzymiastowe') }}" class="btn btn-primary">Powrót do panelu</a>
+                <a href="{{ url('/admin?tab=miedzymiastowe') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-2"></i>Powrót do panelu</a>
             </div>
         </div>
         
@@ -190,8 +190,8 @@
                     </div>
                     
                     <div class="col-12 mt-4">
-                        <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
-                        <a href="{{ route('admin.intercity.index') }}" class="btn btn-secondary">Anuluj</a>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Zapisz zmiany</button>
+                        <a href="{{ route('admin.intercity.index') }}" class="btn btn-secondary"><i class="fas fa-times me-2"></i>Anuluj</a>
                     </div>
                 </form>
             </div>

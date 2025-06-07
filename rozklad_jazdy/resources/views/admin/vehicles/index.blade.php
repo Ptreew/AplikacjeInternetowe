@@ -3,11 +3,11 @@
 @section('title', 'Zarządzanie pojazdami')
 
 @section('content')
-    <div class="container">
+    <div class="container-fluid">
         <div class="row mb-4">
             <div class="col-12">
-                <a href="{{ url('/admin?tab=vehicles') }}" class="btn btn-primary">Powrót do panelu</a>
-                <a href="{{ route('admin.vehicles.create') }}" class="btn btn-success">Dodaj nowy pojazd</a>
+                <a href="{{ url('/admin?tab=pojazdy') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-1"></i>Powrót do panelu</a>
+                <a href="{{ route('admin.vehicles.create') }}" class="btn btn-success"><i class="fas fa-plus me-1"></i>Dodaj nowy pojazd</a>
             </div>
         </div>
 
@@ -32,14 +32,14 @@
                     <table class="table table-striped table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th>ID</th>
-                                <th>Numer pojazdu</th>
-                                <th>Typ</th>
-                                <th>Linia</th>
-                                <th>Przewoźnik</th>
-                                <th>Pojemność</th>
-                                <th>Status</th>
-                                <th>Akcje</th>
+                                <th style="width: 5%">ID</th>
+                                <th style="width: 10%">Numer pojazdu</th>
+                                <th style="width: 10%">Typ</th>
+                                <th style="width: 15%">Linia</th>
+                                <th style="width: 15%">Przewoźnik</th>
+                                <th style="width: 8%">Pojemność</th>
+                                <th style="width: 8%">Status</th>
+                                <th style="width: 17%">Akcje</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -59,18 +59,18 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <div class="d-inline-flex">
+                                        <div class="d-flex flex-nowrap">
                                             <a href="{{ route('admin.vehicles.edit', $vehicle) }}" class="btn btn-sm btn-primary me-1">
-                                                Edytuj
+                                                <i class="fas fa-edit me-1"></i>Edytuj
                                             </a>
                                             <a href="{{ route('admin.vehicles.show', $vehicle) }}" class="btn btn-sm btn-success me-1">
-                                                Pokaż
+                                                <i class="fas fa-eye me-1"></i>Pokaż
                                             </a>
-                                            <form action="{{ route('admin.vehicles.destroy', $vehicle) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('admin.vehicles.destroy', $vehicle) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten pojazd?')">
-                                                    Usuń
+                                                    <i class="fas fa-trash-alt me-1"></i>Usuń
                                                 </button>
                                             </form>
                                         </div>

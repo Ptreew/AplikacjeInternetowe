@@ -6,6 +6,7 @@
 <div class="container my-4">
     <div class="row">
         <div class="col-12">
+            <a href="{{ route('home') }}" class="btn btn-primary mb-3"><i class="fas fa-arrow-left"></i> Powrót do listy linii</a>
             <h1>Lista linii komunikacyjnych</h1>
             
             <div class="card mb-4">
@@ -14,11 +15,11 @@
                 </div>
                 <div class="card-body">
                     <form action="{{ route('lines.index') }}" method="GET" class="row g-3">
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <label for="search" class="form-label">Szukaj nazwy</label>
                             <input type="text" class="form-control" id="search" name="search" value="{{ request('search') }}">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <label for="carrier_id" class="form-label">Przewoźnik</label>
                             <select class="form-select" id="carrier_id" name="carrier_id">
                                 <option value="">Wszyscy przewoźnicy</option>
@@ -30,7 +31,7 @@
                             </select>
                         </div>
                         <div class="col-md-2 d-flex align-items-end">
-                            <button type="submit" class="btn btn-primary w-100">Filtruj</button>
+                            <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter"></i> Filtruj</button>
                         </div>
                     </form>
                 </div>

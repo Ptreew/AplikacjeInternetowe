@@ -61,7 +61,7 @@
                     <div class="col-md-6">
                         <label for="valid_from" class="form-label">Data rozpoczęcia <span class="text-danger">*</span></label>
                         <input type="date" class="form-control @error('valid_from') is-invalid @enderror" 
-                               id="valid_from" name="valid_from" value="{{ old('valid_from', $schedule->valid_from) }}" required>
+                               id="valid_from" name="valid_from" value="{{ old('valid_from', $schedule->valid_from ? date('Y-m-d', strtotime($schedule->valid_from)) : '') }}" required>
                         @error('valid_from')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -69,7 +69,7 @@
                     <div class="col-md-6">
                         <label for="valid_to" class="form-label">Data zakończenia <span class="text-danger">*</span></label>
                         <input type="date" class="form-control @error('valid_to') is-invalid @enderror" 
-                               id="valid_to" name="valid_to" value="{{ old('valid_to', $schedule->valid_to) }}" required>
+                               id="valid_to" name="valid_to" value="{{ old('valid_to', $schedule->valid_to ? date('Y-m-d', strtotime($schedule->valid_to)) : '') }}" required>
                         @error('valid_to')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror

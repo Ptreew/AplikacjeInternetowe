@@ -123,8 +123,9 @@
                                 <th>ID</th>
                                 <th>Godzina odjazdu</th>
                                 <th>Pojazd</th>
+                                <th>Cena</th>
                                 <th>Status</th>
-                                <th>Akcje</th>
+                                <th class="text-center">Akcje</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -133,9 +134,20 @@
                                     <td>{{ $departure->id }}</td>
                                     <td>{{ \Carbon\Carbon::parse($departure->departure_time)->format('H:i') }}</td>
                                     <td>
-                                        {{ $departure->vehicle->carrier->name }} - 
-                                        {{ $departure->vehicle->number }}
-                                        ({{ $departure->vehicle->type }}, miejsca: {{ $departure->vehicle->seats }})
+                                        @if($departure->vehicle)
+                                            @if($departure->vehicle->line && $departure->vehicle->line->carrier)
+                                                {{ $departure->vehicle->line->carrier->name }} - 
+                                            @else
+                                                Brak przewoźnika - 
+                                            @endif
+                                            {{ $departure->vehicle->vehicle_number }}
+                                            ({{ $departure->vehicle->type }}, miejsca: {{ $departure->vehicle->capacity }})
+                                        @else
+                                            Pojazd nie jest dostępny
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{ number_format($departure->price, 2, ',', ' ') }} PLN
                                     </td>
                                     <td>
                                         @if($departure->is_active)
@@ -144,16 +156,19 @@
                                             <span class="badge bg-danger">Nieaktywny</span>
                                         @endif
                                     </td>
-                                    <td>
-                                        <div class="d-flex gap-1">
+                                    <td class="text-center">
+                                        <div class="d-flex gap-1 justify-content-center">
                                             <a href="{{ route('admin.departures.edit', $departure) }}" class="btn btn-sm btn-primary">
-                                                <i class="fas fa-edit"></i>
+                                                <i class="fas fa-edit"></i> Edytuj
+                                            </a>
+                                            <a href="{{ route('admin.departures.show', $departure) }}" class="btn btn-sm btn-success">
+                                                <i class="fas fa-eye"></i> Szczegóły
                                             </a>
                                             <form action="{{ route('admin.departures.destroy', $departure) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno usunąć ten odjazd?')">
-                                                    <i class="fas fa-trash"></i>
+                                                    <i class="fas fa-trash"></i> Usuń
                                                 </button>
                                             </form>
                                         </div>
