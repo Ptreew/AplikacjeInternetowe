@@ -18,7 +18,8 @@ class Vehicle extends Model
         'type',
         'vehicle_number',
         'capacity',
-        'is_active'
+        'is_active',
+        'image_path'
     ];
     
     /**

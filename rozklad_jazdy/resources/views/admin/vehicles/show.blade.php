@@ -53,6 +53,16 @@
                             <dd class="col-sm-8">{{ $vehicle->updated_at->format('d.m.Y H:i') }}</dd>
                         </dl>
                     </div>
+                    <div class="col-md-6">
+                        <h5 class="mb-3"><i class="fas fa-image me-2"></i>Zdjęcie pojazdu</h5>
+                        @if($vehicle->image_path)
+                            <img src="{{ asset('storage/' . $vehicle->image_path) }}" alt="{{ $vehicle->vehicle_number }}" class="img-fluid img-thumbnail" style="max-height: 300px">
+                        @else
+                            <div class="alert alert-light border">
+                                <i class="fas fa-camera-retro me-2"></i>Brak zdjęcia dla tego pojazdu
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>

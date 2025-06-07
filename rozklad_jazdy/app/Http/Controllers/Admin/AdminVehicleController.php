@@ -7,6 +7,7 @@ use App\Models\Vehicle;
 use App\Models\Line;
 use App\Models\Carrier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AdminVehicleController extends Controller
 {
@@ -39,12 +40,26 @@ class AdminVehicleController extends Controller
             'type' => 'required|string|max:255',
             'capacity' => 'required|integer|min:1',
             'is_active' => 'boolean',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $data = $request->all();
         
         if (!isset($data['is_active'])) {
             $data['is_active'] = false;
+        }
+        
+        // Obsługa przesyłanego zdjęcia
+        if ($request->hasFile('image')) {
+            try {
+                $imagePath = $request->file('image')->store('vehicles', 'public');
+                $data['image_path'] = $imagePath;
+            } catch (\Exception $e) {
+                // Logowanie błędu
+                \Log::error('Błąd przesyłania zdjęcia: ' . $e->getMessage());
+                return redirect()->back()->withInput()
+                    ->with('error', 'Błąd przesyłania zdjęcia: ' . $e->getMessage());
+            }
         }
 
         Vehicle::create($data);
@@ -82,12 +97,31 @@ class AdminVehicleController extends Controller
             'type' => 'required|string|max:255',
             'capacity' => 'required|integer|min:1',
             'is_active' => 'boolean',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $data = $request->all();
         
         if (!isset($data['is_active'])) {
             $data['is_active'] = false;
+        }
+        
+        // Obsługa przesyłanego zdjęcia
+        if ($request->hasFile('image')) {
+            try {
+                // Usuń stare zdjęcie jeśli istnieje
+                if ($vehicle->image_path && Storage::disk('public')->exists($vehicle->image_path)) {
+                    Storage::disk('public')->delete($vehicle->image_path);
+                }
+                
+                $imagePath = $request->file('image')->store('vehicles', 'public');
+                $data['image_path'] = $imagePath;
+            } catch (\Exception $e) {
+                // Logowanie błędu
+                \Log::error('Błąd przesyłania zdjęcia: ' . $e->getMessage());
+                return redirect()->back()->withInput()
+                    ->with('error', 'Błąd przesyłania zdjęcia: ' . $e->getMessage());
+            }
         }
 
         $vehicle->update($data);

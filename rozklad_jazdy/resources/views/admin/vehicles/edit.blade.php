@@ -25,7 +25,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.vehicles.update', $vehicle) }}" method="POST">
+                <form action="{{ route('admin.vehicles.update', $vehicle) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     
@@ -66,6 +66,17 @@
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="is_active" name="is_active" value="1" {{ old('is_active', $vehicle->is_active) ? 'checked' : '' }}>
                         <label class="form-check-label" for="is_active">Aktywny</label>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="image" class="form-label"><i class="fas fa-image me-2"></i>Zdjęcie pojazdu</label>
+                        @if ($vehicle->image_path)
+                            <div class="mb-2">
+                                <img src="{{ asset('storage/' . $vehicle->image_path) }}" alt="{{ $vehicle->vehicle_number }}" class="img-thumbnail" style="max-height: 200px">
+                            </div>
+                        @endif
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                        <small class="form-text text-muted">Dozwolone formaty: JPG, PNG, GIF. Maksymalny rozmiar: 2MB</small>
                     </div>
                     
                     <button type="submit" class="btn btn-success"><i class="fas fa-save me-2"></i>Zapisz zmiany</button>
