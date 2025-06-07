@@ -55,7 +55,7 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="vehicle_id" class="form-label"><i class="fas fa-bus-alt me-2"></i>Pojazd <span class="text-danger">*</span></label>
+                                <label for="vehicle_id" class="form-label"><i class="fas fa-truck-moving me-2"></i>Pojazd <span class="text-danger">*</span></label>
                                 <select class="form-select" id="vehicle_id" name="vehicle_id" required>
                                     <option value="">Wybierz pojazd</option>
                                     @foreach($vehicles as $vehicle)
@@ -71,27 +71,30 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label for="line_number" class="form-label"><i class="fas fa-hashtag me-2"></i>Numer linii <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="line_number" name="line_number" value="{{ old('line_number', $route->line->number) }}" required>
-                                @error('line_number')
+                            <div class="col-md-6 mb-3">
+                                <label for="line_id" class="form-label"><i class="fas fa-bus me-2"></i>Linia <span class="text-danger">*</span></label>
+                                <select class="form-select" id="line_id" name="line_id" required>
+                                    <option value="">Najpierw wybierz przewoźnika</option>
+                                    @foreach($lines as $line)
+                                        <option value="{{ $line->id }}" 
+                                            data-carrier="{{ $line->carrier_id }}" 
+                                            data-color="{{ $line->color }}" 
+                                            data-name="{{ $line->name }}" 
+                                            data-number="{{ $line->number }}" 
+                                            class="line-option"
+                                            {{ old('line_id', $route->line_id) == $line->id ? 'selected' : '' }}
+                                            style="display: none;"
+                                        >
+                                            Linia {{ $line->number }} ({{ $line->name }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('line_id')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
 
-                            <div class="col-md-4 mb-3">
-                                <label for="line_color" class="form-label"><i class="fas fa-palette me-2"></i>Kolor linii</label>
-                                <div class="input-group">
-                                    <input type="color" class="form-control form-control-color" id="line_color" value="{{ old('line_color', $route->line->color) }}" title="Wybierz kolor dla linii">
-                                    <input type="text" class="form-control" id="line_color_text" name="line_color" value="{{ old('line_color', $route->line->color) }}" placeholder="#FFFFFF" pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" required>
-                                </div>
-                                <small class="form-text text-muted">Format: #RRGGBB (np. #FF5733)</small>
-                                @error('line_color')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <label for="name" class="form-label"><i class="fas fa-route me-2"></i>Nazwa trasy <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $route->name) }}" required>
                                 @error('name')
@@ -125,7 +128,7 @@
 
                         <div class="row">
                             <div class="col-12 mb-3">
-                                <label class="form-label"><i class="fas fa-calendar-alt me-2"></i>Dni kursowania <span class="text-danger">*</span></label>
+                                <label class="form-label"><i class="fas fa-calendar-week me-2"></i>Dni kursowania <span class="text-danger">*</span></label>
                                 <div class="d-flex flex-wrap gap-3">
                                     @foreach($daysOfWeek as $value => $day)
                                         <div class="form-check">
@@ -145,7 +148,7 @@
                             <div class="col-12 mb-3">
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', $route->is_active) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="is_active">Kurs aktywny</label>
+                                    <label class="form-check-label" for="is_active">Aktywny</label>
                                 </div>
                                 <small class="form-text text-muted">Nieaktywne kursy nie będą widoczne dla użytkowników.</small>
                             </div>
@@ -153,7 +156,7 @@
 
                         <div class="row">
                             <div class="col-12 mt-4">
-                                <button type="submit" class="btn btn-success"><i class="fas fa-save me-2"></i>Zapisz zmiany</button>
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Zapisz zmiany</button>
                                 <a href="{{ route('admin.city_routes.index') }}" class="btn btn-secondary"><i class="fas fa-times me-2"></i>Anuluj</a>
                             </div>
                         </div>
@@ -168,27 +171,68 @@
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Function to filter vehicles based on selected carrier
+            // Elementy UI
             const carrierSelect = document.getElementById('carrier_id');
+            const lineSelect = document.getElementById('line_id');
             const vehicleSelect = document.getElementById('vehicle_id');
+            const nameInput = document.getElementById('name');
+            const lineOptions = document.querySelectorAll('.line-option');
             const vehicleOptions = document.querySelectorAll('.vehicle-option');
             
-            function filterVehicles() {
+            // Funkcja do filtrowania linii na podstawie wybranego przewoźnika
+            function filterLines() {
                 const selectedCarrierId = carrierSelect.value;
                 let hasValidOptions = false;
                 
                 // Reset select
-                vehicleSelect.value = '';
+                lineSelect.value = '{{ old("line_id", $route->line_id) }}';
                 
                 if (!selectedCarrierId) {
-                    // If no carrier selected, disable the vehicle dropdown
+                    // Jeśli nie wybrano przewoźnika, wyłącz dropdown linii
+                    lineOptions.forEach(option => {
+                        option.style.display = 'none';
+                    });
+                    lineSelect.querySelector('option:first-child').text = 'Najpierw wybierz przewoźnika';
+                    lineSelect.disabled = true;
+                } else {
+                    // Włącz dropdown i pokaż tylko linie należące do wybranego przewoźnika
+                    lineSelect.disabled = false;
+                    lineOptions.forEach(option => {
+                        const carrierId = option.getAttribute('data-carrier');
+                        if (carrierId && carrierId === selectedCarrierId) {
+                            option.style.display = '';
+                            hasValidOptions = true;
+                        } else {
+                            option.style.display = 'none';
+                        }
+                    });
+                    lineSelect.querySelector('option:first-child').text = hasValidOptions ? 
+                        'Wybierz linię' : 'Brak dostępnych linii dla tego przewoźnika';
+                }
+                
+                // Uruchom również filtrowanie pojazdów
+                filterVehicles();
+            }
+            
+            // Funkcja do filtrowania pojazdów na podstawie wybranego przewoźnika
+            function filterVehicles() {
+                const selectedCarrierId = carrierSelect.value;
+                let hasValidOptions = false;
+                
+                // Reset select tylko jeśli nie ma wartości z formularza
+                if (!vehicleSelect.value) {
+                    vehicleSelect.value = '{{ old("vehicle_id", $route->vehicle_id) }}';
+                }
+                
+                if (!selectedCarrierId) {
+                    // Jeśli nie wybrano przewoźnika, wyłącz dropdown pojazdów
                     vehicleOptions.forEach(option => {
                         option.style.display = 'none';
                     });
                     vehicleSelect.querySelector('option:first-child').text = 'Najpierw wybierz przewoźnika';
                     vehicleSelect.disabled = true;
                 } else {
-                    // Enable dropdown and show only vehicles belonging to selected carrier's lines
+                    // Włącz dropdown i pokaż tylko pojazdy należące do wybranego przewoźnika
                     vehicleSelect.disabled = false;
                     vehicleOptions.forEach(option => {
                         const carrierId = option.getAttribute('data-carrier');
@@ -204,39 +248,49 @@
                 }
             }
             
-            // Initialize vehicles filter
+            // Obsługa wyboru linii
+            lineSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                if (selectedOption && selectedOption.value) {
+                    const name = selectedOption.getAttribute('data-name');
+                    
+                    // Proponuj nazwę trasy bazując na nazwie linii
+                    if (!nameInput.value) {
+                        nameInput.value = name;
+                    }
+                }
+            });
+            
+            // Inicjalizacja filtrów
+            filterLines();
             filterVehicles();
             
-            // Listen for carrier changes
-            carrierSelect.addEventListener('change', filterVehicles);
+            // Nasłuchiwanie zmiany przewoźnika
+            carrierSelect.addEventListener('change', filterLines);
 
-            // Handle color synchronization
-            const colorPicker = document.getElementById('line_color');
-            const colorTextField = document.getElementById('line_color_text');
-
-            colorPicker.addEventListener('input', function() {
-                colorTextField.value = this.value;
-            });
-
-            colorTextField.addEventListener('input', function() {
-                // Check if the value is a valid hex color
-                const hexPattern = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
-                if (hexPattern.test(this.value)) {
-                    colorPicker.value = this.value;
-                }
-            });
-
-            // Before submitting the form, ensure the correct color format is used
+            // Sprawdź czy formularz jest poprawnie wypełniony przed wysłaniem
             document.querySelector('form').addEventListener('submit', function(e) {
-                const colorValue = colorTextField.value;
-                const hexPattern = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
-                
-                if (!hexPattern.test(colorValue)) {
+                // Sprawdź czy wybrano linię
+                if (!lineSelect.value) {
                     e.preventDefault();
-                    alert('Kolor musi być w formacie HEX (#RRGGBB)');
-                    colorTextField.focus();
+                    alert('Proszę wybrać linię');
+                    lineSelect.focus();
+                    return;
+                }
+                
+                // Sprawdź czy wybrano pojazd
+                if (!vehicleSelect.value) {
+                    e.preventDefault();
+                    alert('Proszę wybrać pojazd');
+                    vehicleSelect.focus();
+                    return;
                 }
             });
+            
+            // Wywołaj filtrowanie na starcie jeśli przewoźnik jest już wybrany
+            if (carrierSelect.value) {
+                filterLines();
+            }
         });
     </script>
 @endsection

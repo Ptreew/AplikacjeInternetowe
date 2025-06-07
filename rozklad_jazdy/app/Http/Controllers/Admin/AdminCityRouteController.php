@@ -55,13 +55,13 @@ class AdminCityRouteController extends Controller
             ->get();
             
         $daysOfWeek = [
-            'monday' => 'Poniedziałek',
-            'tuesday' => 'Wtorek',
-            'wednesday' => 'Środa',
-            'thursday' => 'Czwartek',
-            'friday' => 'Piątek',
-            'saturday' => 'Sobota',
-            'sunday' => 'Niedziela',
+            '1' => 'Poniedziałek',
+            '2' => 'Wtorek',
+            '3' => 'Środa',
+            '4' => 'Czwartek',
+            '5' => 'Piątek',
+            '6' => 'Sobota',
+            '0' => 'Niedziela',
         ];
 
         return view('admin.city_routes.create', compact('carriers', 'cities', 'vehicles', 'existingLines', 'daysOfWeek'));
@@ -81,8 +81,8 @@ class AdminCityRouteController extends Controller
             'city_id' => 'required|exists:cities,id', // City for stops selection
             'line_number' => 'sometimes|string|max:10', // Added line number (optional)
             'travel_time' => 'required|integer|min:1',
-            'days_of_week' => 'required|array',
-            'days_of_week.*' => 'string|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday',
+            'days_of_week' => 'required|array|min:1',
+            'days_of_week.*' => 'required|integer|between:0,6',
             'is_active' => 'sometimes|boolean',
             'stops' => 'sometimes|array',
             'stops.*' => 'sometimes|exists:stops,id'
@@ -189,7 +189,12 @@ class AdminCityRouteController extends Controller
             ->orderBy('vehicle_number')
             ->get(['id', 'type', 'vehicle_number', 'capacity', 'line_id']);
             
-        // Days of week for view
+        // Get all lines with relation to carrier
+        $lines = Line::with('carrier')
+            ->orderBy('carrier_id')
+            ->orderBy('number')
+            ->get();
+            
         $daysOfWeek = [
             '1' => 'Poniedziałek',
             '2' => 'Wtorek',
@@ -204,7 +209,7 @@ class AdminCityRouteController extends Controller
     $selectedDaysOfWeek = $route->schedules->first() ? $route->schedules->first()->days_of_week : [];
     
     return view('admin.city_routes.edit', compact(
-        'route', 'carriers', 'cities', 'vehicles', 'daysOfWeek', 'selectedDaysOfWeek'
+        'route', 'carriers', 'cities', 'vehicles', 'lines', 'daysOfWeek', 'selectedDaysOfWeek'
     ));
 }
 
@@ -219,9 +224,8 @@ class AdminCityRouteController extends Controller
             // Form data validation
             $validated = $request->validate([
                 'carrier_id' => 'required|exists:carriers,id',
+                'line_id' => 'required|exists:lines,id',
                 'vehicle_id' => 'required|exists:vehicles,id',
-                'line_number' => 'required|string|max:10',
-                'line_color' => 'required|string|regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/',
                 'name' => 'required|string|max:255',
                 'city_id' => 'required|exists:cities,id',
                 'travel_time' => 'required|integer|min:1',
@@ -232,24 +236,18 @@ class AdminCityRouteController extends Controller
                 'stops.*' => 'sometimes|exists:stops,id'
             ]);
             
-            $route = Route::with('line', 'routeStops')->findOrFail($id);
+            $route = Route::with('routeStops')->findOrFail($id);
             
-            // 1. Update line
-            $route->line->update([
-                'carrier_id' => $request->carrier_id,
-                'number' => $request->line_number,
-                'name' => $request->name,
-                'color' => $request->line_color
-            ]);
-            
-            // 2. Update route
+            // Update route
             $route->update([
+                'line_id' => $request->line_id,
+                'vehicle_id' => $request->vehicle_id, // Adding vehicle_id update
                 'name' => $request->name,
                 'travel_time' => $request->travel_time,
                 'is_active' => $request->boolean('is_active')
             ]);
             
-            // 3. Update stops
+            // Update stops if provided
             if (isset($request->stops) && is_array($request->stops) && count($request->stops) > 0) {
                 // Delete existing stops
                 $route->routeStops()->delete();

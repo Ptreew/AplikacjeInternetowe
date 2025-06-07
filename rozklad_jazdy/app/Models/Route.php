@@ -13,6 +13,7 @@ class Route extends Model
 
     protected $fillable = [
         'line_id',
+        'vehicle_id',
         'type',
         'name',
         'travel_time',
