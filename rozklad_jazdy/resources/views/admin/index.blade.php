@@ -28,7 +28,7 @@
                 <button class="nav-link" id="pojazdy-tab" data-bs-toggle="tab" data-bs-target="#pojazdy" type="button" role="tab" aria-controls="pojazdy" aria-selected="false"><i class="fas fa-bus-alt me-1"></i> Pojazdy</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="przewoznicy-tab" data-bs-toggle="tab" data-bs-target="#przewoznicy" type="button" role="tab" aria-controls="przewoznicy" aria-selected="false"><i class="fas fa-building me-1"></i> Przewoźnicy</button>
+                <button class="nav-link" id="przewoznicy-tab" data-bs-toggle="tab" data-bs-target="#przewoznicy" type="button" role="tab" aria-controls="przewoznicy" aria-selected="false"><i class="fas fa-building me-2"></i>Przewoźnicy</button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="lines-tab" data-bs-toggle="tab" data-bs-target="#lines" type="button" role="tab" aria-controls="lines" aria-selected="false"><i class="fas fa-project-diagram me-1"></i> Linie</button>
@@ -58,7 +58,7 @@
         <div class="tab-pane fade show active" id="miedzymiastowe" role="tabpanel" aria-labelledby="miedzymiastowe-tab">
             <div class="card">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Najnowsze kursy międzymiastowe</h5>
+                    <h5 class="mb-0"><i class="fas fa-route me-2"></i>Najnowsze kursy międzymiastowe</h5>
                     <a href="{{ route('admin.intercity.create') }}" class="btn btn-sm btn-success">
                         <i class="fas fa-plus"></i> Dodaj nowy kurs
                     </a>
@@ -187,7 +187,7 @@
         <div class="tab-pane fade" id="miejskie" role="tabpanel" aria-labelledby="miejskie-tab">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Kursy miejskie</h5>
+                    <h5 class="mb-0"><i class="fas fa-bus me-2"></i>Kursy miejskie</h5>
                     <a href="{{ route('admin.city_routes.create') }}" class="btn btn-sm btn-success">
                         <i class="fas fa-plus"></i> Dodaj nowy kurs
                     </a>
@@ -284,7 +284,7 @@
         <div class="tab-pane fade" id="uzytkownicy" role="tabpanel" aria-labelledby="uzytkownicy-tab">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Zarządzanie użytkownikami</h5>
+                    <h5 class="mb-0"><i class="fas fa-users me-2"></i>Zarządzanie użytkownikami</h5>
                 </div>
                 <div class="card-body">
                     @if(session('success'))
@@ -400,7 +400,7 @@
         <div class="tab-pane fade" id="pojazdy" role="tabpanel" aria-labelledby="pojazdy-tab">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Zarządzanie pojazdami</h5>
+                    <h5 class="mb-0"><i class="fas fa-bus-alt me-2"></i>Zarządzanie pojazdami</h5>
                     <a href="{{ route('admin.vehicles.create') }}" class="btn btn-success">
                         <i class="fas fa-plus"></i> Dodaj nowy pojazd
                     </a>
@@ -447,7 +447,7 @@
                                                     <i class="fas fa-edit me-1"></i>Edytuj
                                                 </a>
                                                 <a href="{{ route('admin.vehicles.show', $vehicle) }}" class="btn btn-sm btn-success me-1">
-                                                    <i class="fas fa-eye me-1"></i>Pokaż
+                                                    <i class="fas fa-eye me-1"></i>Szczegóły
                                                 </a>
                                                 <form action="{{ route('admin.vehicles.destroy', $vehicle) }}" method="POST" class="d-inline">
                                                     @csrf
@@ -483,7 +483,7 @@
         <div class="tab-pane fade" id="przewoznicy" role="tabpanel" aria-labelledby="przewoznicy-tab">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Zarządzanie Przewoźnikami</h5>
+                    <h5 class="mb-0"><i class="fas fa-building me-2"></i>Zarządzanie Przewoźnikami</h5>
                     <a href="{{ route('admin.carriers.create') }}" class="btn btn-sm btn-success">
                         <i class="fas fa-plus me-1"></i>Dodaj Przewoźnika
                     </a>
@@ -527,7 +527,7 @@
                                                 </a>
                                                 <a href="{{ route('admin.carriers.show', $carrier) }}" 
                                                    class="btn btn-sm btn-success me-1">
-                                                    <i class="fas fa-eye me-1"></i>Pokaż
+                                                    <i class="fas fa-eye me-1"></i>Szczegóły
                                                 </a>
                                                 <form action="{{ route('admin.carriers.destroy', $carrier) }}" 
                                                       method="POST" class="d-inline">
@@ -558,7 +558,7 @@
         <div class="tab-pane fade" id="lines" role="tabpanel" aria-labelledby="lines-tab">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Zarządzanie Liniami</h5>
+                    <h5 class="mb-0"><i class="fas fa-project-diagram me-2"></i>Zarządzanie Liniami</h5>
                     <a href="{{ route('admin.lines.create') }}" class="btn btn-success">
                         <i class="fas fa-plus me-1"></i>Dodaj nową linię
                     </a>
@@ -611,7 +611,7 @@
                                                     <i class="fas fa-edit me-1"></i>Edytuj
                                                 </a>
                                                 <a href="{{ route('admin.lines.show', $line) }}" class="btn btn-sm btn-success me-1">
-                                                    <i class="fas fa-eye me-1"></i>Pokaż
+                                                    <i class="fas fa-eye me-1"></i>Szczegóły
                                                 </a>
                                                 <form action="{{ route('admin.lines.destroy', $line) }}" method="POST">
                                                     @csrf
@@ -646,7 +646,7 @@
         <div class="tab-pane fade" id="routes" role="tabpanel" aria-labelledby="routes-tab">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Zarządzanie Trasami</h5>
+                    <h5 class="mb-0"><i class="fas fa-map-marked-alt me-2"></i>Zarządzanie Trasami</h5>
                     <a href="{{ route('admin.routes.builder.step1') }}" class="btn btn-success">
                         <i class="fas fa-plus"></i> Dodaj nową trasę (Builder)
                     </a>
@@ -710,7 +710,7 @@
                                                     <i class="fas fa-edit me-1"></i>Edytuj
                                                 </a>
                                                 <a href="{{ route('admin.routes.show', $route) }}" class="btn btn-sm btn-success me-1">
-                                                    <i class="fas fa-eye me-1"></i>Pokaż
+                                                    <i class="fas fa-eye me-1"></i>Szczegóły
                                                 </a>
                                                 <form action="{{ route('admin.routes.destroy', $route) }}" method="POST">
                                                     @csrf
@@ -743,7 +743,7 @@
         <div class="tab-pane fade" id="cities" role="tabpanel" aria-labelledby="cities-tab">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Zarządzanie Miastami</h5>
+                    <h5 class="mb-0"><i class="fas fa-city me-2"></i>Zarządzanie Miastami</h5>
                     <a href="{{ route('admin.cities.create') }}" class="btn btn-sm btn-success">
                         <i class="fas fa-plus"></i> Dodaj Miasto
                     </a>
@@ -779,7 +779,7 @@
                                                     <i class="fas fa-edit me-1"></i>Edytuj
                                                 </a>
                                                 <a href="{{ route('admin.cities.show', $city) }}" class="btn btn-sm btn-success me-1">
-                                                    <i class="fas fa-eye me-1"></i>Pokaż
+                                                    <i class="fas fa-eye me-1"></i>Szczegóły
                                                 </a>
                                                 <form action="{{ route('admin.cities.destroy', $city) }}" method="POST" class="d-inline">
                                                     @csrf
@@ -807,7 +807,7 @@
         <div class="tab-pane fade" id="stops" role="tabpanel" aria-labelledby="stops-tab">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Zarządzanie Przystankami</h5>
+                    <h5 class="mb-0"><i class="fas fa-map-pin me-2"></i>Zarządzanie Przystankami</h5>
                     <a href="{{ route('admin.stops.create') }}" class="btn btn-sm btn-success">
                         <i class="fas fa-plus"></i> Dodaj Przystanek
                     </a>
@@ -877,7 +877,7 @@
         <div class="tab-pane fade" id="schedules" role="tabpanel" aria-labelledby="schedules-tab">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Zarządzanie Rozkładami Jazdy</h5>
+                    <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Zarządzanie Rozkładami Jazdy</h5>
                     <a href="{{ route('admin.schedules.create') }}" class="btn btn-sm btn-success">
                         <i class="fas fa-plus"></i> Dodaj nowy rozkład
                     </a>
@@ -933,7 +933,7 @@
                                         <td>
                                             <div class="d-inline-flex">
                                                 <a href="{{ route('admin.schedules.show', $schedule) }}" class="btn btn-sm btn-success me-1">
-                                                    <i class="fas fa-eye"></i> Pokaż
+                                                    <i class="fas fa-eye"></i> Szczegóły
                                                 </a>
                                                 <a href="{{ route('admin.schedules.edit', $schedule) }}" class="btn btn-sm btn-primary me-1">
                                                     <i class="fas fa-edit"></i> Edytuj
@@ -961,7 +961,7 @@
         <div class="tab-pane fade" id="departures" role="tabpanel" aria-labelledby="departures-tab">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Zarządzanie Odjazdami</h5>
+                    <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Zarządzanie Odjazdami</h5>
                     <a href="{{ route('admin.departures.create') }}" class="btn btn-sm btn-success">
                         <i class="fas fa-plus"></i> Dodaj nowy odjazd
                     </a>
@@ -1007,7 +1007,7 @@
                                         <td>
                                             <div class="d-inline-flex">
                                                 <a href="{{ route('admin.departures.show', $departure) }}" class="btn btn-sm btn-success me-1">
-                                                    <i class="fas fa-eye"></i> Pokaż
+                                                    <i class="fas fa-eye"></i> Szczegóły
                                                 </a>
                                                 <a href="{{ route('admin.departures.edit', $departure) }}" class="btn btn-sm btn-primary me-1">
                                                     <i class="fas fa-edit"></i> Edytuj
@@ -1035,7 +1035,7 @@
         <div class="tab-pane fade" id="tickets" role="tabpanel" aria-labelledby="tickets-tab">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Zarządzanie Biletami</h5>
+                    <h5 class="mb-0"><i class="fas fa-ticket-alt me-2"></i>Zarządzanie Biletami</h5>
                 </div>
                 <div class="card-body">
                     @php

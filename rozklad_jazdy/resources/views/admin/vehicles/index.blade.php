@@ -6,14 +6,14 @@
     <div class="container-fluid">
         <div class="row mb-4">
             <div class="col-12">
-                <a href="{{ url('/admin?tab=pojazdy') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-1"></i>Powrót do panelu</a>
-                <a href="{{ route('admin.vehicles.create') }}" class="btn btn-success"><i class="fas fa-plus me-1"></i>Dodaj nowy pojazd</a>
+                <a href="{{ url('/admin?tab=pojazdy') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-2"></i>Powrót do panelu</a>
+                <a href="{{ route('admin.vehicles.create') }}" class="btn btn-success"><i class="fas fa-plus me-2"></i>Dodaj nowy pojazd</a>
             </div>
         </div>
 
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Lista pojazdów</h5>
+                <h5 class="mb-0"><i class="fas fa-bus-alt me-2"></i>Lista pojazdów</h5>
             </div>
             <div class="card-body">
                 @if(session('success'))
@@ -61,16 +61,16 @@
                                     <td>
                                         <div class="d-flex flex-nowrap">
                                             <a href="{{ route('admin.vehicles.edit', $vehicle) }}" class="btn btn-sm btn-primary me-1">
-                                                <i class="fas fa-edit me-1"></i>Edytuj
+                                                <i class="fas fa-edit me-2"></i>Edytuj
                                             </a>
                                             <a href="{{ route('admin.vehicles.show', $vehicle) }}" class="btn btn-sm btn-success me-1">
-                                                <i class="fas fa-eye me-1"></i>Pokaż
+                                                <i class="fas fa-info-circle me-2"></i>Szczegóły
                                             </a>
                                             <form action="{{ route('admin.vehicles.destroy', $vehicle) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten pojazd?')">
-                                                    <i class="fas fa-trash-alt me-1"></i>Usuń
+                                                    <i class="fas fa-trash-alt me-2"></i>Usuń
                                                 </button>
                                             </form>
                                         </div>

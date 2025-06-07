@@ -12,12 +12,21 @@ class AdminRouteController extends Controller
     /**
      * Display a listing of the routes.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $routes = Route::with(['line', 'line.carrier'])
-                  ->where('type', 'intercity')
-                  ->paginate(10);
-        return view('admin.routes.index', compact('routes'));
+        $query = Route::with(['line', 'line.carrier']);
+        
+        // Filter by type if specified in the request and not empty
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+        
+        $routes = $query->paginate(10);
+        
+        // Get distinct route types for the filter
+        $routeTypes = Route::select('type')->distinct()->pluck('type');
+        
+        return view('admin.routes.index', compact('routes', 'routeTypes'));
     }
 
     /**

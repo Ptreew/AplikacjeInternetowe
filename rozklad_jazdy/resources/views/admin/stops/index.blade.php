@@ -8,14 +8,14 @@
     <div class="container-fluid">
         <div class="row mb-4">
             <div class="col-12">
-                <a href="{{ url('/admin?tab=stops') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-1"></i>Powrót do panelu</a>
-                <a href="{{ route('admin.stops.create') }}" class="btn btn-success"><i class="fas fa-plus me-1"></i>Dodaj Nowy Przystanek</a>
+                <a href="{{ url('/admin?tab=stops') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-2"></i>Powrót do panelu</a>
+                <a href="{{ route('admin.stops.create') }}" class="btn btn-success"><i class="fas fa-plus me-2"></i>Dodaj Nowy Przystanek</a>
             </div>
         </div>
 
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Lista Przystanków</h5>
+                <h5 class="mb-0"><i class="fas fa-map-pin me-2"></i>Lista Przystanków</h5>
             </div>
             <div class="card-body">
                 @if (session('success'))

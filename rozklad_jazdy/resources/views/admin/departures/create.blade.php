@@ -8,11 +8,11 @@
         <div class="col-12">
             @if(isset($selectedScheduleId))
                 <a href="{{ route('admin.schedules.show', $selectedScheduleId) }}" class="btn btn-primary">
-                    <i class="fas fa-arrow-left"></i> Powrót do rozkładu
+                    <i class="fas fa-arrow-left me-2"></i>Powrót do rozkładu
                 </a>
             @else
                 <a href="{{ route('admin.departures.index') }}" class="btn btn-primary">
-                    <i class="fas fa-arrow-left"></i> Powrót do listy odjazdów
+                    <i class="fas fa-arrow-left me-2"></i>Powrót do listy odjazdów
                 </a>
             @endif
         </div>
@@ -27,7 +27,7 @@
 
     <div class="card">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Dodaj nowy odjazd</h5>
+            <h5 class="mb-0"><i class="fas fa-plus me-2"></i>Dodaj nowy odjazd</h5>
         </div>
         <div class="card-body">
             @if($errors->any())
@@ -46,7 +46,7 @@
                 
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        <label for="schedule_id" class="form-label">Rozkład jazdy <span class="text-danger">*</span></label>
+                        <label for="schedule_id" class="form-label"><i class="fas fa-calendar-alt me-2"></i>Rozkład jazdy <span class="text-danger">*</span></label>
                         <select class="form-select @error('schedule_id') is-invalid @enderror" id="schedule_id" name="schedule_id" required {{ isset($selectedScheduleId) ? 'disabled' : '' }}>
                             <option value="">Wybierz rozkład</option>
                             @foreach($schedules as $scheduleItem)
@@ -70,7 +70,7 @@
                 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="vehicle_id" class="form-label">Pojazd <span class="text-danger">*</span></label>
+                        <label for="vehicle_id" class="form-label"><i class="fas fa-bus me-2"></i>Pojazd <span class="text-danger">*</span></label>
                         <select class="form-select @error('vehicle_id') is-invalid @enderror" id="vehicle_id" name="vehicle_id" required>
                             <option value="">Wybierz pojazd</option>
                             @foreach($vehicles as $vehicle)
@@ -85,7 +85,7 @@
                         @enderror
                     </div>
                     <div class="col-md-6">
-                        <label for="departure_time" class="form-label">Godzina odjazdu <span class="text-danger">*</span></label>
+                        <label for="departure_time" class="form-label"><i class="fas fa-clock me-2"></i>Godzina odjazdu <span class="text-danger">*</span></label>
                         <input type="time" class="form-control @error('departure_time') is-invalid @enderror" 
                                id="departure_time" name="departure_time" value="{{ old('departure_time', now()->format('H:i')) }}" required>
                         @error('departure_time')
@@ -96,7 +96,7 @@
                 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="price" class="form-label">Cena biletu <span class="text-danger">*</span></label>
+                        <label for="price" class="form-label"><i class="fas fa-money-bill-alt me-2"></i>Cena biletu <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <input type="number" class="form-control @error('price') is-invalid @enderror" 
                                    id="price" name="price" value="{{ old('price', 0) }}" 
@@ -111,7 +111,7 @@
                 
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        <label for="stop_id" class="form-label">Przystanek odjazdu <span class="text-danger">*</span></label>
+                        <label for="stop_id" class="form-label"><i class="fas fa-map-marker-alt me-2"></i>Przystanek odjazdu <span class="text-danger">*</span></label>
                         <select class="form-select @error('stop_id') is-invalid @enderror" id="stop_id" name="stop_id" required>
                             <option value="">Wybierz przystanek</option>
                             @foreach($stops as $stop)
@@ -141,7 +141,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header bg-light">
-                                <h6 class="mb-0">Przystanki na trasie</h6>
+                                <h6 class="mb-0"><i class="fas fa-map-marked-alt me-2"></i>Przystanki na trasie</h6>
                             </div>
                             <div class="card-body p-0">
                                 <ol class="list-group list-group-numbered">
@@ -159,8 +159,8 @@
                 
                 <div class="row">
                     <div class="col-12">
-                        <button type="submit" class="btn btn-success">
-                            <i class="fas fa-save"></i> Zapisz odjazd
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Zapisz odjazd
                         </button>
                     </div>
                 </div>

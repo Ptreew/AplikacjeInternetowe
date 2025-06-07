@@ -7,7 +7,7 @@
     <div class="row mb-4">
         <div class="col-12">
             <a href="{{ route('admin.routes.builder.step2') }}" class="btn btn-primary">
-                <i class="fas fa-arrow-left"></i> Powrót do kroku 2
+                <i class="fas fa-arrow-left me-2"></i>Powrót do kroku 2
             </a>
         </div>
     </div>
@@ -15,7 +15,7 @@
     <div class="card">
         <div class="card-header bg-primary text-white">
             <div class="d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Kreator trasy - Krok 3 z 3: Harmonogram kursowania</h5>
+                <h5 class="mb-0"><i class="fas fa-magic me-2"></i>Kreator trasy - Krok 3 z 3: Harmonogram kursowania</h5>
                 <span>3/3</span>
             </div>
         </div>
@@ -26,7 +26,7 @@
             </div>
             
             <div class="alert alert-info">
-                <h5><i class="fas fa-info-circle"></i> Tworzenie harmonogramu dla trasy: {{ $routeData['basic_info']['name'] }}</h5>
+                <h5><i class="fas fa-info-circle me-2"></i>Tworzenie harmonogramu dla trasy: {{ $routeData['basic_info']['name'] }}</h5>
                 <p>Dodaj daty obowiązywania rozkładu, dni tygodnia i godziny odjazdów. Możesz utworzyć kilka różnych harmonogramów.</p>
             </div>
             
@@ -44,20 +44,20 @@
             <!-- Podsumowanie trasy -->
             <div class="card mb-4">
                 <div class="card-header bg-light">
-                    <h6 class="mb-0">Podsumowanie trasy</h6>
+                    <h6 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>Podsumowanie trasy</h6>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <h6>Podstawowe informacje</h6>
+                            <h6><i class="fas fa-info-circle me-2"></i>Podstawowe informacje</h6>
                             <ul class="list-unstyled">
-                                <li><strong>Nazwa trasy:</strong> {{ $routeData['basic_info']['name'] }}</li>
-                                <li><strong>Typ trasy:</strong> {{ $routeData['basic_info']['type'] == 'city' ? 'Miejska' : 'Międzymiastowa' }}</li>
-                                <li><strong>Liczba przystanków:</strong> {{ count($stopsSequence) }}</li>
+                                <li><i class="fas fa-tag me-2"></i><strong>Nazwa trasy:</strong> {{ $routeData['basic_info']['name'] }}</li>
+                                <li><i class="fas fa-map-signs me-2"></i><strong>Typ trasy:</strong> {{ $routeData['basic_info']['type'] == 'city' ? 'Miejska' : 'Międzymiastowa' }}</li>
+                                <li><i class="fas fa-map-marker-alt me-2"></i><strong>Liczba przystanków:</strong> {{ count($stopsSequence) }}</li>
                             </ul>
                         </div>
                         <div class="col-md-6">
-                            <h6>Przystanki</h6>
+                            <h6><i class="fas fa-bus me-2"></i>Przystanki</h6>
                             <ol class="mb-0">
                                 @foreach($stopsSequence as $index => $stopData)
                                     <li>
@@ -84,21 +84,21 @@
                 <!-- Przycisk dodawania harmonogramów -->
                 <div class="mb-4">
                     <button type="button" class="btn btn-success btn-sm" id="add-schedule">
-                        <i class="fas fa-plus"></i> Dodaj harmonogram
+                        <i class="fas fa-plus me-2"></i>Dodaj harmonogram
                     </button>
                 </div>
                 
                 <div class="d-flex justify-content-between mt-4">
                     <a href="{{ route('admin.routes.builder.cancel') }}" class="btn btn-secondary" id="cancel-button">
-                        <i class="fas fa-times"></i> Anuluj cały proces
+                        <i class="fas fa-times me-2"></i>Anuluj cały proces
                     </a>
                     
                     <div>
                         <a href="{{ route('admin.routes.builder.step2') }}" class="btn btn-outline-primary me-2">
-                            <i class="fas fa-arrow-left"></i> Wróć do przystanków
+                            <i class="fas fa-arrow-left me-2"></i>Wróć do przystanków
                         </a>
                         <button type="submit" class="btn btn-primary" id="finish-button">
-                            <i class="fas fa-check"></i> Zakończ i utwórz trasę
+                            <i class="fas fa-check me-2"></i>Zakończ i utwórz trasę
                         </button>
                     </div>
                 </div>
@@ -113,7 +113,7 @@
         <div class="card-header bg-light d-flex justify-content-between align-items-center">
             <h6 class="mb-0">Harmonogram <span class="schedule-number"></span></h6>
             <button type="button" class="btn btn-danger btn-sm remove-schedule">
-                <i class="fas fa-trash"></i> Usuń
+                <i class="fas fa-trash-alt me-2"></i>Usuń
             </button>
         </div>
         <div class="card-body">
@@ -171,8 +171,8 @@
                         <!-- Tu będą dodawane odjazdy dynamicznie -->
                     </div>
                     <div class="mt-2">
-                        <button type="button" class="btn btn-outline-primary btn-sm add-departure">
-                            <i class="fas fa-plus"></i> Dodaj odjazd
+                        <button type="button" class="btn btn-success btn-sm add-departure">
+                            <i class="fas fa-plus me-2"></i>Dodaj odjazd
                         </button>
                     </div>
                 </div>
@@ -211,8 +211,8 @@
             </div>
         </div>
         <div class="col-md-2">
-            <button type="button" class="btn btn-danger btn-sm remove-departure">
-                <i class="fas fa-trash"></i> Usuń
+            <button type="button" class="btn btn-danger btn-sm remove-departure w-100">
+                <i class="fas fa-trash-alt me-2"></i>Usuń
             </button>
         </div>
     </div>

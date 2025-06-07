@@ -8,13 +8,15 @@
     <div class="container-fluid">
         <div class="row mb-4">
             <div class="col-12">
-                <a href="{{ route('admin.stops.index') }}" class="btn btn-primary">Powrót do Listy Przystanków</a>
+                <a href="{{ route('admin.stops.index') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Powrót do Listy Przystanków
+                </a>
             </div>
         </div>
 
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Formularz Edycji Przystanku</h5>
+                <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Formularz Edycji Przystanku</h5>
             </div>
             <div class="card-body">
                 <form method="POST" action="{{ route('admin.stops.update', $stop) }}" class="row g-3">
@@ -30,7 +32,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <label for="city_id">Miasto</label>
+                            <label for="city_id"><i class="fas fa-city me-2"></i>Miasto</label>
                             @error('city_id')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
@@ -40,7 +42,7 @@
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $stop->name) }}" placeholder="Nazwa przystanku" required />
-                            <label for="name">Nazwa przystanku</label>
+                            <label for="name"><i class="fas fa-map-marker-alt me-2"></i>Nazwa przystanku</label>
                             @error('name')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
@@ -50,7 +52,7 @@
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="code" name="code" value="{{ old('code', $stop->code) }}" placeholder="Kod przystanku" required />
-                            <label for="code">Kod przystanku</label>
+                            <label for="code"><i class="fas fa-route me-2"></i>Kod przystanku</label>
                             @error('code')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
@@ -68,7 +70,9 @@
                     </div>
 
                     <div class="col-12">
-                        <button type="submit" class="btn btn-primary">Zaktualizuj Przystanek</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Zaktualizuj Przystanek
+                        </button>
                     </div>
                 </form>
             </div>

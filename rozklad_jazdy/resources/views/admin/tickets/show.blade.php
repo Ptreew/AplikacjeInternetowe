@@ -4,25 +4,25 @@
 <div class="container-fluid py-4">
     <div class="row mb-4">
         <div class="col-12 d-flex align-items-center">
-            <a href="{{ route('admin.tickets.index') }}" class="btn btn-primary me-2"><i class="fas fa-arrow-left me-1"></i>Powrót do listy biletów</a>
-            <a href="{{ route('admin.tickets.edit', $ticket) }}" class="btn btn-primary me-2"><i class="fas fa-edit me-1"></i>Edytuj</a>
+            <a href="{{ route('admin.tickets.index') }}" class="btn btn-primary me-2"><i class="fas fa-arrow-left me-2"></i>Powrót do listy biletów</a>
+            <a href="{{ route('admin.tickets.edit', $ticket) }}" class="btn btn-primary me-2"><i class="fas fa-edit me-2"></i>Edytuj</a>
             <form action="{{ route('admin.tickets.destroy', $ticket) }}" method="POST">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten bilet?')">
-                    <i class="fas fa-trash-alt me-1"></i>Usuń
+                    <i class="fas fa-trash-alt me-2"></i>Usuń
                 </button>
             </form>
         </div>
     </div>
     
-    <h2 class="mb-3">Szczegóły biletu</h2>
+    <h2 class="mb-3"><i class="fas fa-ticket-alt me-2"></i>Szczegóły biletu</h2>
 
     <div class="row">
         <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Informacje o bilecie</h5>
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Informacje o bilecie</h5>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">
@@ -84,7 +84,7 @@
 
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Dane pasażera</h5>
+                    <h5 class="mb-0"><i class="fas fa-user me-2"></i>Dane pasażera</h5>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">
@@ -116,7 +116,7 @@
         <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Informacje o przejeździe</h5>
+                    <h5 class="mb-0"><i class="fas fa-route me-2"></i>Informacje o przejeździe</h5>
                 </div>
                 <div class="card-body">
                     @if($ticket->departure && $ticket->departure->schedule && $ticket->departure->schedule->route)
@@ -184,7 +184,7 @@
             @if($ticket->departure && $ticket->departure->schedule && $ticket->departure->schedule->route && $ticket->departure->schedule->route->routeStops->count() > 0)
                 <div class="card">
                     <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Przystanki na trasie</h5>
+                        <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Przystanki na trasie</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">

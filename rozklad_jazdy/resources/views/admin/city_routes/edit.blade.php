@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-12">
-            <a href="{{ url('/admin?tab=miejskie') }}" class="btn btn-primary">Powrót do panelu</a>
+            <a href="{{ url('/admin?tab=miejskie') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-2"></i>Powrót do panelu</a>
         </div>
     </div>
     
@@ -12,7 +12,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Edytuj kurs miejski: {{ $route->name }}</h5>
+                    <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Edytuj kurs miejski: {{ $route->name }}</h5>
                 </div>
 
                 <div class="card-body">
@@ -42,7 +42,7 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="carrier_id" class="form-label">Przewoźnik <span class="text-danger">*</span></label>
+                                <label for="carrier_id" class="form-label"><i class="fas fa-building me-2"></i>Przewoźnik <span class="text-danger">*</span></label>
                                 <select class="form-select" id="carrier_id" name="carrier_id" required>
                                     <option value="">Wybierz przewoźnika</option>
                                     @foreach($carriers as $carrier)
@@ -55,7 +55,7 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="vehicle_id" class="form-label">Pojazd <span class="text-danger">*</span></label>
+                                <label for="vehicle_id" class="form-label"><i class="fas fa-bus-alt me-2"></i>Pojazd <span class="text-danger">*</span></label>
                                 <select class="form-select" id="vehicle_id" name="vehicle_id" required>
                                     <option value="">Wybierz pojazd</option>
                                     @foreach($vehicles as $vehicle)
@@ -72,7 +72,7 @@
 
                         <div class="row">
                             <div class="col-md-4 mb-3">
-                                <label for="line_number" class="form-label">Numer linii <span class="text-danger">*</span></label>
+                                <label for="line_number" class="form-label"><i class="fas fa-hashtag me-2"></i>Numer linii <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="line_number" name="line_number" value="{{ old('line_number', $route->line->number) }}" required>
                                 @error('line_number')
                                     <div class="text-danger">{{ $message }}</div>
@@ -80,7 +80,7 @@
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label for="line_color" class="form-label">Kolor linii</label>
+                                <label for="line_color" class="form-label"><i class="fas fa-palette me-2"></i>Kolor linii</label>
                                 <div class="input-group">
                                     <input type="color" class="form-control form-control-color" id="line_color" value="{{ old('line_color', $route->line->color) }}" title="Wybierz kolor dla linii">
                                     <input type="text" class="form-control" id="line_color_text" name="line_color" value="{{ old('line_color', $route->line->color) }}" placeholder="#FFFFFF" pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" required>
@@ -92,7 +92,7 @@
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label for="name" class="form-label">Nazwa trasy <span class="text-danger">*</span></label>
+                                <label for="name" class="form-label"><i class="fas fa-route me-2"></i>Nazwa trasy <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $route->name) }}" required>
                                 @error('name')
                                     <div class="text-danger">{{ $message }}</div>
@@ -102,7 +102,7 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="city_id" class="form-label">Miasto <span class="text-danger">*</span></label>
+                                <label for="city_id" class="form-label"><i class="fas fa-city me-2"></i>Miasto <span class="text-danger">*</span></label>
                                 <select class="form-select" id="city_id" name="city_id" required>
                                     <option value="">Wybierz miasto</option>
                                     @foreach($cities as $city)
@@ -115,7 +115,7 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="travel_time" class="form-label">Czas przejazdu (minuty) <span class="text-danger">*</span></label>
+                                <label for="travel_time" class="form-label"><i class="fas fa-clock me-2"></i>Czas przejazdu (minuty) <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="travel_time" name="travel_time" value="{{ old('travel_time', $route->travel_time) }}" min="1" required>
                                 @error('travel_time')
                                     <div class="text-danger">{{ $message }}</div>
@@ -125,7 +125,7 @@
 
                         <div class="row">
                             <div class="col-12 mb-3">
-                                <label class="form-label">Dni kursowania <span class="text-danger">*</span></label>
+                                <label class="form-label"><i class="fas fa-calendar-alt me-2"></i>Dni kursowania <span class="text-danger">*</span></label>
                                 <div class="d-flex flex-wrap gap-3">
                                     @foreach($daysOfWeek as $value => $day)
                                         <div class="form-check">
@@ -153,8 +153,8 @@
 
                         <div class="row">
                             <div class="col-12 mt-4">
-                                <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
-                                <a href="{{ route('admin.city_routes.index') }}" class="btn btn-secondary">Anuluj</a>
+                                <button type="submit" class="btn btn-success"><i class="fas fa-save me-2"></i>Zapisz zmiany</button>
+                                <a href="{{ route('admin.city_routes.index') }}" class="btn btn-secondary"><i class="fas fa-times me-2"></i>Anuluj</a>
                             </div>
                         </div>
                     </form>

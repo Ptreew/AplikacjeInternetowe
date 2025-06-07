@@ -8,7 +8,7 @@
     <div class="container-fluid">
         <div class="row mb-3">
             <div class="col-12">
-                <a href="{{ url('/admin?tab=miejskie') }}" class="btn btn-primary">Powrót do panelu administratora</a>
+                <a href="{{ url('/admin?tab=miejskie') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-2"></i>Powrót do panelu administratora</a>
             </div>
         </div>
 
@@ -16,9 +16,9 @@
         <div class="col-md-12">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Lista kursów miejskich</h5>
+                    <h5 class="mb-0"><i class="fas fa-bus me-2"></i>Lista kursów miejskich</h5>
                     <a href="{{ route('admin.city_routes.create') }}" class="btn btn-sm btn-success">
-                        <i class="fas fa-plus"></i> Dodaj kurs
+                        <i class="fas fa-plus me-2"></i>Dodaj kurs
                     </a>
                 </div>
 
@@ -41,7 +41,7 @@
                                     <th>Liczba przystanków</th>
                                     <th>Czas przejazdu</th>
                                     <th>Status</th>
-                                    <th class="text-end">Akcje</th>
+                                    <th class="text-center">Akcje</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -64,13 +64,13 @@
                                                 <span class="badge bg-secondary">Nieaktywny</span>
                                             @endif
                                         </td>
-                                        <td class="text-end">
+                                        <td class="text-center">
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('admin.city_routes.edit', $route->id) }}" class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-edit"></i> Edytuj
+                                                    <i class="fas fa-edit me-2"></i>Edytuj
                                                 </a>
                                                 <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $route->id }}">
-                                                    <i class="fas fa-trash"></i> Usuń
+                                                    <i class="fas fa-trash-alt me-2"></i>Usuń
                                                 </button>
                                             </div>
 
@@ -86,11 +86,11 @@
                                                             Czy na pewno chcesz usunąć kurs linii <strong>{{ $route->line->number }}</strong>?
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Anuluj</button>
                                                             <form action="{{ route('admin.city_routes.destroy', $route->id) }}" method="POST" style="display: inline;">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="submit" class="btn btn-danger">Usuń</button>
+                                                                <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt me-2"></i>Usuń</button>
                                                             </form>
                                                         </div>
                                                     </div>

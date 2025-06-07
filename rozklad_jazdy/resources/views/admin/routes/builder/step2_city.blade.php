@@ -7,7 +7,7 @@
     <div class="row mb-4">
         <div class="col-12">
             <a href="{{ route('admin.routes.builder.step1') }}" class="btn btn-primary">
-                <i class="fas fa-arrow-left"></i> Powrót do kroku 1
+                <i class="fas fa-arrow-left me-2"></i>Powrót do kroku 1
             </a>
         </div>
     </div>
@@ -15,7 +15,7 @@
     <div class="card">
         <div class="card-header bg-primary text-white">
             <div class="d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Kreator trasy miejskiej - Krok 2 z 3: Dodawanie przystanków</h5>
+                <h5 class="mb-0"><i class="fas fa-magic me-2"></i>Kreator trasy miejskiej - Krok 2 z 3: Dodawanie przystanków</h5>
                 <span>2/3</span>
             </div>
         </div>
@@ -26,7 +26,7 @@
             </div>
             
             <div class="alert alert-info">
-                <h5><i class="fas fa-info-circle"></i> Tworzenie trasy miejskiej: {{ $routeData['basic_info']['name'] }}</h5>
+                <h5><i class="fas fa-info-circle me-2"></i>Tworzenie trasy miejskiej: {{ $routeData['basic_info']['name'] }}</h5>
                 <p>Dodaj przystanki w kolejności ich występowania na trasie. <strong>Musisz wybrać co najmniej przystanek początkowy i końcowy</strong> (np. pierwsza i ostatnia pętla lub dworzec). Możesz sortować przystanki przeciągając i upuszczając wiersze.</p>
             </div>
             
@@ -47,7 +47,7 @@
                 <!-- Wybór miasta -->
                 <div class="row mb-4">
                     <div class="col-md-6">
-                        <label for="city_select" class="form-label">Wybierz miasto</label>
+                        <label for="city_select" class="form-label"><i class="fas fa-city me-2"></i>Wybierz miasto</label>
                         <select class="form-select" id="city_select">
                             <option value="">-- Wybierz miasto --</option>
                             @foreach($cities as $city)
@@ -57,7 +57,7 @@
                     </div>
                     
                     <div class="col-md-6">
-                        <label for="stop_search" class="form-label">Wyszukaj przystanek</label>
+                        <label for="stop_search" class="form-label"><i class="fas fa-search me-2"></i>Wyszukaj przystanek</label>
                         <input type="text" class="form-control" id="stop_search" placeholder="Wpisz nazwę przystanku">
                     </div>
                 </div>
@@ -67,7 +67,7 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header bg-light">
-                                Dostępne przystanki
+                                <i class="fas fa-list me-2"></i>Dostępne przystanki
                             </div>
                             <div class="card-body p-0">
                                 <div class="list-group available-stops" id="available-stops" style="max-height: 300px; overflow-y: auto;">
@@ -82,7 +82,7 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                                <span>Wybrane przystanki</span>
+                                <span><i class="fas fa-map-marker-alt me-2"></i>Wybrane przystanki</span>
                                 <span class="badge bg-primary" id="stops-count">0</span>
                             </div>
                             <div class="card-body p-0">
@@ -109,15 +109,15 @@
                 
                 <div class="d-flex justify-content-between mt-4">
                     <a href="{{ route('admin.routes.builder.cancel') }}" class="btn btn-secondary" id="cancel-button">
-                        <i class="fas fa-times"></i> Anuluj cały proces
+                        <i class="fas fa-times me-2"></i>Anuluj cały proces
                     </a>
                     
                     <div>
                         <a href="{{ route('admin.routes.builder.step1') }}" class="btn btn-outline-primary me-2">
-                            <i class="fas fa-arrow-left"></i> Wróć do kroku 1
+                            <i class="fas fa-arrow-left me-2"></i>Wróć do kroku 1
                         </a>
                         <button type="submit" class="btn btn-primary" id="next-step-button" disabled>
-                            Dalej: Harmonogram <i class="fas fa-arrow-right"></i>
+                            Dalej: Harmonogram <i class="fas fa-arrow-right ms-2"></i>
                         </button>
                     </div>
                 </div>

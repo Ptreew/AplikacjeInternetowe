@@ -6,13 +6,13 @@
     <div class="container">
         <div class="row mb-4">
             <div class="col-12">
-                <a href="{{ route('admin.vehicles.index') }}" class="btn btn-primary">Powrót do listy pojazdów</a>
+                <a href="{{ route('admin.vehicles.index') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-2"></i>Powrót do listy pojazdów</a>
             </div>
         </div>
 
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Dodaj nowy pojazd</h5>
+                <h5 class="mb-0"><i class="fas fa-bus me-2"></i>Dodaj nowy pojazd</h5>
             </div>
             <div class="card-body">
                 @if ($errors->any())
@@ -29,12 +29,12 @@
                     @csrf
                     
                     <div class="mb-3">
-                        <label for="vehicle_number" class="form-label">Numer pojazdu</label>
+                        <label for="vehicle_number" class="form-label"><i class="fas fa-hashtag me-2"></i>Numer pojazdu</label>
                         <input type="text" class="form-control" id="vehicle_number" name="vehicle_number" value="{{ old('vehicle_number') }}" required>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="type" class="form-label">Typ pojazdu</label>
+                        <label for="type" class="form-label"><i class="fas fa-truck-moving me-2"></i>Typ pojazdu</label>
                         <select class="form-select" id="type" name="type" required>
                             <option value="" disabled selected>Wybierz typ pojazdu</option>
                             <option value="Pociąg ekspresowy" {{ old('type') == 'Pociąg ekspresowy' ? 'selected' : '' }}>Pociąg ekspresowy</option>
@@ -46,7 +46,7 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="line_id" class="form-label">Przypisana linia</label>
+                        <label for="line_id" class="form-label"><i class="fas fa-route me-2"></i>Przypisana linia</label>
                         <select class="form-select" id="line_id" name="line_id" required>
                             <option value="" disabled selected>Wybierz linię</option>
                             @foreach($lines as $line)
@@ -58,7 +58,7 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="capacity" class="form-label">Pojemność</label>
+                        <label for="capacity" class="form-label"><i class="fas fa-users me-2"></i>Pojemność</label>
                         <input type="number" class="form-control" id="capacity" name="capacity" value="{{ old('capacity') }}" min="1" required>
                     </div>
                     
@@ -67,7 +67,7 @@
                         <label class="form-check-label" for="is_active">Aktywny</label>
                     </div>
                     
-                    <button type="submit" class="btn btn-success">Dodaj pojazd</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Dodaj pojazd</button>
                 </form>
             </div>
         </div>

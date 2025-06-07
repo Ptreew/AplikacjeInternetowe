@@ -6,38 +6,38 @@
     <div class="container">
         <div class="row mb-4">
             <div class="col-12">
-                <a href="{{ route('admin.vehicles.index') }}" class="btn btn-primary">Powrót do listy pojazdów</a>
-                <a href="{{ route('admin.vehicles.edit', $vehicle) }}" class="btn btn-warning">Edytuj</a>
+                <a href="{{ route('admin.vehicles.index') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-2"></i>Powrót do listy pojazdów</a>
+                <a href="{{ route('admin.vehicles.edit', $vehicle) }}" class="btn btn-primary"><i class="fas fa-edit me-2"></i>Edytuj</a>
             </div>
         </div>
 
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Szczegóły pojazdu: {{ $vehicle->vehicle_number }}</h5>
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Szczegóły pojazdu: {{ $vehicle->vehicle_number }}</h5>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
                         <dl class="row">
-                            <dt class="col-sm-4">ID:</dt>
+                            <dt class="col-sm-4"><i class="fas fa-hashtag me-2"></i>ID:</dt>
                             <dd class="col-sm-8">{{ $vehicle->id }}</dd>
                             
-                            <dt class="col-sm-4">Numer pojazdu:</dt>
+                            <dt class="col-sm-4"><i class="fas fa-id-card me-2"></i>Numer pojazdu:</dt>
                             <dd class="col-sm-8">{{ $vehicle->vehicle_number }}</dd>
                             
-                            <dt class="col-sm-4">Typ pojazdu:</dt>
+                            <dt class="col-sm-4"><i class="fas fa-bus me-2"></i>Typ pojazdu:</dt>
                             <dd class="col-sm-8">{{ $vehicle->type }}</dd>
                             
-                            <dt class="col-sm-4">Linia:</dt>
+                            <dt class="col-sm-4"><i class="fas fa-route me-2"></i>Linia:</dt>
                             <dd class="col-sm-8">{{ $vehicle->line->name ?? 'Brak przypisanej linii' }}</dd>
                             
-                            <dt class="col-sm-4">Przewoźnik:</dt>
+                            <dt class="col-sm-4"><i class="fas fa-building me-2"></i>Przewoźnik:</dt>
                             <dd class="col-sm-8">{{ $vehicle->line->carrier->name ?? 'Brak przewoźnika' }}</dd>
                             
-                            <dt class="col-sm-4">Pojemność:</dt>
+                            <dt class="col-sm-4"><i class="fas fa-users me-2"></i>Pojemność:</dt>
                             <dd class="col-sm-8">{{ $vehicle->capacity }} miejsc</dd>
                             
-                            <dt class="col-sm-4">Status:</dt>
+                            <dt class="col-sm-4"><i class="fas fa-toggle-on me-2"></i>Status:</dt>
                             <dd class="col-sm-8">
                                 @if($vehicle->is_active)
                                     <span class="badge bg-success">Aktywny</span>
@@ -46,10 +46,10 @@
                                 @endif
                             </dd>
                             
-                            <dt class="col-sm-4">Data utworzenia:</dt>
+                            <dt class="col-sm-4"><i class="fas fa-calendar-plus me-2"></i>Data utworzenia:</dt>
                             <dd class="col-sm-8">{{ $vehicle->created_at->format('d.m.Y H:i') }}</dd>
                             
-                            <dt class="col-sm-4">Data aktualizacji:</dt>
+                            <dt class="col-sm-4"><i class="fas fa-calendar-check me-2"></i>Data aktualizacji:</dt>
                             <dd class="col-sm-8">{{ $vehicle->updated_at->format('d.m.Y H:i') }}</dd>
                         </dl>
                     </div>
@@ -59,7 +59,7 @@
 
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Zaplanowane odjazdy</h5>
+                <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Zaplanowane odjazdy</h5>
             </div>
             <div class="card-body">
                 @if($vehicle->departures->count() > 0)
@@ -79,13 +79,31 @@
                                 @foreach($vehicle->departures as $departure)
                                     <tr>
                                         <td>{{ $departure->id }}</td>
-                                        <td>{{ $departure->line->name ?? 'Brak' }}</td>
-                                        <td>{{ $departure->departure_time }}</td>
-                                        <td>{{ $departure->stop_from->name ?? 'Brak' }}</td>
-                                        <td>{{ $departure->stop_to->name ?? 'Brak' }}</td>
                                         <td>
-                                            <a href="#" class="btn btn-sm btn-primary">
-                                                Szczegóły
+                                            @if($departure->schedule && $departure->schedule->route && $departure->schedule->route->line)
+                                                {{ $departure->schedule->route->line->name }}
+                                            @else
+                                                Brak
+                                            @endif
+                                        </td>
+                                        <td>{{ $departure->departure_time }}</td>
+                                        <td>
+                                            @php
+                                                $routeStop = $departure->schedule && $departure->schedule->route ? 
+                                                    $departure->schedule->route->routeStops()->orderBy('stop_number', 'asc')->first() : null;
+                                                echo $routeStop && $routeStop->stop ? $routeStop->stop->name : 'Brak';
+                                            @endphp
+                                        </td>
+                                        <td>
+                                            @php
+                                                $routeStop = $departure->schedule && $departure->schedule->route ? 
+                                                    $departure->schedule->route->routeStops()->orderBy('stop_number', 'desc')->first() : null;
+                                                echo $routeStop && $routeStop->stop ? $routeStop->stop->name : 'Brak';
+                                            @endphp
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('admin.departures.show', $departure->id) }}" class="btn btn-sm btn-success">
+                                                <i class="fas fa-info-circle me-2"></i>Szczegóły
                                             </a>
                                         </td>
                                     </tr>

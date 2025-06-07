@@ -7,16 +7,16 @@
     <div class="row mb-4">
         <div class="col-12">
             <a href="{{ route('admin') }}?tab=routes" class="btn btn-primary">
-                <i class="fas fa-arrow-left"></i> Powrót do panelu
+                <i class="fas fa-arrow-left me-2"></i>Powrót do panelu
             </a>
-            <a href="{{ route('admin.routes.edit', $route) }}" class="btn btn-warning">
-                <i class="fas fa-edit"></i> Edytuj trasę
+            <a href="{{ route('admin.routes.edit', $route) }}" class="btn btn-primary">
+                <i class="fas fa-edit me-2"></i>Edytuj trasę
             </a>
             <form action="{{ route('admin.routes.destroy', $route) }}" method="POST" class="d-inline">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć tę trasę?')">
-                    <i class="fas fa-trash"></i> Usuń trasę
+                    <i class="fas fa-trash-alt me-2"></i>Usuń trasę
                 </button>
             </form>
         </div>
@@ -24,21 +24,21 @@
 
     <div class="card mb-4">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Informacje o trasie #{{ $route->id }}</h5>
+            <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Informacje o trasie #{{ $route->id }}</h5>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <p><strong>Nazwa trasy:</strong> {{ $route->name }}</p>
+                    <p><strong><i class="fas fa-tag me-2"></i>Nazwa trasy:</strong> {{ $route->name }}</p>
                     <p>
-                        <strong>Typ trasy:</strong> 
+                        <strong><i class="fas fa-map-signs me-2"></i>Typ trasy:</strong> 
                         @if($route->type == 'city')
-                            <span class="badge bg-info">Miejska</span>
+                            <span class="badge bg-success">Miejska</span>
                         @else
-                            <span class="badge bg-warning">Międzymiastowa</span>
+                            <span class="badge bg-primary">Międzymiastowa</span>
                         @endif
                     </p>
-                    <p><strong>Linia:</strong> 
+                    <p><strong><i class="fas fa-bus me-2"></i>Linia:</strong> 
                         @if($route->line->number)
                             {{ $route->line->number }}
                         @else
@@ -46,34 +46,34 @@
                         @endif
                         - {{ $route->line->name }}
                     </p>
-                    <p><strong>Przewoźnik:</strong> {{ $route->line->carrier->name ?? 'Brak przewoźnika' }}</p>
+                    <p><strong><i class="fas fa-building me-2"></i>Przewoźnik:</strong> {{ $route->line->carrier->name ?? 'Brak przewoźnika' }}</p>
                 </div>
                 <div class="col-md-6">
-                    <p><strong>Czas podróży:</strong> 
+                    <p><strong><i class="fas fa-clock me-2"></i>Czas podróży:</strong> 
                         @if($route->travel_time)
                             {{ $route->travel_time }} min
                         @else
                             <span class="text-muted">Nie określono</span>
                         @endif
                     </p>
-                    <p><strong>Status:</strong> 
+                    <p><strong><i class="fas fa-toggle-on me-2"></i>Status:</strong> 
                         @if($route->is_active)
                             <span class="badge bg-success">Aktywna</span>
                         @else
                             <span class="badge bg-danger">Nieaktywna</span>
                         @endif
                     </p>
-                    <p><strong>Data utworzenia:</strong> {{ $route->created_at->format('d.m.Y H:i') }}</p>
+                    <p><strong><i class="fas fa-calendar-alt me-2"></i>Data utworzenia:</strong> {{ $route->created_at->format('d.m.Y H:i') }}</p>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="card mb-4">
-        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Przystanki na trasie</h5>
-            <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addStopModal">
-                <i class="fas fa-plus"></i> Dodaj przystanek
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Przystanki na trasie</h5>
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addStopModal">
+                <i class="fas fa-plus me-2"></i>Dodaj przystanek
             </button>
         </div>
         <div class="card-body">
@@ -116,14 +116,14 @@
                                         <div class="d-inline-flex">
                                             <button type="button" class="btn btn-sm btn-primary me-1"
                                                     data-bs-toggle="modal" data-bs-target="#editStopModal{{ $routeStop->id }}">
-                                                Edytuj
+                                                <i class="fas fa-edit me-2"></i>Edytuj
                                             </button>
                                             <form action="{{ route('admin.route_stops.destroy', $routeStop) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger" 
+                                                <button type="submit" class="btn btn-sm btn-danger"
                                                         onclick="return confirm('Czy na pewno chcesz usunąć ten przystanek z trasy?')">
-                                                    Usuń
+                                                    <i class="fas fa-trash-alt me-2"></i>Usuń
                                                 </button>
                                             </form>
                                         </div>
@@ -224,17 +224,20 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-                        <button type="submit" class="btn btn-success">Dodaj przystanek</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Anuluj</button>
+                        <button type="submit" class="btn btn-success"><i class="fas fa-plus me-2"></i>Dodaj przystanek</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header bg-success text-white">
-            <h5 class="mb-0">Rozkłady jazdy</h5>
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-calendar me-2"></i>Rozkłady jazdy</h5>
+            <a href="#" class="btn btn-success">
+                <i class="fas fa-plus me-2"></i>Dodaj rozkład
+            </a>
         </div>
         <div class="card-body">
             @if($route->schedules->count() > 0)
@@ -246,7 +249,6 @@
                                 <th>Dni kursowania</th>
                                 <th>Ważny od</th>
                                 <th>Ważny do</th>
-                                <th>Status</th>
                                 <th>Akcje</th>
                             </tr>
                         </thead>
@@ -256,36 +258,36 @@
                                     <td>{{ $schedule->id }}</td>
                                     <td>
                                         @php
-                                            $days = [
-                                                1 => 'Pn',
-                                                2 => 'Wt',
-                                                3 => 'Śr',
-                                                4 => 'Cz',
-                                                5 => 'Pt',
-                                                6 => 'So',
-                                                7 => 'Nd'
-                                            ];
-                                            $operatingDays = [];
-                                            foreach ($days as $key => $day) {
-                                                if ($schedule->{"day_$key"}) {
-                                                    $operatingDays[] = $day;
+                                            $dayNames = ['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So'];
+                                            $daysArray = $schedule->days_of_week;
+                                            
+                                            // Check if days_of_week is a JSON string and decode it if needed
+                                            if (is_string($daysArray)) {
+                                                try {
+                                                    $daysArray = json_decode($daysArray, true);
+                                                } catch (\Exception $e) {
+                                                    $daysArray = null;
                                                 }
                                             }
-                                            echo implode(', ', $operatingDays);
+                                            
+                                            if (is_array($daysArray)) {
+                                                $operatingDays = [];
+                                                foreach ($daysArray as $dayIndex) {
+                                                    if (isset($dayNames[$dayIndex])) {
+                                                        $operatingDays[] = $dayNames[$dayIndex];
+                                                    }
+                                                }
+                                                echo implode(', ', $operatingDays);
+                                            } else {
+                                                echo 'Nieokreślone';
+                                            }
                                         @endphp
                                     </td>
                                     <td>{{ $schedule->valid_from ? $schedule->valid_from->format('d.m.Y') : 'Bezterminowo' }}</td>
                                     <td>{{ $schedule->valid_to ? $schedule->valid_to->format('d.m.Y') : 'Bezterminowo' }}</td>
                                     <td>
-                                        @if($schedule->is_active)
-                                            <span class="badge bg-success">Aktywny</span>
-                                        @else
-                                            <span class="badge bg-danger">Nieaktywny</span>
-                                        @endif
-                                    </td>
-                                    <td>
                                         <!-- Tutaj można dodać przyciski do zarządzania rozkładami jazdy -->
-                                        <a href="#" class="btn btn-sm btn-primary">Szczegóły</a>
+                                        <a href="/admin/schedules/{{ $schedule->id }}" class="btn btn-sm btn-success"><i class="fas fa-info-circle me-2"></i>Szczegóły</a>
                                     </td>
                                 </tr>
                             @endforeach

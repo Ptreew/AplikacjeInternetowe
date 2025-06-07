@@ -48,7 +48,7 @@
                                                 <i class="fas fa-edit me-1"></i>Edytuj
                                             </a>
                                             <a href="{{ route('admin.cities.show', $city) }}" class="btn btn-sm btn-success me-1">
-                                                <i class="fas fa-eye me-1"></i>Pokaż
+                                                <i class="fas fa-eye me-1"></i>Szczegóły
                                             </a>
                                             <form action="{{ route('admin.cities.destroy', $city) }}" method="POST" class="d-inline">
                                                 @csrf

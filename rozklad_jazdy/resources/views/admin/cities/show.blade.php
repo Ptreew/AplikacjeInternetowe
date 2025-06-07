@@ -8,14 +8,18 @@
     <div class="container-fluid">
         <div class="row mb-4">
             <div class="col-12">
-                <a href="{{ route('admin.cities.index') }}" class="btn btn-primary">Powrót do Listy Miast</a>
-                <a href="{{ route('admin.cities.edit', $city) }}" class="btn btn-success">Edytuj Miasto</a>
+                <a href="{{ route('admin.cities.index') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Powrót do Listy Miast
+                </a>
+                <a href="{{ route('admin.cities.edit', $city) }}" class="btn btn-success">
+                    <i class="fas fa-edit me-2"></i>Edytuj Miasto
+                </a>
             </div>
         </div>
 
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Informacje o Mieście</h5>
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Informacje o Mieście</h5>
             </div>
             <div class="card-body">
                 <dl class="row">
@@ -42,7 +46,7 @@
 
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Przystanki w Mieście</h5>
+                <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Przystanki w Mieście</h5>
             </div>
             <div class="card-body">
                 @if($city->stops->count() > 0)
@@ -65,11 +69,15 @@
                                         <td>{{ $stop->code }}</td>
                                         <td>{{ $stop->is_active ? 'Aktywny' : 'Nieaktywny' }}</td>
                                         <td>
-                                            <a href="{{ route('admin.stops.edit', $stop) }}" class="btn btn-sm btn-primary me-1">Edytuj</a>
+                                            <a href="{{ route('admin.stops.edit', $stop) }}" class="btn btn-sm btn-primary me-1">
+                                                <i class="fas fa-edit me-2"></i>Edytuj
+                                            </a>
                                             <form action="{{ route('admin.stops.destroy', $stop) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten przystanek?')">Usuń</button>
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten przystanek?')">
+                                                    <i class="fas fa-trash-alt me-2"></i>Usuń
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>
@@ -80,7 +88,7 @@
                 @else
                     <div class="alert alert-info">
                         Brak przystanków przypisanych do tego miasta. 
-                        <a href="{{ route('admin.stops.create') }}" class="alert-link">Dodaj pierwszy przystanek</a>.
+                        <a href="{{ route('admin.stops.create') }}" class="alert-link"><i class="fas fa-plus-circle me-2"></i>Dodaj pierwszy przystanek</a>.
                     </div>
                 @endif
             </div>

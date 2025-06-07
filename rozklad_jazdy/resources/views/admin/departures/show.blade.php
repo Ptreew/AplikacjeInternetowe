@@ -7,16 +7,16 @@
     <div class="row mb-4">
         <div class="col-12 d-flex flex-wrap gap-2">
             <a href="{{ route('admin.schedules.show', $departure->schedule_id) }}" class="btn btn-primary">
-                <i class="fas fa-arrow-left"></i> Powrót do rozkładu
+                <i class="fas fa-arrow-left me-2"></i>Powrót do rozkładu
             </a>
-            <a href="{{ route('admin.departures.edit', $departure) }}" class="btn btn-warning">
-                <i class="fas fa-edit"></i> Edytuj odjazd
+            <a href="{{ route('admin.departures.edit', $departure) }}" class="btn btn-primary">
+                <i class="fas fa-edit me-2"></i>Edytuj odjazd
             </a>
             <form action="{{ route('admin.departures.destroy', $departure) }}" method="POST" class="d-inline">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten odjazd?')">
-                    <i class="fas fa-trash"></i> Usuń odjazd
+                    <i class="fas fa-trash me-2"></i>Usuń odjazd
                 </button>
             </form>
         </div>
@@ -39,7 +39,7 @@
         <div class="col-md-6 mb-4">
             <div class="card h-100">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Informacje o odjeździe #{{ $departure->id }}</h5>
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Informacje o odjeździe #{{ $departure->id }}</h5>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered">
@@ -99,7 +99,7 @@
         <div class="col-md-6 mb-4">
             <div class="card h-100">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Informacje o pojeździe</h5>
+                    <h5 class="mb-0"><i class="fas fa-bus me-2"></i>Informacje o pojeździe</h5>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered">
@@ -137,7 +137,7 @@
 
     <div class="card mb-4">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Przystanki na trasie</h5>
+            <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Przystanki na trasie</h5>
         </div>
         <div class="card-body">
             <ol class="list-group list-group-numbered">
@@ -183,7 +183,7 @@
     @if($departure->tickets->count() > 0)
     <div class="card">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Bilety</h5>
+            <h5 class="mb-0"><i class="fas fa-ticket-alt me-2"></i>Bilety</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -230,7 +230,7 @@
                                 <td>{{ \Carbon\Carbon::parse($ticket->created_at)->format('d.m.Y H:i') }}</td>
                                 <td>
                                     <a href="{{ route('admin.tickets.show', $ticket) }}" class="btn btn-sm btn-success">
-                                        <i class="fas fa-eye"></i> Szczegóły
+                                        <i class="fas fa-eye me-2"></i>Szczegóły
                                     </a>
                                 </td>
                             </tr>

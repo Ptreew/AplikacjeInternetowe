@@ -8,12 +8,12 @@
     <div class="container">
         <div class="row mb-4">
             <div class="col-12">
-                <a href="{{ url('/admin?tab=uzytkownicy') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-1"></i>Powrót do panelu</a>
+                <a href="{{ url('/admin?tab=uzytkownicy') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-2"></i>Powrót do panelu</a>
             </div>
         </div>
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Lista użytkowników</h5>
+                <h5 class="mb-0"><i class="fas fa-users me-2"></i>Lista użytkowników</h5>
             </div>
             <div class="card-body">
                 @if(session('success'))
@@ -54,14 +54,14 @@
                                         <div class="btn-group">
                                             @if($user->id != auth()->id())
                                                 <button type="button" class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#changeRoleModal{{ $user->id }}">
-                                                    <i class="fas fa-user-edit me-1"></i>Zmień rolę
+                                                    <i class="fas fa-user-edit me-2"></i>Zmień rolę
                                                 </button>
                                                 
                                                 <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć tego użytkownika?')">
-                                                        <i class="fas fa-trash-alt me-1"></i>Usuń
+                                                        <i class="fas fa-trash-alt me-2"></i>Usuń
                                                     </button>
                                                 </form>
                                             @else
@@ -82,7 +82,7 @@
                                                         @method('PATCH')
                                                         <div class="modal-body">
                                                             <div class="mb-3">
-                                                                <label for="role" class="form-label">Rola</label>
+                                                                <label for="role" class="form-label"><i class="fas fa-user-shield me-2"></i>Rola</label>
                                                                 <select class="form-select" id="role" name="role" required>
                                                                     <option value="standard" {{ $user->role == 'standard' ? 'selected' : '' }}>Użytkownik</option>
                                                                     <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Administrator</option>
@@ -90,8 +90,8 @@
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-1"></i>Anuluj</button>
-                                                            <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>Zapisz zmiany</button>
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Anuluj</button>
+                                                            <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Zapisz zmiany</button>
                                                         </div>
                                                     </form>
                                                 </div>

@@ -7,7 +7,7 @@
     <div class="row mb-4">
         <div class="col-12">
             <a href="{{ route('admin.routes.index') }}" class="btn btn-primary">
-                <i class="fas fa-arrow-left"></i> Powrót do listy tras
+                <i class="fas fa-arrow-left me-2"></i>Powrót do listy tras
             </a>
         </div>
     </div>
@@ -15,7 +15,7 @@
     <div class="card">
         <div class="card-header bg-primary text-white">
             <div class="d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Kreator trasy - Krok 1 z 3: Podstawowe informacje</h5>
+                <h5 class="mb-0"><i class="fas fa-magic me-2"></i>Kreator trasy - Krok 1 z 3: Podstawowe informacje</h5>
                 <span>1/3</span>
             </div>
         </div>
@@ -42,7 +42,7 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="type" class="form-label">Typ trasy <span class="text-danger">*</span></label>
+                            <label for="type" class="form-label"><i class="fas fa-map-signs me-2"></i>Typ trasy <span class="text-danger">*</span></label>
                             <select class="form-select @error('type') is-invalid @enderror" id="type" name="type" required>
                                 <option value="">Wybierz typ</option>
                                 <option value="city" {{ old('type') == 'city' ? 'selected' : '' }}>Miejska</option>
@@ -59,7 +59,7 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="line_id" class="form-label">Linia <span class="text-danger">*</span></label>
+                            <label for="line_id" class="form-label"><i class="fas fa-bus me-2"></i>Linia <span class="text-danger">*</span></label>
                             <select class="form-select @error('line_id') is-invalid @enderror" id="line_id" name="line_id" required>
                                 <option value="">Wybierz linię</option>
                                 @foreach($lines as $line)
@@ -92,7 +92,7 @@
                     
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="name" class="form-label">Nazwa trasy <span class="text-danger">*</span></label>
+                            <label for="name" class="form-label"><i class="fas fa-tag me-2"></i>Nazwa trasy <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required>
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -118,10 +118,10 @@
                 
                 <div class="d-flex justify-content-between mt-4">
                     <a href="{{ route('admin.routes.builder.cancel') }}" class="btn btn-secondary" id="cancel-button">
-                        <i class="fas fa-times"></i> Anuluj
+                        <i class="fas fa-times me-2"></i>Anuluj
                     </a>
                     <button type="submit" class="btn btn-primary">
-                        Dalej: Dodaj przystanki <i class="fas fa-arrow-right"></i>
+                        Dalej: Dodaj przystanki <i class="fas fa-arrow-right ms-2"></i>
                     </button>
                 </div>
             </form>

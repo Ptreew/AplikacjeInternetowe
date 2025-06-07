@@ -6,8 +6,8 @@
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-12">
-            <a href="{{ url('/admin?tab=departures') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-1"></i>Powrót do panelu</a>
-            <a href="{{ route('admin.departures.create') }}" class="btn btn-success ms-2"><i class="fas fa-plus me-1"></i>Dodaj odjazd</a>
+            <a href="{{ url('/admin?tab=departures') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-2"></i>Powrót do panelu</a>
+            <a href="{{ route('admin.departures.create') }}" class="btn btn-success ms-2"><i class="fas fa-plus me-2"></i>Dodaj odjazd</a>
         </div>
     </div>
 
@@ -19,7 +19,7 @@
     @endif
 
     <div class="card">
-        <div class="card-header bg-primary text-white"><h5 class="mb-0">Lista odjazdów</h5></div>
+        <div class="card-header bg-primary text-white"><h5 class="mb-0"><i class="fas fa-clock me-2"></i>Lista odjazdów</h5></div>
         <div class="card-body">
             <table class="table table-hover">
                 <thead>
@@ -54,16 +54,16 @@
                             <td class="text-center">
                                 <div class="d-flex flex-nowrap justify-content-center">
                                     <a href="{{ route('admin.departures.show', $departure) }}" class="btn btn-sm btn-success me-1">
-                                        <i class="fas fa-eye me-1"></i>Pokaż
+                                        <i class="fas fa-eye me-2"></i>Szczegóły
                                     </a>
                                     <a href="{{ route('admin.departures.edit', $departure) }}" class="btn btn-sm btn-primary me-1">
-                                        <i class="fas fa-edit me-1"></i>Edytuj
+                                        <i class="fas fa-edit me-2"></i>Edytuj
                                     </a>
                                     <form action="{{ route('admin.departures.destroy', $departure) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno usunąć odjazd?')">
-                                            <i class="fas fa-trash-alt me-1"></i>Usuń
+                                            <i class="fas fa-trash-alt me-2"></i>Usuń
                                         </button>
                                     </form>
                                 </div>

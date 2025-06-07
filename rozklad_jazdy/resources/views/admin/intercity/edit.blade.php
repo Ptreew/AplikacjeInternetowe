@@ -14,7 +14,7 @@
         
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Edycja Kursu Międzymiastowego</h5>
+                <h5 class="mb-0"><i class="fas fa-shuttle-van me-2"></i>Edycja Kursu Międzymiastowego</h5>
             </div>
             <div class="card-body">
                 @if($errors->any())
@@ -32,7 +32,7 @@
                     @method('PUT')
                     
                     <div class="col-md-4">
-                        <label for="carrier_id" class="form-label">Przewoźnik</label>
+                        <label for="carrier_id" class="form-label"><i class="fas fa-building me-2"></i>Przewoźnik</label>
                         <select class="form-select @error('carrier_id') is-invalid @enderror" id="carrier_id" name="carrier_id" required>
                             <option value="">Wybierz przewoźnika</option>
                             @foreach($carriers as $carrier)
@@ -47,7 +47,7 @@
                     </div>
                     
                     <div class="col-md-4">
-                        <label for="vehicle_id" class="form-label">Pojazd</label>
+                        <label for="vehicle_id" class="form-label"><i class="fas fa-bus me-2"></i>Pojazd</label>
                         <select class="form-select @error('vehicle_id') is-invalid @enderror" id="vehicle_id" name="vehicle_id" required disabled>
                             <option value="">Najpierw wybierz przewoźnika</option>
                             @foreach($vehicles as $vehicle)
@@ -64,7 +64,7 @@
                     <input type="hidden" id="line_number" name="line_number" value="INTERCITY">
                     
                     <div class="col-md-3">
-                        <label class="form-label">Nazwa linii</label>
+                        <label class="form-label"><i class="fas fa-tag me-2"></i>Nazwa linii</label>
                         <input type="text" class="form-control" value="{{ $route->line->name }}" readonly disabled>
                         <div class="form-text small">Nazwa linii zostanie zaktualizowana automatycznie w formacie "Miasto1 - Miasto2"</div>
                         <input type="hidden" id="line_name" name="line_name" value="AUTO_GENERATE">
@@ -74,7 +74,7 @@
                     </div>
                     
                     <div class="col-md-6">
-                        <label for="origin_city_id" class="form-label">Miasto początkowe</label>
+                        <label for="origin_city_id" class="form-label"><i class="fas fa-city me-2"></i>Miasto początkowe</label>
                         <select class="form-select @error('origin_city_id') is-invalid @enderror" id="origin_city_id" name="origin_city_id" required>
                             <option value="">Wybierz miasto</option>
                             @foreach($cities as $city)
@@ -89,7 +89,7 @@
                     </div>
                     
                     <div class="col-md-6">
-                        <label for="origin_stop_id" class="form-label">Przystanek początkowy</label>
+                        <label for="origin_stop_id" class="form-label"><i class="fas fa-map-marker-alt me-2"></i>Przystanek początkowy</label>
                         <select class="form-select @error('origin_stop_id') is-invalid @enderror" id="origin_stop_id" name="origin_stop_id" required>
                             <option value="">Najpierw wybierz miasto</option>
                             <!-- Stops will be loaded by JavaScript -->
@@ -100,7 +100,7 @@
                     </div>
                     
                     <div class="col-md-6">
-                        <label for="destination_city_id" class="form-label">Miasto docelowe</label>
+                        <label for="destination_city_id" class="form-label"><i class="fas fa-city me-2"></i>Miasto docelowe</label>
                         <select class="form-select @error('destination_city_id') is-invalid @enderror" id="destination_city_id" name="destination_city_id" required>
                             <option value="">Wybierz miasto</option>
                             @foreach($cities as $city)
@@ -115,7 +115,7 @@
                     </div>
                     
                     <div class="col-md-6">
-                        <label for="destination_stop_id" class="form-label">Przystanek docelowy</label>
+                        <label for="destination_stop_id" class="form-label"><i class="fas fa-map-marker-alt me-2"></i>Przystanek docelowy</label>
                         <select class="form-select @error('destination_stop_id') is-invalid @enderror" id="destination_stop_id" name="destination_stop_id" required>
                             <option value="">Najpierw wybierz miasto</option>
                             <!-- Stops will be loaded by JavaScript -->
@@ -126,7 +126,7 @@
                     </div>
                     
                     <div class="col-md-4">
-                        <label for="departure_time" class="form-label">Czas odjazdu</label>
+                        <label for="departure_time" class="form-label"><i class="fas fa-clock me-2"></i>Czas odjazdu</label>
                         <input type="time" class="form-control @error('departure_time') is-invalid @enderror" id="departure_time" name="departure_time" value="{{ old('departure_time', $departureTime) }}" required>
                         @error('departure_time')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -134,7 +134,7 @@
                     </div>
                     
                     <div class="col-md-4">
-                        <label for="price" class="form-label">Cena biletu (zł)</label>
+                        <label for="price" class="form-label"><i class="fas fa-money-bill me-2"></i>Cena biletu (zł)</label>
                         <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price', $price) }}" required>
                         @error('price')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -142,7 +142,7 @@
                     </div>
                     
                     <div class="col-md-4">
-                        <label for="travel_time" class="form-label">Czas podróży (minuty)</label>
+                        <label for="travel_time" class="form-label"><i class="fas fa-hourglass-half me-2"></i>Czas podróży (minuty)</label>
                         <input type="number" min="1" class="form-control @error('travel_time') is-invalid @enderror" id="travel_time" name="travel_time" value="{{ old('travel_time', $route->travel_time ?? 120) }}" required>
                         <div class="form-text small">Całkowity czas przejazdu trasy</div>
                         @error('travel_time')
@@ -151,7 +151,7 @@
                     </div>
                     
                     <div class="col-12">
-                        <label class="form-label">Dni kursowania</label>
+                        <label class="form-label"><i class="fas fa-calendar-alt me-2"></i>Dni kursowania</label>
                         <div class="row">
                             @php
                                 $days = [
@@ -179,7 +179,7 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="days_of_week[]" value="{{ $value }}" id="day_{{ $value }}" 
                                             {{ in_array($value, $oldDays) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="day_{{ $value }}">{{ $day }}</label>
+                                        <label class="form-check-label" for="day_{{ $value }}">{{ $value == 0 ? 'Nd' : ($value == 1 ? 'Pn' : ($value == 2 ? 'Wt' : ($value == 3 ? 'Śr' : ($value == 4 ? 'Cz' : ($value == 5 ? 'Pt' : 'Sb'))))) }}</label>
                                     </div>
                                 </div>
                             @endforeach
@@ -190,7 +190,7 @@
                     </div>
                     
                     <div class="col-12 mt-4">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Zapisz zmiany</button>
+                        <button type="submit" class="btn btn-success"><i class="fas fa-save me-2"></i>Zapisz zmiany</button>
                         <a href="{{ route('admin.intercity.index') }}" class="btn btn-secondary"><i class="fas fa-times me-2"></i>Anuluj</a>
                     </div>
                 </form>

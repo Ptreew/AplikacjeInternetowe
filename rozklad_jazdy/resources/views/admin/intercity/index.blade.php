@@ -8,14 +8,14 @@
     <div class="container-fluid">
         <div class="row mb-4">
             <div class="col-12">
-                <a href="{{ url('/admin?tab=miedzymiastowe') }}" class="btn btn-primary">Powrót do panelu</a>
-                <a href="{{ route('admin.intercity.create') }}" class="btn btn-success">Dodaj Nowy Kurs</a>
+                <a href="{{ url('/admin?tab=miedzymiastowe') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-2"></i>Powrót do panelu</a>
+                <a href="{{ route('admin.intercity.create') }}" class="btn btn-success"><i class="fas fa-plus me-2"></i>Dodaj Nowy Kurs</a>
             </div>
         </div>
 
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Kursy Międzymiastowe</h5>
+                <h5 class="mb-0"><i class="fas fa-shuttle-van me-2"></i>Kursy Międzymiastowe</h5>
             </div>
             <div class="card-body">
                 @if(session('success'))
@@ -69,13 +69,13 @@
                                             @if($route->schedules->isNotEmpty())
                                                 @php
                                                     $dayNames = [
-                                                        0 => 'Niedziela',
-                                                        1 => 'Poniedziałek',
-                                                        2 => 'Wtorek',
-                                                        3 => 'Środa',
-                                                        4 => 'Czwartek',
-                                                        5 => 'Piątek',
-                                                        6 => 'Sobota'
+                                                        0 => 'Nd',
+                                                        1 => 'Pn',
+                                                        2 => 'Wt',
+                                                        3 => 'Śr',
+                                                        4 => 'Cz',
+                                                        5 => 'Pt',
+                                                        6 => 'Sb'
                                                     ];
                                                     
                                                     $allDays = [];
@@ -105,13 +105,13 @@
                                         <td>
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('admin.intercity.edit', $route->id) }}" class="btn btn-sm btn-primary me-1">
-                                                    Edytuj
+                                                    <i class="fas fa-edit me-2"></i>Edytuj
                                                 </a>
                                                 <form action="{{ route('admin.intercity.destroy', $route->id) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten kurs?')">
-                                                        Usuń
+                                                        <i class="fas fa-trash-alt me-2"></i>Usuń
                                                     </button>
                                                 </form>
                                             </div>

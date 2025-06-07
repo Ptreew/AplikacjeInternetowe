@@ -7,7 +7,7 @@
     <div class="row mb-4">
         <div class="col-12">
             <a href="{{ route('admin.departures.show', $departure) }}" class="btn btn-primary">
-                <i class="fas fa-arrow-left"></i> Powrót do szczegółów odjazdu
+                <i class="fas fa-arrow-left me-2"></i>Powrót do szczegółów odjazdu
             </a>
         </div>
     </div>
@@ -21,7 +21,7 @@
 
     <div class="card">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Edytuj odjazd #{{ $departure->id }}</h5>
+            <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Edytuj odjazd #{{ $departure->id }}</h5>
         </div>
         <div class="card-body">
             @if($errors->any())
@@ -41,7 +41,7 @@
                 
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        <label for="schedule_id" class="form-label">Rozkład jazdy <span class="text-danger">*</span></label>
+                        <label for="schedule_id" class="form-label"><i class="fas fa-calendar-alt me-2"></i>Rozkład jazdy <span class="text-danger">*</span></label>
                         <select class="form-select @error('schedule_id') is-invalid @enderror" id="schedule_id" name="schedule_id" required>
                             <option value="">Wybierz rozkład</option>
                             @foreach($schedules as $schedule)
@@ -60,7 +60,7 @@
                 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="vehicle_id" class="form-label">Pojazd <span class="text-danger">*</span></label>
+                        <label for="vehicle_id" class="form-label"><i class="fas fa-bus me-2"></i>Pojazd <span class="text-danger">*</span></label>
                         <select class="form-select @error('vehicle_id') is-invalid @enderror" id="vehicle_id" name="vehicle_id" required>
                             <option value="">Wybierz pojazd</option>
                             @foreach($vehicles as $vehicle)
@@ -75,7 +75,7 @@
                         @enderror
                     </div>
                     <div class="col-md-6">
-                        <label for="departure_time" class="form-label">Godzina odjazdu <span class="text-danger">*</span></label>
+                        <label for="departure_time" class="form-label"><i class="fas fa-clock me-2"></i>Godzina odjazdu <span class="text-danger">*</span></label>
                         <input type="time" class="form-control @error('departure_time') is-invalid @enderror" 
                                id="departure_time" name="departure_time" value="{{ old('departure_time', $departureTime) }}" required>
                         @error('departure_time')
@@ -86,7 +86,7 @@
                 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="price" class="form-label">Cena biletu <span class="text-danger">*</span></label>
+                        <label for="price" class="form-label"><i class="fas fa-money-bill-alt me-2"></i>Cena biletu <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <input type="number" class="form-control @error('price') is-invalid @enderror" 
                                    id="price" name="price" value="{{ old('price', $departure->price) }}" 
@@ -98,7 +98,7 @@
                         @enderror
                     </div>
                     <div class="col-md-6">
-                        <label for="stop_id" class="form-label">Przystanek odjazdu <span class="text-danger">*</span></label>
+                        <label for="stop_id" class="form-label"><i class="fas fa-map-marker-alt me-2"></i>Przystanek odjazdu <span class="text-danger">*</span></label>
                         <select class="form-select @error('stop_id') is-invalid @enderror" id="stop_id" name="stop_id" required>
                             @if($stops && $stops->count() > 0)
                                 @foreach($stops as $stop)
@@ -129,7 +129,7 @@
                 <div class="row">
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Zapisz zmiany
+                            <i class="fas fa-save me-2"></i>Zapisz zmiany
                         </button>
                     </div>
                 </div>

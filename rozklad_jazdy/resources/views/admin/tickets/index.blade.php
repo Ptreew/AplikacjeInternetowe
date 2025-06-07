@@ -4,7 +4,7 @@
 <div class="container-fluid py-4">
     <div class="row mb-4">
         <div class="col-12">
-            <a href="{{ url('/admin?tab=tickets') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-1"></i>Powrót do panelu</a>
+            <a href="{{ url('/admin?tab=tickets') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-2"></i>Powrót do panelu</a>
         </div>
     </div>
 
@@ -24,7 +24,7 @@
 
     <div class="card">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Lista biletów</h5>
+            <h5 class="mb-0"><i class="fas fa-ticket-alt me-2"></i>Lista biletów</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -101,16 +101,16 @@
                                 <td>
                                     <div class="d-flex flex-nowrap justify-content-center">
                                         <a href="{{ route('admin.tickets.show', $ticket) }}" class="btn btn-sm btn-success text-white me-1">
-                                            <i class="fas fa-eye me-1"></i>Szczegóły
+                                            <i class="fas fa-eye me-2"></i>Szczegóły
                                         </a>
                                         <a href="{{ route('admin.tickets.edit', $ticket) }}" class="btn btn-sm btn-primary me-1">
-                                            <i class="fas fa-edit me-1"></i>Edytuj
+                                            <i class="fas fa-edit me-2"></i>Edytuj
                                         </a>
                                         <form action="{{ route('admin.tickets.destroy', $ticket) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten bilet?')">
-                                                <i class="fas fa-trash-alt me-1"></i>Usuń
+                                                <i class="fas fa-trash-alt me-2"></i>Usuń
                                             </button>
                                         </form>
                                     </div>

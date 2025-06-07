@@ -9,10 +9,10 @@
     <div class="row mb-4">
         <div class="col-12">
             <a href="{{ route('admin') }}?tab=lines" class="btn btn-primary">
-                <i class="fas fa-arrow-left me-1"></i>Powrót do panelu
+                <i class="fas fa-arrow-left me-2"></i>Powrót do panelu
             </a>
             <a href="{{ route('admin.lines.create') }}" class="btn btn-success">
-                <i class="fas fa-plus me-1"></i>Dodaj nową linię
+                <i class="fas fa-plus me-2"></i>Dodaj nową linię
             </a>
         </div>
     </div>
@@ -33,7 +33,7 @@
 
     <div class="card">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Lista linii</h5>
+            <h5 class="mb-0"><i class="fas fa-list me-2"></i>Lista linii</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -76,16 +76,16 @@
                                 <td class="text-center">
                                     <div class="d-flex flex-nowrap justify-content-center">
                                         <a href="{{ route('admin.lines.edit', $line) }}" class="btn btn-sm btn-primary me-1">
-                                            <i class="fas fa-edit me-1"></i>Edytuj
+                                            <i class="fas fa-edit me-2"></i>Edytuj
                                         </a>
                                         <a href="{{ route('admin.lines.show', $line) }}" class="btn btn-sm btn-success me-1">
-                                            <i class="fas fa-eye me-1"></i>Pokaż
+                                            <i class="fas fa-info-circle me-2"></i>Szczegóły
                                         </a>
                                         <form action="{{ route('admin.lines.destroy', $line) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć tę linię?')">
-                                                <i class="fas fa-trash-alt me-1"></i>Usuń
+                                                <i class="fas fa-trash-alt me-2"></i>Usuń
                                             </button>
                                         </form>
                                     </div>

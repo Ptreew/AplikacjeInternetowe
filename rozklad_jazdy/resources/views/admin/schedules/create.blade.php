@@ -7,7 +7,7 @@
     <div class="row mb-4">
         <div class="col-12">
             <a href="{{ route('admin.schedules.index') }}" class="btn btn-primary">
-                <i class="fas fa-arrow-left"></i> Powrót do listy rozkładów
+                <i class="fas fa-arrow-left me-2"></i>Powrót do listy rozkładów
             </a>
         </div>
     </div>
@@ -21,7 +21,7 @@
 
     <div class="card">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Dodaj nowy rozkład jazdy</h5>
+            <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Dodaj nowy rozkład jazdy</h5>
         </div>
         <div class="card-body">
             @if($errors->any())
@@ -40,7 +40,7 @@
                 
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        <label for="route_id" class="form-label">Trasa <span class="text-danger">*</span></label>
+                        <label for="route_id" class="form-label"><i class="fas fa-route me-2"></i>Trasa <span class="text-danger">*</span></label>
                         <select class="form-select @error('route_id') is-invalid @enderror" id="route_id" name="route_id" required>
                             <option value="">Wybierz trasę</option>
                             @foreach($routes as $route)
@@ -58,7 +58,7 @@
                 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="valid_from" class="form-label">Data rozpoczęcia <span class="text-danger">*</span></label>
+                        <label for="valid_from" class="form-label"><i class="fas fa-calendar-plus me-2"></i>Data rozpoczęcia <span class="text-danger">*</span></label>
                         <input type="date" class="form-control @error('valid_from') is-invalid @enderror" 
                                id="valid_from" name="valid_from" value="{{ old('valid_from', date('Y-m-d')) }}" required>
                         @error('valid_from')
@@ -66,7 +66,7 @@
                         @enderror
                     </div>
                     <div class="col-md-6">
-                        <label for="valid_to" class="form-label">Data zakończenia <span class="text-danger">*</span></label>
+                        <label for="valid_to" class="form-label"><i class="fas fa-calendar-minus me-2"></i>Data zakończenia <span class="text-danger">*</span></label>
                         <input type="date" class="form-control @error('valid_to') is-invalid @enderror" 
                                id="valid_to" name="valid_to" value="{{ old('valid_to', date('Y-m-d', strtotime('+1 year'))) }}" required>
                         @error('valid_to')
@@ -77,7 +77,7 @@
                 
                 <div class="row mb-4">
                     <div class="col-md-12">
-                        <label class="form-label">Dni tygodnia <span class="text-danger">*</span></label>
+                        <label class="form-label"><i class="fas fa-calendar-week me-2"></i>Dni tygodnia <span class="text-danger">*</span></label>
                         <div class="d-flex flex-wrap gap-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="day-1" name="days_of_week[]" value="1" {{ in_array('1', old('days_of_week', [])) ? 'checked' : '' }}>
@@ -116,8 +116,8 @@
                 
                 <div class="row">
                     <div class="col-12">
-                        <button type="submit" class="btn btn-success">
-                            <i class="fas fa-save"></i> Zapisz rozkład
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Zapisz rozkład
                         </button>
                     </div>
                 </div>

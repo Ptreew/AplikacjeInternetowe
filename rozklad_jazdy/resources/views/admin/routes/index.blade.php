@@ -34,6 +34,23 @@
             <h5 class="mb-0">Lista tras</h5>
         </div>
         <div class="card-body">
+            <!-- Filters -->
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <form action="{{ route('admin.routes.index') }}" method="GET" class="d-flex">
+                        <select name="type" class="form-select me-2" onchange="this.form.submit()">
+                            <option value="">Wszystkie typy tras</option>
+                            @foreach($routeTypes as $type)
+                                <option value="{{ $type }}" {{ request('type') == $type ? 'selected' : '' }}>
+                                    {{ $type == 'city' ? 'Miejskie' : 'Międzymiastowe' }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <button type="submit" class="btn btn-primary">Filtruj</button>
+                    </form>
+                </div>
+            </div>
+            
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
                     <thead class="table-light">

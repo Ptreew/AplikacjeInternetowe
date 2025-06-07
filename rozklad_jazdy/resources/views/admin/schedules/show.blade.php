@@ -7,16 +7,16 @@
     <div class="row mb-4">
         <div class="col-12 d-flex flex-wrap gap-2">
             <a href="{{ route('admin.schedules.index') }}" class="btn btn-primary">
-                <i class="fas fa-arrow-left"></i> Powrót do listy rozkładów
+                <i class="fas fa-arrow-left me-2"></i>Powrót do listy rozkładów
             </a>
-            <a href="{{ route('admin.schedules.edit', $schedule) }}" class="btn btn-warning">
-                <i class="fas fa-edit"></i> Edytuj rozkład
+            <a href="{{ route('admin.schedules.edit', $schedule) }}" class="btn btn-primary">
+                <i class="fas fa-edit me-2"></i>Edytuj rozkład
             </a>
             <form action="{{ route('admin.schedules.destroy', $schedule) }}" method="POST" class="d-inline">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten rozkład? Usuwa to również wszystkie powiązane odjazdy.')">
-                    <i class="fas fa-trash"></i> Usuń rozkład
+                    <i class="fas fa-trash me-2"></i>Usuń rozkład
                 </button>
             </form>
         </div>
@@ -37,7 +37,7 @@
 
     <div class="card mb-4">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Informacje o rozkładzie #{{ $schedule->id }}</h5>
+            <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Informacje o rozkładzie #{{ $schedule->id }}</h5>
         </div>
         <div class="card-body">
             <div class="row">
@@ -84,7 +84,7 @@
                     </table>
                 </div>
                 <div class="col-md-6">
-                    <h5>Przystanki na trasie</h5>
+                    <h5><i class="fas fa-map-marker-alt me-2"></i>Przystanki na trasie</h5>
                     <ol class="list-group list-group-numbered mb-3">
                         @foreach($schedule->route->routeStops->sortBy('order') as $routeStop)
                             <li class="list-group-item d-flex justify-content-between align-items-start">
@@ -105,9 +105,9 @@
 
     <div class="card">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Odjazdy</h5>
+            <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Odjazdy</h5>
             <a href="{{ route('admin.departures.create', ['schedule_id' => $schedule->id]) }}" class="btn btn-success btn-sm">
-                <i class="fas fa-plus"></i> Dodaj odjazd
+                <i class="fas fa-plus me-2"></i>Dodaj odjazd
             </a>
         </div>
         <div class="card-body">
@@ -159,16 +159,16 @@
                                     <td class="text-center">
                                         <div class="d-flex gap-1 justify-content-center">
                                             <a href="{{ route('admin.departures.edit', $departure) }}" class="btn btn-sm btn-primary">
-                                                <i class="fas fa-edit"></i> Edytuj
+                                                <i class="fas fa-edit me-2"></i>Edytuj
                                             </a>
                                             <a href="{{ route('admin.departures.show', $departure) }}" class="btn btn-sm btn-success">
-                                                <i class="fas fa-eye"></i> Szczegóły
+                                                <i class="fas fa-eye me-2"></i>Szczegóły
                                             </a>
                                             <form action="{{ route('admin.departures.destroy', $departure) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno usunąć ten odjazd?')">
-                                                    <i class="fas fa-trash"></i> Usuń
+                                                    <i class="fas fa-trash me-2"></i>Usuń
                                                 </button>
                                             </form>
                                         </div>

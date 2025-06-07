@@ -9,16 +9,16 @@
     <div class="row mb-4">
         <div class="col-12">
             <a href="{{ route('admin') }}?tab=lines" class="btn btn-primary">
-                <i class="fas fa-arrow-left"></i> Powrót do panelu
+                <i class="fas fa-arrow-left me-2"></i>Powrót do panelu
             </a>
             <a href="{{ route('admin.lines.edit', $line) }}" class="btn btn-primary">
-                <i class="fas fa-edit"></i> Edytuj linię
+                <i class="fas fa-edit me-2"></i>Edytuj linię
             </a>
             <form action="{{ route('admin.lines.destroy', $line) }}" method="POST" class="d-inline">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć tę linię?')">
-                    <i class="fas fa-trash"></i> Usuń linię
+                    <i class="fas fa-trash-alt me-2"></i>Usuń linię
                 </button>
             </form>
         </div>
@@ -26,18 +26,18 @@
 
     <div class="card mb-4">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Informacje o linii</h5>
+            <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Informacje o linii</h5>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
                     <table class="table">
                         <tr>
-                            <th style="width: 30%">ID:</th>
+                            <th style="width: 30%"><i class="fas fa-hashtag me-2"></i>ID:</th>
                             <td>{{ $line->id }}</td>
                         </tr>
                         <tr>
-                            <th>Numer linii:</th>
+                            <th><i class="fas fa-hashtag me-2"></i>Numer linii:</th>
                             <td>
                             @if($line->number)
                                 {{ $line->number }}
@@ -47,11 +47,11 @@
                         </td>
                         </tr>
                         <tr>
-                            <th>Nazwa:</th>
+                            <th><i class="fas fa-tag me-2"></i>Nazwa:</th>
                             <td>{{ $line->name }}</td>
                         </tr>
                         <tr>
-                            <th>Przewoźnik:</th>
+                            <th><i class="fas fa-bus me-2"></i>Przewoźnik:</th>
                             <td>{{ $line->carrier->name ?? 'Brak przewoźnika' }}</td>
                         </tr>
                     </table>
@@ -59,14 +59,14 @@
                 <div class="col-md-6">
                     <table class="table">
                         <tr>
-                            <th style="width: 30%">Kolor:</th>
+                            <th style="width: 30%"><i class="fas fa-palette me-2"></i>Kolor:</th>
                             <td>
                                 <span class="color-box" style="background-color: {{ $line->color }}; display: inline-block; width: 20px; height: 20px; margin-right: 5px; border: 1px solid #ccc;"></span>
                                 {{ $line->color }}
                             </td>
                         </tr>
                         <tr>
-                            <th>Status:</th>
+                            <th><i class="fas fa-toggle-on me-2"></i>Status:</th>
                             <td>
                                 @if($line->is_active)
                                     <span class="badge bg-success">Aktywna</span>
@@ -76,11 +76,11 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>Data utworzenia:</th>
+                            <th><i class="fas fa-calendar-plus me-2"></i>Data utworzenia:</th>
                             <td>{{ $line->created_at->format('d.m.Y H:i') }}</td>
                         </tr>
                         <tr>
-                            <th>Ostatnia aktualizacja:</th>
+                            <th><i class="fas fa-calendar-check me-2"></i>Ostatnia aktualizacja:</th>
                             <td>{{ $line->updated_at->format('d.m.Y H:i') }}</td>
                         </tr>
                     </table>
@@ -91,7 +91,7 @@
 
     <div class="card mb-4">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Trasy linii</h5>
+            <h5 class="mb-0"><i class="fas fa-route me-2"></i>Trasy linii</h5>
         </div>
         <div class="card-body">
             @if($line->routes->count() > 0)
@@ -111,10 +111,20 @@
                                 <tr>
                                     <td>{{ $route->id }}</td>
                                     <td>{{ $route->name }}</td>
-                                    <td>{{ $route->start_stop->name ?? 'Brak' }}</td>
-                                    <td>{{ $route->end_stop->name ?? 'Brak' }}</td>
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-primary">Szczegóły</a>
+                                        @php
+                                            $firstStop = $route->routeStops()->orderBy('stop_number', 'asc')->first();
+                                            echo $firstStop ? $firstStop->stop->name : 'Brak';
+                                        @endphp
+                                    </td>
+                                    <td>
+                                        @php
+                                            $lastStop = $route->routeStops()->orderBy('stop_number', 'desc')->first();
+                                            echo $lastStop ? $lastStop->stop->name : 'Brak';
+                                        @endphp
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('admin.routes.show', $route) }}" class="btn btn-sm btn-success"><i class="fas fa-info-circle me-2"></i>Szczegóły</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -129,7 +139,7 @@
 
     <div class="card">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Pojazdy przypisane do linii</h5>
+            <h5 class="mb-0"><i class="fas fa-bus me-2"></i>Pojazdy przypisane do linii</h5>
         </div>
         <div class="card-body">
             @if($line->vehicles->count() > 0)
@@ -160,7 +170,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('admin.vehicles.show', $vehicle) }}" class="btn btn-sm btn-primary">Szczegóły</a>
+                                        <a href="{{ route('admin.vehicles.show', $vehicle) }}" class="btn btn-sm btn-success"><i class="fas fa-info-circle me-2"></i>Szczegóły</a>
                                     </td>
                                 </tr>
                             @endforeach

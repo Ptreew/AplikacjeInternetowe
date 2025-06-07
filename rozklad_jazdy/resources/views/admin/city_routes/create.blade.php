@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-12">
-            <a href="{{ url('/admin?tab=miejskie') }}" class="btn btn-primary">Powrót do panelu</a>
+            <a href="{{ url('/admin?tab=miejskie') }}" class="btn btn-primary"><i class="fas fa-arrow-left me-2"></i>Powrót do panelu</a>
         </div>
     </div>
     
@@ -12,7 +12,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Dodaj nowy kurs miejski</h5>
+                    <h5 class="mb-0"><i class="fas fa-route me-2"></i>Dodaj nowy kurs miejski</h5>
                 </div>
 
                 <div class="card-body">
@@ -37,7 +37,7 @@
                         
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="carrier_id" class="form-label">Przewoźnik <span class="text-danger">*</span></label>
+                                <label for="carrier_id" class="form-label"><i class="fas fa-building me-2"></i>Przewoźnik <span class="text-danger">*</span></label>
                                 <select class="form-select" id="carrier_id" name="carrier_id" required>
                                     <option value="">Wybierz przewoźnika</option>
                                     @foreach($carriers as $carrier)
@@ -50,7 +50,7 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="line_id" class="form-label">Linia <span class="text-danger">*</span></label>
+                                <label for="line_id" class="form-label"><i class="fas fa-bus me-2"></i>Linia <span class="text-danger">*</span></label>
                                 <select class="form-select" id="line_id" name="line_id" required>
                                     <option value="">Najpierw wybierz przewoźnika</option>
                                     @foreach($existingLines as $line)
@@ -75,7 +75,7 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="vehicle_id" class="form-label">Pojazd <span class="text-danger">*</span></label>
+                                <label for="vehicle_id" class="form-label"><i class="fas fa-truck-moving me-2"></i>Pojazd <span class="text-danger">*</span></label>
                                 <select class="form-select" id="vehicle_id" name="vehicle_id" required>
                                     <option value="">Najpierw wybierz przewoźnika</option>
                                     @foreach($vehicles as $vehicle)
@@ -90,7 +90,7 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="name" class="form-label">Nazwa trasy <span class="text-danger">*</span></label>
+                                <label for="name" class="form-label"><i class="fas fa-map-signs me-2"></i>Nazwa trasy <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
                                 @error('name')
                                     <div class="text-danger">{{ $message }}</div>
@@ -100,7 +100,7 @@
                         
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="city_id" class="form-label">Miasto <span class="text-danger">*</span></label>
+                                <label for="city_id" class="form-label"><i class="fas fa-city me-2"></i>Miasto <span class="text-danger">*</span></label>
                                 <select class="form-select" id="city_id" name="city_id" required>
                                     <option value="">Wybierz miasto</option>
                                     @foreach($cities as $city)
@@ -115,7 +115,7 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="travel_time" class="form-label">Czas przejazdu (minuty) <span class="text-danger">*</span></label>
+                                <label for="travel_time" class="form-label"><i class="fas fa-clock me-2"></i>Czas przejazdu (minuty) <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="travel_time" name="travel_time" min="1" value="{{ old('travel_time') }}" required>
                                 @error('travel_time')
                                     <div class="text-danger">{{ $message }}</div>
@@ -125,7 +125,7 @@
 
                         <div class="row mb-3">
                             <div class="col-12">
-                                <label class="form-label">Dni kursowania <span class="text-danger">*</span></label>
+                                <label class="form-label"><i class="fas fa-calendar-week me-2"></i>Dni kursowania <span class="text-danger">*</span></label>
                                 <div class="d-flex flex-wrap gap-3">
                                     @foreach($daysOfWeek as $key => $day)
                                         <div class="form-check">
@@ -157,7 +157,7 @@
 
                         <div class="row mt-4">
                             <div class="col-12">
-                                <button type="submit" class="btn btn-primary">Zapisz trasę</button>
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Zapisz trasę</button>
                                 <a href="{{ route('admin.city_routes.index') }}" class="btn btn-secondary ms-2">Anuluj</a>
                             </div>
                         </div>
