@@ -20,40 +20,12 @@ class TicketController extends Controller
      */
     public function index(Request $request)
     {
-        $user = Auth::user();
-        
-        // For admin users, show all tickets with pagination and filters
-        if ($user && $user->role === 'admin') {
-            $query = Ticket::with(['user', 'departure.schedule.route', 'departure.vehicle'])
-                ->orderBy('created_at', 'desc');
-                
-            // Apply filters if provided
-            if ($request->has('status')) {
-                $query->where('status', $request->status);
-            }
-            
-            if ($request->has('date_from')) {
-                $query->whereHas('departure', function($q) use ($request) {
-                    $q->whereDate('departure_time', '>=', $request->date_from);
-                });
-            }
-            
-            if ($request->has('date_to')) {
-                $query->whereHas('departure', function($q) use ($request) {
-                    $q->whereDate('departure_time', '<=', $request->date_to);
-                });
-            }
-            
-            $tickets = $query->paginate(15);
-            return view('tickets.index', compact('tickets'));
-        }
-        
-        // For regular users, show only their tickets
+        // Show only logged-in user's tickets for all users
         $tickets = Ticket::with(['departure.schedule.route', 'departure.vehicle'])
             ->where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-            
+        
         return view('tickets.index', compact('tickets'));
     }
 

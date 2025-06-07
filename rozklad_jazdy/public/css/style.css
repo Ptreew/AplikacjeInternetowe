@@ -23,7 +23,7 @@ header h1 {
 
 nav a {
   color: white;
-  margin-left: 1rem;
+  /* margin-left: 1rem;  */ /* Is breaking tools dropdown */
   text-decoration: none;
 }
 

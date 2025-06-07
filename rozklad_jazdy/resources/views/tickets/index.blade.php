@@ -93,11 +93,6 @@
                                                     <a href="{{ route('tickets.show', $ticket) }}" class="btn btn-sm btn-outline-primary">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    @if(($ticket->status === 'reserved' || $ticket->status === 'paid') && Auth::user()->role === 'admin')
-                                                        <a href="{{ route('tickets.edit', $ticket) }}" class="btn btn-sm btn-outline-secondary">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                    @endif
                                                 </div>
                                             </td>
                                         </tr>
