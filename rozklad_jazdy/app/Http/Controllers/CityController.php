@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\City;
+use App\Http\Middleware\CheckRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,7 @@ class CityController extends Controller
         $this->middleware('auth')->except(['index', 'show']);
         
         // Require admin role for create, store, edit, update, destroy
-        $this->middleware('role:admin')->except(['index', 'show']);
+        $this->middleware(CheckRole::class . ':admin')->except(['index', 'show']);
     }
     
     /**

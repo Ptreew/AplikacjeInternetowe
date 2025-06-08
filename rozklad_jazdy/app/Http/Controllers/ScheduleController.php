@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use App\Http\Middleware\CheckRole;
 
 class ScheduleController extends Controller
 {
@@ -20,7 +21,7 @@ class ScheduleController extends Controller
         $this->middleware('auth');
         
         // Require admin role for all methods
-        $this->middleware('role:admin');
+        $this->middleware(CheckRole::class . ':admin');
     }
     
     /**
@@ -35,8 +36,9 @@ class ScheduleController extends Controller
             $query->where('route_id', $request->route_id);
         }
         
-        if ($request->has('day_type')) {
-            $query->where('day_type', $request->day_type);
+        if ($request->has('day_of_week')) {
+            // Check if the value is present in the days_of_week JSON array
+            $query->whereJsonContains('days_of_week', (int)$request->day_of_week);
         }
         
         if ($request->has('valid_from')) {
@@ -48,20 +50,23 @@ class ScheduleController extends Controller
         }
         
         // Paginate the results
-        $schedules = $query->orderBy('route_id')->orderBy('day_type')->paginate(15);
+        $schedules = $query->orderBy('route_id')->paginate(15);
         
         // Get routes for filter dropdown
         $routes = Route::with('line')->orderBy('name')->get();
         
-        // Day types for dropdown
+        // Day types for filters
         $dayTypes = [
-            'weekday' => 'Dzień powszedni',
-            'saturday' => 'Sobota',
-            'sunday' => 'Niedziela', 
-            'holiday' => 'Święto'
+            '1' => 'Poniedziałek',
+            '2' => 'Wtorek',
+            '3' => 'Środa',
+            '4' => 'Czwartek',
+            '5' => 'Piątek',
+            '6' => 'Sobota',
+            '0' => 'Niedziela'
         ];
         
-        return view('schedules.index', compact('schedules', 'routes', 'dayTypes'));
+        return view('admin.schedules.index', compact('schedules', 'routes', 'dayTypes'));
     }
 
     /**
@@ -79,7 +84,7 @@ class ScheduleController extends Controller
             'holiday' => 'Święto'
         ];
         
-        return view('schedules.create', compact('routes', 'dayTypes'));
+        return view('admin.schedules.create', compact('routes', 'dayTypes'));
     }
 
     /**
@@ -90,13 +95,8 @@ class ScheduleController extends Controller
         // Validate the request data
         $validated = $request->validate([
             'route_id' => 'required|exists:routes,id',
-            'day_type' => [
-                'required',
-                'in:weekday,saturday,sunday,holiday',
-                Rule::unique('schedules')->where(function ($query) use ($request) {
-                    return $query->where('route_id', $request->route_id);
-                }),
-            ],
+            'days_of_week' => 'required|array',
+            'days_of_week.*' => 'required|integer|between:0,6',
             'valid_from' => 'required|date',
             'valid_to' => 'required|date|after_or_equal:valid_from',
         ]);
@@ -104,12 +104,12 @@ class ScheduleController extends Controller
         // Create new schedule
         $schedule = new Schedule();
         $schedule->route_id = $validated['route_id'];
-        $schedule->day_type = $validated['day_type'];
+        $schedule->days_of_week = $validated['days_of_week'];
         $schedule->valid_from = $validated['valid_from'];
         $schedule->valid_to = $validated['valid_to'];
         $schedule->save();
         
-        return redirect()->route('schedules.show', $schedule)
+        return redirect()->route('admin.schedules.show', $schedule)
             ->with('success', 'Schedule created successfully. Now you can add departures to this schedule.');
     }
 
@@ -136,7 +136,7 @@ class ScheduleController extends Controller
             'holiday' => 'Święto'
         ];
         
-        return view('schedules.show', compact('schedule', 'dayTypes'));
+        return view('admin.schedules.show', compact('schedule', 'dayTypes'));
     }
 
     /**
@@ -154,7 +154,7 @@ class ScheduleController extends Controller
             'holiday' => 'Święto'
         ];
         
-        return view('schedules.edit', compact('schedule', 'routes', 'dayTypes'));
+        return view('admin.schedules.edit', compact('schedule', 'routes', 'dayTypes'));
     }
 
     /**
@@ -165,25 +165,20 @@ class ScheduleController extends Controller
         // Validate the request data
         $validated = $request->validate([
             'route_id' => 'required|exists:routes,id',
-            'day_type' => [
-                'required',
-                'in:weekday,saturday,sunday,holiday',
-                Rule::unique('schedules')->where(function ($query) use ($request) {
-                    return $query->where('route_id', $request->route_id);
-                })->ignore($schedule->id),
-            ],
+            'days_of_week' => 'required|array',
+            'days_of_week.*' => 'required|integer|between:0,6',
             'valid_from' => 'required|date',
             'valid_to' => 'required|date|after_or_equal:valid_from',
         ]);
         
         // Update schedule
         $schedule->route_id = $validated['route_id'];
-        $schedule->day_type = $validated['day_type'];
+        $schedule->days_of_week = $validated['days_of_week'];
         $schedule->valid_from = $validated['valid_from'];
         $schedule->valid_to = $validated['valid_to'];
         $schedule->save();
         
-        return redirect()->route('schedules.show', $schedule)
+        return redirect()->route('admin.schedules.show', $schedule)
             ->with('success', 'Schedule updated successfully.');
     }
 
@@ -192,27 +187,56 @@ class ScheduleController extends Controller
      */
     public function destroy(Schedule $schedule)
     {
-        // Check if the schedule has any departures
+        // Sprawdź czy rozkład ma powiązane odjazdy
         if ($schedule->departures()->exists()) {
-            return redirect()->route('schedules.show', $schedule)
-                ->with('error', 'Cannot delete schedule with associated departures. Please delete the departures first.');
+            return redirect()->route('admin.schedules.show', $schedule)
+                ->with('error', 'Nie można usunąć rozkładu jazdy z przypisanymi odjazdami. Najpierw usuń wszystkie odjazdy.');
         }
         
         try {
             DB::beginTransaction();
             
-            // Delete the schedule
+            // Usuń rozkład jazdy
             $schedule->delete();
             
             DB::commit();
             
-            return redirect()->route('schedules.index')
-                ->with('success', 'Schedule deleted successfully.');
+            return redirect()->route('admin.schedules.index')
+                ->with('success', 'Rozkład jazdy został pomyślnie usunięty.');
         } catch (\Exception $e) {
             DB::rollBack();
             
-            return redirect()->route('schedules.show', $schedule)
-                ->with('error', 'Failed to delete schedule: ' . $e->getMessage());
+            return redirect()->route('admin.schedules.show', $schedule)
+                ->with('error', 'Błąd podczas usuwania rozkładu jazdy: ' . $e->getMessage());
         }
+    }
+    
+    /**
+     * API method to get stops for a specific schedule
+     */
+    public function getStops(Schedule $schedule)
+    {
+        // Load stops for the selected schedule's route
+        $stops = [];
+        
+        if ($schedule && $schedule->route) {
+            $routeStops = $schedule->route->routeStops()
+                ->with('stop.city')
+                ->orderBy('stop_number', 'asc')
+                ->get();
+                
+            $stops = $routeStops->map(function($routeStop) {
+                return [
+                    'id' => $routeStop->stop->id,
+                    'name' => $routeStop->stop->name,
+                    'city' => [
+                        'id' => $routeStop->stop->city->id,
+                        'name' => $routeStop->stop->city->name
+                    ]
+                ];
+            });
+        }
+        
+        return response()->json(['stops' => $stops]);
     }
 }

@@ -4,6 +4,34 @@
 
 {{-- Navigation is handled in the main layout --}}
 
+@section('styles')
+<style>
+    /* Styles for inactive tab buttons to match admin panel */
+    .tabs .btn-outline-secondary {
+        color: #6c757d; /* Bootstrap secondary text color */
+        border: 1px solid #6c757d; /* Bootstrap secondary border color */
+        background-color: transparent;
+    }
+    .tabs .btn-outline-secondary:hover {
+        color: #fff; /* White text on hover */
+        background-color: #6c757d; /* Bootstrap secondary color as background */
+        border-color: #6c757d;
+    }
+
+    /* Ensure active tab button retains its primary style */
+    .tabs .btn-primary {
+        color: #fff;
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .tabs .btn-primary:hover {
+        color: #fff;
+        background-color: #0069d9; /* Darker primary on hover */
+        border-color: #0062cc;
+    }
+</style>
+@endsection
+
 @section('content')
     <div class="container my-4">
         <div class="row justify-content-center">
@@ -26,8 +54,8 @@
                             }
                         @endphp
                         
-                        <button class="tab-button {{ $finalActiveTab == 'miedzymiastowe' ? 'active btn btn-primary' : 'btn btn-outline-secondary' }}" data-tab="miedzymiastowe">Międzymiastowe</button>
-                        <button class="tab-button {{ $finalActiveTab == 'miejskie' ? 'active btn btn-primary' : 'btn btn-outline-secondary' }}" data-tab="miejskie">Miejskie</button>
+                        <button class="tab-button {{ $finalActiveTab == 'miedzymiastowe' ? 'active btn btn-primary' : 'btn btn-outline-secondary' }}" data-tab="miedzymiastowe"><i class="fas fa-bus"></i> Międzymiastowe</button>
+                        <button class="tab-button {{ $finalActiveTab == 'miejskie' ? 'active btn btn-primary' : 'btn btn-outline-secondary' }}" data-tab="miejskie"><i class="fas fa-tram"></i> Miejskie</button>
                     </div>
                 </div>
                 
@@ -40,6 +68,7 @@
                             <form action="{{ route('routes.search.results') }}" method="POST" class="route-search-form">
                                 @csrf
                                 <input type="hidden" name="active_tab" value="miedzymiastowe">
+                                <input type="hidden" name="type" value="intercity">
                                 <!-- Dropdowns at the top -->
                                 <div class="dropdowns-container">
                                     <select name="from_city" id="from_city" required>
@@ -69,7 +98,7 @@
                                     <input type="date" id="date" name="date" placeholder="Data">
                                     <input type="time" id="time_from" name="time_from" pattern="[0-9]{2}:[0-9]{2}" step="60" placeholder="Od godziny">
                                     <input type="time" id="time_to" name="time_to" pattern="[0-9]{2}:[0-9]{2}" step="60" placeholder="Do godziny">
-                                    <button type="submit">Szukaj połączeń</button>
+                                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Szukaj połączeń</button>
                                 </div>
                             </form>
                         </section>
@@ -80,6 +109,7 @@
                             <form action="{{ route('routes.search.city') }}" method="POST" class="city-route-search-form">
                                 @csrf
                                 <input type="hidden" name="active_tab" value="miejskie">
+                                <input type="hidden" name="type" value="city">
                                 <!-- Dropdowns at the top -->
                                 <div class="dropdowns-container">
                                     <select name="city_id" id="city_id" required>
@@ -122,7 +152,7 @@
                                     <input type="date" id="city_date" name="date" placeholder="Data">
                                     <input type="time" id="city_time_from" name="time_from" pattern="[0-9]{2}:[0-9]{2}" step="60" placeholder="Od godziny">
                                     <input type="time" id="city_time_to" name="time_to" pattern="[0-9]{2}:[0-9]{2}" step="60" placeholder="Do godziny">
-                                    <button type="submit">Szukaj połączeń</button>
+                                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Szukaj połączeń</button>
                                 </div>
                             </form>
                         </section>
@@ -142,11 +172,13 @@
                                             <tr>
                                                 <th>Linia</th>
                                                 <th>Przewoźnik</th>
-                                                <th>Trasa</th>
+                                                <th>Miasto początkowe</th>
+                                                <th>Miasto docelowe</th>
+                                                <th>Dni kursowania</th>
                                                 <th>Odjazd</th>
                                                 <th>Przyjazd</th>
-                                                <th>Dzień</th>
                                                 <th>Pojazd</th>
+                                                <th>Cena</th>
                                                 <th>Akcje</th>
                                             </tr>
                                         </thead>
@@ -160,36 +192,50 @@
                                                                     <td class="align-middle">{{ $route->line->name ?? 'Brak' }}</td>
                                                                     <td class="align-middle">{{ $route->line->carrier->name ?? 'Brak' }}</td>
                                                                     <td class="align-middle">
-                                                                        @if(isset($fromCity) && isset($toCity))
-                                                                            {{ $fromCity->name }} → {{ $toCity->name }}
-                                                                        @elseif(isset($fromStop) && isset($toStop))
-                                                                            {{ $fromStop->name }} → {{ $toStop->name }}
+                                                                        @if(isset($fromCity))
+                                                                            {{ $fromCity->name }}
+                                                                        @elseif(isset($fromStop))
+                                                                            {{ $fromStop->name }}
                                                                         @else
-                                                                            Brak danych o trasie
+                                                                            Brak danych
                                                                         @endif
+                                                                    </td>
+                                                                    <td class="align-middle">
+                                                                        @if(isset($toCity))
+                                                                            {{ $toCity->name }}
+                                                                        @elseif(isset($toStop))
+                                                                            {{ $toStop->name }}
+                                                                        @else
+                                                                            Brak danych
+                                                                        @endif
+                                                                    </td>
+                                                                    <td class="align-middle">
+                                                                        @php
+                                                                            $dayNames = [
+                                                                                0 => 'Nd',
+                                                                                1 => 'Pn',
+                                                                                2 => 'Wt',
+                                                                                3 => 'Śr',
+                                                                                4 => 'Cz',
+                                                                                5 => 'Pt',
+                                                                                6 => 'Sb'
+                                                                            ];
+                                                                            
+                                                                            $daysText = [];
+                                                                            foreach ($schedule->days_of_week as $day) {
+                                                                                $daysText[] = $dayNames[$day];
+                                                                            }
+                                                                        @endphp
+                                                                        {{ implode(', ', $daysText) }}
                                                                     </td>
                                                                     <td class="align-middle">{{ $departure->departure_time }}</td>
                                                                     <td class="align-middle">{{ $departure->arrival_time ?? 'Brak danych' }}</td>
-                                                                    <td class="align-middle">
-                                                                        @switch($schedule->day_type)
-                                                                            @case('weekday')
-                                                                                Dzień roboczy
-                                                                                @break
-                                                                            @case('saturday')
-                                                                                Sobota
-                                                                                @break
-                                                                            @case('sunday')
-                                                                                Niedziela
-                                                                                @break
-                                                                            @default
-                                                                                {{ $schedule->day_type }}
-                                                                        @endswitch
-                                                                    </td>
                                                                     <td class="align-middle">{{ $departure->vehicle->type ?? 'Brak' }}</td>
+                                                                    <td class="align-middle text-success fw-bold">{{ number_format($departure->price, 2) }} zł</td>
                                                                     <td class="align-middle" style="white-space: nowrap;">
-                                                                        <a href="{{ route('routes.show', ['route' => $route->id]) }}" class="btn btn-sm btn-warning">Szczegóły</a>
+                                                                        <a href="{{ route('routes.show', ['route' => $route->id, 'date' => $request->date ?? now()->toDateString()]) }}" class="btn btn-sm btn-warning">Szczegóły</a>
                                                                         @if(auth()->check())
-                                                                            <a href="{{ route('tickets.create', ['departure_id' => $departure->id]) }}" class="btn btn-sm btn-success">Kup Bilet</a>
+                                                                            <a href="{{ route('tickets.create', ['departure_id' => $departure->id, 'travel_date' => $request->date ?? now()->toDateString()]) }}" class="btn btn-sm btn-success">Kup Bilet</a>
                                                                         @else
                                                                             <a href="{{ route('login') }}" class="btn btn-sm btn-primary">Kup bilet</a>
                                                                         @endif
@@ -222,7 +268,7 @@
 
         // Code executed when the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM Content Loaded - brak automatycznej inicjalizacji JS, zakładki są już ustawione przez PHP');
+            console.log('DOM Content Loaded - brak automatycznej inicjalizacji JS, zakładki są już ustawiane przez PHP');
             console.log('URL strony:', window.location.href);
 
             // Add form validation for the międzymiastowe search form

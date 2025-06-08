@@ -16,7 +16,6 @@ class Ticket extends Model
         'user_id',
         'departure_id',
         'ticket_number',
-        'price',
         'status',
         'purchase_date',
         'passenger_name',
@@ -32,8 +31,7 @@ class Ticket extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'purchase_date' => 'datetime',
-        'price' => 'decimal:2'
+        'purchase_date' => 'datetime'
     ];
     
     /**
@@ -50,5 +48,15 @@ class Ticket extends Model
     public function departure(): BelongsTo
     {
         return $this->belongsTo(Departure::class);
+    }
+    
+    /**
+     * Get the price of this ticket from its departure
+     *
+     * @return float
+     */
+    public function getPrice()
+    {
+        return $this->departure->price;
     }
 }

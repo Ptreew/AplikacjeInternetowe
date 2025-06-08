@@ -98,13 +98,22 @@
                                                         <p class="mb-2">
                                                             <strong>
                                                                 @php
-                                                                    $dayTypes = [
-                                                                        'weekday' => 'Dni powszednie (pon-pt)',
-                                                                        'saturday' => 'Sobota',
-                                                                        'sunday' => 'Niedziela'
+                                                                    $dayNames = [
+                                                                        0 => 'Nd',
+                                                                        1 => 'Pn',
+                                                                        2 => 'Wt',
+                                                                        3 => 'Śr',
+                                                                        4 => 'Cz',
+                                                                        5 => 'Pt',
+                                                                        6 => 'Sb'
                                                                     ];
+                                                                    
+                                                                    $daysText = [];
+                                                                    foreach ($schedule->days_of_week as $day) {
+                                                                        $daysText[] = $dayNames[$day];
+                                                                    }
                                                                 @endphp
-                                                                {{ $dayTypes[$schedule->day_type] }}
+                                                                {{ implode(', ', $daysText) }}
                                                             </strong>
                                                         </p>
                                                         <div class="departures-list">
@@ -113,9 +122,12 @@
                                                                     <div class="col-md-2 mb-2">
                                                                         <div class="departure-time p-2 border rounded text-center">
                                                                             <strong>{{ date('H:i', strtotime($departure->departure_time)) }}</strong>
+                                                                            <div class="text-success fw-bold small">
+                                                                                {{ number_format($departure->price, 2) }} zł
+                                                                            </div>
                                                                             @if(Auth::check())
-                                                                                <a href="{{ route('tickets.create', ['departure_id' => $departure->id]) }}" class="btn btn-sm btn-primary mt-2 d-block">
-                                                                                    Bilet
+                                                                                <a href="{{ route('tickets.create', ['departure_id' => $departure->id, 'travel_date' => $request->date ?? now()->toDateString()]) }}" class="btn btn-sm btn-primary mt-2 d-block">
+                                                                                    Zarezerwuj bilet
                                                                                 </a>
                                                                             @else
                                                                                 <a href="{{ route('login') }}" class="btn btn-sm btn-outline-primary mt-2 d-block">

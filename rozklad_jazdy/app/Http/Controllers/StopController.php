@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use App\Http\Middleware\CheckRole;
 
 class StopController extends Controller
 {
@@ -21,7 +22,7 @@ class StopController extends Controller
         $this->middleware('auth', ['except' => ['getStopsByCity']]);
         
         // Require admin role for all methods except getStopsByCity
-        $this->middleware('role:admin', ['except' => ['getStopsByCity']]);
+        $this->middleware(CheckRole::class . ':admin', ['except' => ['getStopsByCity']]);
     }
     
     /**

@@ -23,8 +23,8 @@ class CheckRole
             return redirect('login');
         }
         
-        // Check if user has the required role
-        if (Auth::user()->role !== $role) {
+        // Check if user has the required role (case-insensitive)
+        if (strtolower(Auth::user()->role) !== strtolower($role)) {
             abort(403, 'Brak dostępu do tej części aplikacji.');
         }
         

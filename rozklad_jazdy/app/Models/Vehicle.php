@@ -14,11 +14,12 @@ class Vehicle extends Model
     use HasFactory;
     
     protected $fillable = [
-        'carrier_id',
+        'line_id',
         'type',
-        'number',
+        'vehicle_number',
         'capacity',
-        'is_active'
+        'is_active',
+        'image_path'
     ];
     
     /**
@@ -35,5 +36,13 @@ class Vehicle extends Model
     public function departures(): HasMany
     {
         return $this->hasMany(Departure::class);
+    }
+    
+    /**
+     * Get the line that this vehicle is assigned to
+     */
+    public function line(): BelongsTo
+    {
+        return $this->belongsTo(Line::class);
     }
 }

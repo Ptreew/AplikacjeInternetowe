@@ -13,8 +13,20 @@ class Schedule extends Model
     
     protected $fillable = [
         'route_id',
-        'day_of_week',
-        'is_active'
+        'days_of_week',
+        'valid_from',
+        'valid_to'
+    ];
+    
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'days_of_week' => 'array',
+        'valid_from' => 'date',
+        'valid_to' => 'date'
     ];
     
     /**

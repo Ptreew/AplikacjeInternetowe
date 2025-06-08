@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use App\Http\Middleware\CheckRole;
 
 class RouteStopController extends Controller
 {
@@ -21,7 +22,7 @@ class RouteStopController extends Controller
         $this->middleware('auth');
         
         // Require admin role for all methods
-        $this->middleware('role:admin');
+        $this->middleware(CheckRole::class . ':admin');
     }
     
     /**

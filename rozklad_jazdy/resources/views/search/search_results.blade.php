@@ -111,13 +111,22 @@
                                                         <p class="mb-2">
                                                             <strong>
                                                                 @php
-                                                                    $dayTypes = [
-                                                                        'weekday' => 'Dni powszednie (pon-pt)',
-                                                                        'saturday' => 'Sobota',
-                                                                        'sunday' => 'Niedziela'
+                                                                    $dayNames = [
+                                                                        0 => 'Nd',
+                                                                        1 => 'Pn',
+                                                                        2 => 'Wt',
+                                                                        3 => 'Śr',
+                                                                        4 => 'Cz',
+                                                                        5 => 'Pt',
+                                                                        6 => 'Sb'
                                                                     ];
+                                                                    
+                                                                    $daysText = [];
+                                                                    foreach ($schedule->days_of_week as $day) {
+                                                                        $daysText[] = $dayNames[$day];
+                                                                    }
                                                                 @endphp
-                                                                {{ $dayTypes[$schedule->day_type] }}
+                                                                {{ implode(', ', $daysText) }}
                                                             </strong>
                                                         </p>
                                                         <div class="departures-list">
@@ -129,8 +138,11 @@
                                                                             <div class="small text-muted">
                                                                                 {{ $departure->vehicle->type }} {{ $departure->vehicle->number }}
                                                                             </div>
+                                                                            <div class="text-success fw-bold">
+                                                                                {{ number_format($departure->price, 2) }} zł
+                                                                            </div>
                                                                             @if(Auth::check())
-                                                                                <a href="{{ route('tickets.create', ['departure_id' => $departure->id]) }}" class="btn btn-sm btn-primary mt-2">
+                                                                                <a href="{{ route('tickets.create', ['departure_id' => $departure->id, 'travel_date' => $request->date ?? now()->toDateString()]) }}" class="btn btn-sm btn-primary mt-2">
                                                                                     Zarezerwuj bilet
                                                                                 </a>
                                                                             @else
