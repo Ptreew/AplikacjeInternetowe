@@ -19,9 +19,17 @@ class Departure extends Model
         'vehicle_id',
         'stop_id',
         'departure_time',
+        'available_seats',
         'price',
         'is_active'
     ];
+    
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['arrival_time'];
     
     /**
      * Get the schedule that this departure belongs to

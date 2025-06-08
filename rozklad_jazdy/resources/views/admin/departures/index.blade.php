@@ -28,6 +28,7 @@
                         <th>Rozkład (Trasa)</th>
                         <th>Czas odjazdu</th>
                         <th>Pojazd</th>
+                        <th>Miejsca</th>
                         <th>Cena</th>
                         <th>Aktywny</th>
                         <th>Akcje</th>
@@ -43,6 +44,23 @@
                             </td>
                             <td>{{ \Carbon\Carbon::parse($departure->departure_time)->format('H:i') }}</td>
                             <td>{{ $departure->vehicle?->vehicle_number }}</td>
+                            <td>
+                                @php
+                                    $capacity = $departure->vehicle->capacity ?? 0;
+                                    $availableSeats = $departure->available_seats ?? $capacity;
+                                    $percentFull = $capacity > 0 ? 100 - (($availableSeats / $capacity) * 100) : 0;
+                                @endphp
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-users me-1"></i> {{ $availableSeats }}/{{ $capacity }}
+                                    @if($percentFull > 80)
+                                        <span class="badge bg-danger ms-1">{{ number_format($percentFull, 0) }}%</span>
+                                    @elseif($percentFull > 50)
+                                        <span class="badge bg-warning ms-1">{{ number_format($percentFull, 0) }}%</span>
+                                    @else
+                                        <span class="badge bg-success ms-1">{{ number_format($percentFull, 0) }}%</span>
+                                    @endif
+                                </div>
+                            </td>
                             <td>{{ number_format($departure->price, 2, ',', ' ') }} PLN</td>
                             <td class="text-center">
                                 @if($departure->is_active)

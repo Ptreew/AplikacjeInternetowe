@@ -312,12 +312,16 @@ class RouteBuilderController extends Controller
                         ->orderBy('stop_number', 'asc')
                         ->first()->stop_id;
                         
+                    // Pobierz pojazd, aby uzyskać jego pojemność
+                    $vehicle = \App\Models\Vehicle::findOrFail($departureData['vehicle_id']);
+                    
                     Departure::create([
                         'schedule_id' => $schedule->id,
                         'departure_time' => $departureData['departure_time'],
                         'vehicle_id' => $departureData['vehicle_id'],
                         'stop_id' => $firstStopId, // First stop as departure location
                         'price' => $departureData['price'] ?? 0.00, // Use value from form or default
+                        'available_seats' => $vehicle->capacity, // Inicjalizacja dostępnych miejsc
                         'is_active' => true
                     ]);
                 }

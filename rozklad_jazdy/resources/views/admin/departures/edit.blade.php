@@ -117,7 +117,20 @@
                 </div>
                 
                 <div class="row mb-3">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
+                        <label for="available_seats" class="form-label"><i class="fas fa-users me-2"></i>Dostępne miejsca <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="number" class="form-control @error('available_seats') is-invalid @enderror" 
+                                   id="available_seats" name="available_seats" value="{{ old('available_seats', $departure->available_seats) }}" 
+                                   min="0" required>
+                            <span class="input-group-text"><i class="fas fa-chair"></i></span>
+                        </div>
+                        <small class="form-text text-muted">Liczba dostępnych miejsc w pojeździe. Inicjalizowana na podstawie pojemności pojazdu, zmniejszana przy każdej rezerwacji biletu.</small>
+                        @error('available_seats')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="is_active" name="is_active" value="1" 
                                    {{ old('is_active', $departure->is_active) ? 'checked' : '' }}>

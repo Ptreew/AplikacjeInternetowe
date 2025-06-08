@@ -91,6 +91,25 @@
                                 @endif
                             </td>
                         </tr>
+                        <tr>
+                            <th class="bg-light">Dostępne miejsca</th>
+                            <td>
+                                @php
+                                    $capacity = $departure->vehicle->capacity ?? 0;
+                                    $availableSeats = $departure->available_seats ?? $capacity;
+                                    $percentFull = $capacity > 0 ? 100 - (($availableSeats / $capacity) * 100) : 0;
+                                @endphp
+                                <div class="d-flex align-items-center">
+                                    <span><i class="fas fa-users me-2"></i>{{ $availableSeats }} / {{ $capacity }}</span>
+                                    <div class="progress ms-3 flex-grow-1" style="height: 10px;">
+                                        <div class="progress-bar {{ $percentFull > 80 ? 'bg-danger' : ($percentFull > 50 ? 'bg-warning' : 'bg-success') }}" 
+                                             role="progressbar" style="width: {{ $percentFull }}%;" 
+                                             aria-valuenow="{{ $percentFull }}" aria-valuemin="0" aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
                     </table>
                 </div>
             </div>

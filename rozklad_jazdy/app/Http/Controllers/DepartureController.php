@@ -199,6 +199,7 @@ class DepartureController extends Controller
             'stop_id' => 'required|exists:stops,id',
             'price' => 'required|numeric|min:0',
             'departure_time' => 'required|date_format:H:i',
+            'available_seats' => 'required|integer|min:0',
             'is_active' => 'boolean',
         ]);
         
@@ -214,6 +215,7 @@ class DepartureController extends Controller
             $departure->stop_id = $validated['stop_id'];
             $departure->price = $validated['price'];
             $departure->departure_time = $departureTime;
+            $departure->available_seats = $validated['available_seats'];
             $departure->is_active = $request->has('is_active');
             $departure->save();
             

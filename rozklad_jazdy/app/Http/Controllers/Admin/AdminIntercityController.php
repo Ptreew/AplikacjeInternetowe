@@ -161,13 +161,17 @@ class AdminIntercityController extends Controller
                 'valid_to' => now()->addYear(),
             ]);
             
-            // Add departure for origin stop
+            // Pobierz pojazd, aby uzyskać jego pojemność
+            $vehicle = Vehicle::findOrFail($request->vehicle_id);
+
+            // Add departure for origin stop with available seats
             Departure::create([
                 "stop_id" => $request->origin_stop_id,
                 'schedule_id' => $schedule->id,
                 'vehicle_id' => $request->vehicle_id,
                 'departure_time' => $request->departure_time,
                 'price' => $request->price,
+                'available_seats' => $vehicle->capacity,
                 'is_active' => true, // Change in the future
             ]);
             
@@ -334,13 +338,17 @@ class AdminIntercityController extends Controller
                 'valid_to' => now()->addYear(),
             ]);
             
-            // Add departure for origin stop
+            // Pobierz pojazd, aby uzyskać jego pojemność
+            $vehicle = Vehicle::findOrFail($request->vehicle_id);
+            
+            // Add departure for origin stop with available seats
             Departure::create([
                 'stop_id' => $request->origin_stop_id,
                 'schedule_id' => $schedule->id,
                 'vehicle_id' => $request->vehicle_id,
                 'departure_time' => $request->departure_time,
                 'price' => $request->price,
+                'available_seats' => $vehicle->capacity,
                 'is_active' => true,
             ]);
             
